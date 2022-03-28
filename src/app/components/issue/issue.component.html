@@ -1,0 +1,36 @@
+<div class="issue-container" *ngIf="this.AllowIssue">
+	<div class="issue-header" (click)="this.BackEvent()">
+		<div class="back-arrow">&larr;</div>
+		<div class="back-title">Назад</div>
+	</div>
+
+	<div class="issue-content">
+		<div class="left-part">
+			<div class="issue-title">
+				<span>Выпуск покрытого аккредитива</span>
+				<psb-tooltip class="svg-holder" tooltipType="white" text="Банк выступает посредником между вами и вашим контрагентом. До момента совершения платежа ваши деньги хранятся на специальном счёте. Платёж вашему контрагенту будет совершён только после предоставления им документов в соответствии с условиями аккредитива. Больше информации по <a href=''>ссылке</a>."></psb-tooltip>
+			</div>
+
+			<loc-issue-step1 *ngIf="1 === this.CurrentStep"></loc-issue-step1>
+
+			<loc-issue-step2 *ngIf="2 === this.CurrentStep" [LocInstance]="this.LocInstance"></loc-issue-step2>
+
+			<loc-issue-step3 *ngIf="3 === this.CurrentStep" [LocInstance]="this.LocInstance"></loc-issue-step3>
+
+			<loc-issue-step4 *ngIf="4 === this.CurrentStep" [LocInstance]="this.LocInstance"></loc-issue-step4>
+
+			<loc-issue-step5 *ngIf="5 === this.CurrentStep" [LocInstance]="this.LocInstance"></loc-issue-step5>
+		</div>
+
+		<div class="right-part">
+			<div class="vertical-dots">
+				<div class="dots-holder"></div>
+			</div>
+
+			<loc-issue-steps [CurrentStep]="this.CurrentStep"></loc-issue-steps>
+		</div>
+	</div>
+	<div class="issue-footer">
+		<psb-button [type]="ButtonType.Primary" (click)="this.NextEvent()"> Далее </psb-button>
+	</div>
+</div>

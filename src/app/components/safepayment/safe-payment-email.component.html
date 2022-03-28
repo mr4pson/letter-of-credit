@@ -1,0 +1,9 @@
+<div class="email-holder">
+	<psb-text-input label="Email" [formControl]="EmailFormControl" class="email-form-field"></psb-text-input>
+
+	<svg *ngIf="this.EmailFormControl.valid" class="green-check" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+		<path d="M12 20C16.4183 20 20 16.4183 20 12C20 7.58172 16.4183 4 12 4C7.58172 4 4 7.58172 4 12C4 16.4183 7.58172 20 12 20ZM8.67593 10.5117L11.0571 12.8928L15.725 8.22488L17.1392 9.6391L11.0571 15.7213L7.26172 11.9259L8.67593 10.5117Z" fill="#41B665" />
+	</svg>
+
+	<psb-button [type]="this.ButtonType.Text" [size]="ButtonSize.Medium" (click)="this.TakeEmail()" class="email-button"> Получить материалы </psb-button>
+</div>

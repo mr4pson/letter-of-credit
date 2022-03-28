@@ -1,0 +1,99 @@
+// ### colors
+$white: #fff;
+$white-alpha-20: rgba($white, 0.2);
+$white-alpha-40: rgba($white, 0.4);
+$white-alpha-70: rgba($white, 0.7);
+
+$black: #000;
+$black-alpha-87: rgba($black, 0.87);
+$black-alpha-60: rgba($black, 0.6);
+$black-alpha-54: rgba($black, 0.54);
+$black-alpha-50: rgba($black, 0.5);
+$black-alpha-40: rgba($black, 0.4);
+$black-alpha-38: rgba($black, 0.38);
+$black-alpha-28: rgba($black, 0.28);
+$black-alpha-24: rgba($black, 0.24);
+$black-alpha-20: rgba($black, 0.2);
+$black-alpha-12: rgba($black, 0.12);
+$black-alpha-6: rgba($black, 0.06);
+
+$main-blue: #383ad1;
+$main-blue-alpha-10: rgba($main-blue, 0.1);
+
+// ### text
+$text-main: $black-alpha-87;
+$text-secondary: $black-alpha-54;
+$text-inactive: $black-alpha-38;
+
+// ### background
+$bg-grey-super-light: #f5f5f5;
+$bg-grey-light: #f1f1f1;
+$bg-grey-blue: #f2f2f7;
+$bg-white: $white;
+$bg-blue-white: #f5f3ff;
+$bg-notification-info: #edf6ff;
+$bg-notification-error: #fcedef;
+$bg-notification-success: #f2faf4;
+$bg-notification-warning: #fef4f0;
+
+// ### status
+$status-error: #d0021b;
+$status-info: #00adef;
+$status-success: #41b665;
+$status-warning: #f26126;
+
+// ### border
+$border-main: $black-alpha-12;
+$border-light: $black-alpha-6;
+
+// ### product
+$product-44-fz: #5753c9;
+$product-account: #6074bc;
+$product-bookkeeping-free: #159ca7;
+$product-bookkeeping-pay: #159ca7;
+$product-acquiring: #6074bc;
+$product-corp-card: #6c98a8;
+$product-credit: #e4730a;
+$product-credit-for-salary: #62b244;
+$product-credit-holidays: #ea5616;
+$product-credit-online: #4c89f0;
+$product-credit-without-papers-20: #f57a08;
+$product-credit-without-papers: #6f69f3;
+$product-credit-without-papers-contract: #1b67e4;
+$product-gold-card: #dea755;
+$product-guarantees: #eca02e;
+$product-overdraft-online: #be9ae3;
+$product-salary: #3fa079;
+$product-sms-info: #ad62c6;
+$product-travel-card: #7964b2;
+
+// ### semaphore
+$semaphore-green: #94cf1a;
+$semaphore-yellow: #fef078;
+$semaphore-red: #ff3f33;
+
+// ### button
+$button-pressed: #232482;
+$button-disabled: #b7b8ee;
+$button-hover: #6061da;
+
+// ### indicator
+$indicator-empty: #ebebfa;
+$indicator-violet: #8058bf;
+$indicator-blue: #6698cf;
+$indicator-yellow: #ebce61;
+$indicator-teal: #66a7b6;
+$indicator-red: #d7816e;
+$indicator-purple: #bb59af;
+
+// ### badge
+$badge-background: #ebebfa;
+
+// ### chips
+$chips-border-selected-hovered: #d7d8f6;
+
+// ### input-select
+$selected-item-background: #ebebfa;
+
+// ### spinner
+$spinner-orange: #ea5614;

@@ -1,0 +1,23 @@
+@import "../../../assets/_colors.scss";
+
+.email-holder {
+	position: relative;
+	margin: 32px 0;
+
+	.email-form-field {
+		width: 300px;
+		display: inline-block;
+	}
+
+	.email-button {
+		position: absolute;
+		top: 22px;
+		margin-left: 20px;
+	}
+
+	.green-check {
+		position: absolute;
+		top: 27px;
+		left: 275px;
+	}
+}

@@ -1,0 +1,113 @@
+@import "../../../assets/colors";
+
+.issue-step4 {
+	padding-bottom: 24px;
+
+	.loc-date-holder {
+		.end-loc-date-holder {
+			width: 440px;
+
+			psb-tooltip {
+				margin-top: 31px;
+			}
+		}
+
+		.loc-date-length-holder {
+			display: flex;
+			justify-content: flex-end;
+		}
+	}
+
+	.doc-title {
+		display: inline-block;
+		margin: 40px 0 24px 0;
+		font-size: 20px;
+		line-height: 24px;
+		letter-spacing: 0.15px;
+
+		psb-tooltip {
+			margin-top: 5px;
+		}
+	}
+
+	.docs-holder {
+		background: #f5f5f5;
+		padding: 32px 16px;
+		margin-bottom: 24px;
+
+		.doc-fields {
+			display: flex;
+
+			.doc-field {
+				width: 300px;
+				display: inline-block;
+			}
+
+			.count-field {
+				width: 216px;
+				display: inline-block;
+				margin-left: 20px;
+			}
+		}
+
+		.only-orig-doc-holder {
+			display: inline-block;
+			margin-top: -10px;
+
+			psb-tooltip {
+				margin-top: 14px;
+			}
+		}
+
+		.doc-additional-field {
+			display: block;
+			margin-bottom: 24px;
+		}
+	}
+
+	.add-doc-holder {
+		background: #f5f5f5;
+		padding: 12px 16px;
+		display: flex;
+		justify-content: center;
+		cursor: pointer;
+
+		svg {
+			float: left;
+			margin-right: 10px;
+		}
+
+		span {
+			font-weight: bold;
+			font-size: 16px;
+			line-height: 24px;
+			color: $main-blue;
+		}
+	}
+
+	.el-doc-cb-holder {
+		padding-top: 40px;
+
+		psb-checkbox {
+			display: inline-block;
+			width: 530px;
+		}
+
+		psb-tooltip {
+			margin-top: 15px;
+		}
+	}
+
+	.allow-loc-by-parts-holder {
+		padding-top: 20px;
+
+		psb-checkbox {
+			display: inline-block;
+			width: 540px;
+		}
+
+		psb-tooltip {
+			margin: 15px 0 0 0;
+		}
+	}
+}

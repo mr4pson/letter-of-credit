@@ -1,0 +1,88 @@
+@import "assets/indigo-pink.css";
+
+@import "assets/_colors.scss";
+
+.loc-backdrop {
+	background-color: $black-alpha-50;
+
+	& + .cdk-global-overlay-wrapper {
+		display: flex !important;
+		text-align: left !important;
+	}
+}
+
+.loc-overlay-spinner {
+	mat-dialog-container {
+		display: flex;
+		align-items: center;
+		background: transparent;
+		box-shadow: none;
+	}
+}
+
+.loc-overlay {
+	max-width: 100vw !important;
+
+	&.loc-payment {
+		mat-dialog-container {
+			width: 840px !important;
+		}
+	}
+
+	.mat-dialog-container {
+		margin-left: auto;
+		margin-right: auto;
+	}
+
+	.success-modal {
+		.status-icon,
+		psb-heading {
+			text-align: left;
+		}
+	}
+}
+
+loc-inner,
+.loc-overlay {
+	a,
+	.main-color {
+		color: $main-blue !important;
+	}
+
+	.checkbox .checkbox-label {
+		color: $black-alpha-87;
+		padding-left: 0;
+	}
+
+	psb-button {
+		display: inline-block;
+	}
+
+	psb-tooltip psb-icon svg {
+		color: $black-alpha-38 !important;
+	}
+}
+
+loc-inner {
+	.simplebar-track.simplebar-horizontal .simplebar-scrollbar {
+		height: 4px !important;
+
+		&::before {
+			background: $black-alpha-12 !important;
+		}
+	}
+
+	ngx-dropzone-remove-badge {
+		opacity: 1 !important;
+		background: $black-alpha-24 !important;
+
+		&:hover {
+			background: $main-blue !important;
+		}
+	}
+
+	psb-hint {
+		max-height: 50px;
+		overflow: hidden;
+	}
+}

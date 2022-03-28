@@ -1,0 +1,16 @@
+<div class="issue-step5" [formGroup]="this.Issue5Group">
+	<p class="step-title">В течение одного рабочего дня после отправки заявления с вами свяжется сотрудник банка, обработает вашу заявку и выпустит покрытый аккредитив для безопасного платежа вашему контрагенту.</p>
+
+	<label class="agree-label">
+		<psb-checkbox formControlName="AgreeWithTerms" name="only-orig-doc"></psb-checkbox>
+		<span class="label-text">Я согласен с <a href="https://www.psbank.ru/MediumBusiness/CashService/RKO/Documentary" target="_blank">условиями открытия</a> аккредитива</span>
+	</label>
+
+	<psb-checkbox label="Создать шаблон аккредитива" formControlName="CreateLocTemplate" name="only-orig-doc"></psb-checkbox>
+
+	<h2 class="contact-title">Контактные данные для уточнения вопросов:</h2>
+
+	<psb-text-input class="contact-fio" label="ФИО ответственного" formControlName="ContactPersone"></psb-text-input>
+
+	<psb-phone-input class="contact-phone" label="Контактный телефон ответственного" formControlName="ContactPhone"></psb-phone-input>
+</div>
