@@ -8,29 +8,28 @@ import {PaymentForm} from "./payment-form";
 import {SafePaymentButton} from "./safe-payment-button";
 
 export class SafePaymentHelper {
-	private PaymentForm: PaymentForm;
+	private paymentForm: PaymentForm;
 
 	private readonly NewSafePayButtonClassName = "js-new-button";
 	private readonly OldPayButtonHideClassName = "hidden";
 
 	constructor(
-		private Store: StoreService,
-		private Dialog: MatDialog,
-		private AccountServiceInstance: AccountService,
+		private store: StoreService,
+		private dıalog: MatDialog,
+		private accountServiceInstance: AccountService,
 	) {
-		this.PaymentForm = new PaymentForm();
+		this.paymentForm = new PaymentForm();
 	}
 
 	public HookMainPagePaymentButton(): void {
-		const that = this;
 		let listenerAdded = false;
-		let observer = new MutationObserver(function () {
+		let observer = new MutationObserver(() => {
 			if (document.location.pathname.indexOf("/main") < 0) {
 				listenerAdded = false;
 				return;
 			}
 
-			let newPaymentButton = that.PaymentForm.GetMainPagePaymentButtonElement();
+			let newPaymentButton = this.paymentForm.GetMainPagePaymentButtonElement();
 			if (null === newPaymentButton) {
 				listenerAdded = false;
 				return;
@@ -40,28 +39,27 @@ export class SafePaymentHelper {
 				return;
 			}
 
-			newPaymentButton.addEventListener("click", function () {
-				that.Store.RestoreDefaultState();
-				that.NewPaymentButtonListener(that);
+			newPaymentButton.addEventListener("click", () => {
+				this.store.RestoreDefaultState();
+				this.NewPaymentButtonListener();
 			});
 
 			listenerAdded = true;
 		});
 
-		observer.observe(document.querySelector("smb-app"), {"subtree": true, "childList": true});
+		// observer.observe(document.querySelector("smb-app"), {"subtree": true, "childList": true});
 	}
 
 	public HookDocPagePaymentButton(): void {
-		const that = this;
 		let listenerAdded = false;
 
-		let observer = new MutationObserver(function () {
+		let observer = new MutationObserver(() => {
 			if (document.location.pathname.indexOf("/documents") < 0) {
 				listenerAdded = false;
 				return;
 			}
 
-			let newPaymentButton = that.PaymentForm.GetDocPagePaymentButtonElement();
+			let newPaymentButton = this.paymentForm.GetDocPagePaymentButtonElement();
 			if (null === newPaymentButton) {
 				listenerAdded = false;
 				return;
@@ -71,39 +69,39 @@ export class SafePaymentHelper {
 				return;
 			}
 
-			newPaymentButton.addEventListener("click", function () {
-				that.Store.RestoreDefaultState();
-				that.NewPaymentButtonListener(that);
+			newPaymentButton.addEventListener("click", () => {
+				this.store.RestoreDefaultState();
+				this.NewPaymentButtonListener();
 			});
 
 			listenerAdded = true;
 		});
 
-		observer.observe(document.querySelector("smb-app"), {"subtree": true, "childList": true});
+		// observer.observe(document.querySelector("smb-app"), {"subtree": true, "childList": true});
 	}
 
-	private NewPaymentButtonListener(that: SafePaymentHelper): void {
-		let element = that.PaymentForm.GetOverlayContainer();
+	private NewPaymentButtonListener(): void {
+		let element = this.paymentForm.GetOverlayContainer();
 		if (null !== element) {
-			that.SetSavePaymentButtonsClickEvent(that);
+			this.SetSavePaymentButtonsClickEvent();
 			return;
 		}
 
-		let observer = new MutationObserver(function () {
-			element = that.PaymentForm.GetOverlayContainer();
+		let observer = new MutationObserver(() => {
+			element = this.paymentForm.GetOverlayContainer();
 			if (null === element) {
 				return;
 			}
 
 			observer.disconnect();
-			that.SetSavePaymentButtonsClickEvent(that);
+			this.SetSavePaymentButtonsClickEvent();
 		});
 
 		observer.observe(document.body, {"subtree": true, "childList": true});
 	}
-	private SetSavePaymentButtonsClickEvent(that: SafePaymentHelper): void {
-		let observer = new MutationObserver(function () {
-			let buttons = that.PaymentForm.GetSavePaymentButtons();
+	private SetSavePaymentButtonsClickEvent(): void {
+		let observer = new MutationObserver(() => {
+			let buttons = this.paymentForm.GetSavePaymentButtons();
 
 			if (null === buttons) {
 				return;
@@ -116,81 +114,83 @@ export class SafePaymentHelper {
 
 				let newElement = oldElement.cloneNode(true);
 
-				(oldElement as HTMLElement)?.classList.add(that.OldPayButtonHideClassName);
-				(newElement as HTMLElement)?.classList.add(that.NewSafePayButtonClassName);
+				(oldElement as HTMLElement)?.classList.add(this.OldPayButtonHideClassName);
+				(newElement as HTMLElement)?.classList.add(this.NewSafePayButtonClassName);
 
 				oldElement.parentNode.appendChild(newElement);
 
-				newElement.addEventListener("click", function () {
-					that.SavePaymentButtonsClickEventAsync(that);
+				newElement.addEventListener("click", () => {
+					this.SavePaymentButtonsClickEventAsync();
 				});
 			}
 		});
 
-		observer.observe(that.PaymentForm.GetOverlayContainer(), {"subtree": true, "childList": true});
+		observer.observe(this.paymentForm.GetOverlayContainer(), {"subtree": true, "childList": true});
 	}
 
-	private async SavePaymentButtonsClickEventAsync(that: SafePaymentHelper) {
-		if (!that.PaymentForm.IsValidForm()) {
-			this.ClickSavePaymentButton(that);
+	private async SavePaymentButtonsClickEventAsync() {
+		if (!this.paymentForm.IsValidForm()) {
+			this.ClickSavePaymentButton();
 
 			return;
 		}
 
-		that.Store.ReciverInn = that.PaymentForm.FormValues[PaymentFields.ReceiverInn];
-		if (!await that.IsShowLoC(that)) {
-			this.ClickSavePaymentButton(that);
+		this.store.ReciverInn = this.paymentForm.FormValues[PaymentFields.ReceiverInn];
+		if (!await this.IsShowLoC()) {
+			this.ClickSavePaymentButton();
 			return;
 		}
 
-		that.Store.ReciverName = that.PaymentForm.FormValues[PaymentFields.ReceiverName];
-		that.Store.ReciverBankBik = that.PaymentForm.FormValues[PaymentFields.ReceiverBankBik];
-		that.Store.ReciverBankName = that.PaymentForm.FormValues[PaymentFields.ReceiverBankName];
-		that.Store.ReciverAccount = that.PaymentForm.FormValues[PaymentFields.ReceiverAccount];
-		if (!!that.PaymentForm.FormValues[PaymentFields.PaymentSum] && that.PaymentForm.FormValues[PaymentFields.PaymentSum].trim().length > 0) {
-			that.Store.PaymentSum = parseInt(that.PaymentForm.FormValues[PaymentFields.PaymentSum].replace(/(\D)/g, ''));
+		this.store.ReciverName = this.paymentForm.FormValues[PaymentFields.ReceiverName];
+		this.store.ReciverBankBik = this.paymentForm.FormValues[PaymentFields.ReceiverBankBik];
+		this.store.ReciverBankName = this.paymentForm.FormValues[PaymentFields.ReceiverBankName];
+		this.store.ReciverAccount = this.paymentForm.FormValues[PaymentFields.ReceiverAccount];
+		if (!!this.paymentForm.FormValues[PaymentFields.PaymentSum] && this.paymentForm.FormValues[PaymentFields.PaymentSum].trim().length > 0) {
+			this.store.PaymentSum = parseInt(this.paymentForm.FormValues[PaymentFields.PaymentSum].replace(/(\D)/g, ''));
 		}
 
-		that.OpenPaymentDialog(that);
+		this.OpenPaymentDialog();
 	}
 
-	public async IsShowLoC(that: SafePaymentHelper): Promise<boolean> {
-		that.Store.OpenWaitDialog();
+	public async IsShowLoC(): Promise<boolean> {
+		this.store.OpenWaitDialog();
 
-		if (!await that.AccountServiceInstance.GetAllowLoCAsync(that.Store.ReciverInn)) {
-			if (null !== that.AccountServiceInstance.LastError) {
+		const isLoCAllowed = await this.accountServiceInstance.GetAllowLoC(this.store.ReciverInn);
+		if (!isLoCAllowed) {
+			if (this.accountServiceInstance.lastError) {
 				alert("Не удалось получить информацию о возможности запроса аккредитива.");
 			}
-
-			that.Store.CloseWaitDialog();
+			
+			this.store.CloseWaitDialog();
 
 			return false;
 		}
 
-		if (!await that.AccountServiceInstance.GetIsBadReliabilityAsync(that.Store.ReciverInn)) {
-			if (null !== that.AccountServiceInstance.LastError) {
+		const isBadReliability = await this.accountServiceInstance.GetIsBadReliability(this.store.ReciverInn);
+		if (!isBadReliability) {
+			if (this.accountServiceInstance.lastError) {
 				alert("Не удалось получить информацию о рейтинге контрагента.");
 			}
 
-			that.Store.CloseWaitDialog();
+			this.store.CloseWaitDialog();
 
 			return false;
 		}
 
-		that.Store.CloseWaitDialog();
+		this.store.CloseWaitDialog();
 
 		return true;
 	}
 
-	private ClickSavePaymentButton(that: SafePaymentHelper) {
-		let buttons = that.PaymentForm.GetSavePaymentButtons();
+	private ClickSavePaymentButton() {
+		let buttons = this.paymentForm.GetSavePaymentButtons();
 		if (null !== buttons && buttons.length > 0) {
 			(buttons[0] as HTMLButtonElement)?.click();
 		}
 	}
 
-	private OpenPaymentDialog(that: SafePaymentHelper): void {
-		if (!that.PaymentForm.HidePaymentDialog()) {
+	private OpenPaymentDialog(): void {
+		if (!this.paymentForm.HidePaymentDialog()) {
 			alert("Ошибка при переключении на запрос аккредитива.");
 			return;
 		}
@@ -200,8 +200,8 @@ export class SafePaymentHelper {
 			component: SafePaymentComponent,
 		};
 
-		setTimeout(function () {
-			that.Store.SafePaymentDialog = that.Dialog.open(BaseModalComponent, {
+		setTimeout(() => {
+			this.store.SafePaymentDialog = this.dıalog.open(BaseModalComponent, {
 				data: {
 					...exampleData,
 				},
@@ -209,33 +209,33 @@ export class SafePaymentHelper {
 				backdropClass: "loc-backdrop"
 			});
 
-			that.Store.SafePaymentDialog.afterClosed().subscribe(result => {
+			this.store.SafePaymentDialog.afterClosed().subscribe(result => {
 				switch (result) {
 					case SafePaymentButton.RefusePay:
-						that.DoRefusePay(that);
+						this.DoRefusePay();
 						break;
 					case false:
 					case SafePaymentButton.OrdinalPay:
-						that.DoOrdinalPay(that);
+						this.DoOrdinalPay();
 						break;
 				}
 			});
 		}, 33);
 	}
-	private DoOrdinalPay(that: SafePaymentHelper) {
-		let buttons = that.PaymentForm.GetSavePaymentButtons();
+	private DoOrdinalPay() {
+		let buttons = this.paymentForm.GetSavePaymentButtons();
 		for (let i = 0; i < buttons.length; i++) {
 			let item = <HTMLButtonElement>buttons[i];
-			if (!item.classList.contains(that.NewSafePayButtonClassName)) {
-				item.classList.remove(that.OldPayButtonHideClassName);
+			if (!item.classList.contains(this.NewSafePayButtonClassName)) {
+				item.classList.remove(this.OldPayButtonHideClassName);
 				continue;
 			}
 			item.remove();
 		}
 
-		this.PaymentForm.ShowPaymentDialog();
+		this.paymentForm.ShowPaymentDialog();
 	}
-	private DoRefusePay(that: SafePaymentHelper) {
-		that.PaymentForm.ClosePaymentDialog();
+	private DoRefusePay() {
+		this.paymentForm.ClosePaymentDialog();
 	}
 }

@@ -1,173 +1,192 @@
-import {Injectable} from "@angular/core";
-import {HttpClient} from "@angular/common/http";
-import {ServiceBase} from "./service-base";
-import {StoreService} from "./state.service";
-import {ApiAccountList} from "../classes/interfaces/api-account-list.interface";
-import {ApiAccount} from "../classes/interfaces/api-account.interface";
-import {ReciverStatus} from "../classes/reciver-status";
-import {ClientSearch} from "../classes/interfaces/client-search.interface";
-import {BankSearch} from "../classes/interfaces/bank-search.interface";
+import { HttpClient } from "@angular/common/http";
+import { Injectable } from "@angular/core";
+import { Observable, of } from "rxjs";
+import { catchError, filter, map } from "rxjs/operators";
+import { LetterService } from "src/api/services";
+import { ApiAccountList } from "../classes/interfaces/api-account-list.interface";
+import { ApiAccount } from "../classes/interfaces/api-account.interface";
+import { BankSearch } from "../classes/interfaces/bank-search.interface";
+import { ClientSearch } from "../classes/interfaces/client-search.interface";
+import { ReciverStatus } from "../classes/reciver-status";
+import { StorageService } from "../services/storage.service";
+import { ReliabilityResult } from "./reliability.interface";
+import { StoreService } from "./state.service";
 
 @Injectable()
-export class AccountService extends ServiceBase {
-	public LastError: object = null;
+export class AccountService {
+	public lastError: object = null;
 
-	constructor(HttpClientInstance: HttpClient, public Store: StoreService) {
-		super(HttpClientInstance);
+	constructor(
+		public store: StoreService,
+		public storage: StorageService,
+		private http: HttpClient,
+		private letterService: LetterService
+	) {}
+
+	public GetAllowLoC(reciverINN: string): Observable<boolean> {
+		this.lastError = null;
+
+		return this.letterService
+			.apiLcIsLcOffersEnabledClientIdGet({
+				clientId: this.storage.getClientID(),
+				branchId: this.storage.getBranchID(),
+				contractor: reciverINN,
+			})
+			.pipe(
+				map((result: any) => {
+					return !!result?.canShowOffer;
+				}),
+				catchError((error) => {
+					this.lastError = error;
+
+					return of(false);
+				})
+			);
 	}
 
-	public async GetAllowLoCAsync(reciverINN: string): Promise<boolean> {
-		this.LastError = null;
+	public GetIsBadReliability(reciverINN: string): Observable<boolean> {
+		this.lastError = null;
 
-		let url = this.ApiDomain + `api/LC/isLCOffersEnabled/${this.ClientID}?branchId=${this.BranchID}&Contractor=${reciverINN}`;
+		// This request isn't from swagger
+		const url =
+			this.storage.apiDomain +
+			`api/Document/reliability/${reciverINN}?v=${this.storage.apiVersion}`;
 
-		try {
-			let result: {canShowOffer: boolean} = await this.GetAsync(url, this.HttpOptions);
+		return this.http.get(url).pipe(
+			map((reliability: ReliabilityResult) => {
+				this.setReciverStatus(reciverINN, reliability);
 
-			return !!result?.canShowOffer;
-		} catch (error: any) {
-			if (401 === error.status) {
-				document.location.href = "/";
+				return (
+					reliability.yellow ||
+					reliability.red ||
+					(!reliability.red &&
+						!reliability.yellow &&
+						!reliability.green)
+				);
+			}),
+			catchError((error) => {
+				this.lastError = error;
+
+				return of(false);
+			})
+		);
+	}
+
+	private setReciverStatus(
+		reciverINN: string,
+		reliability: ReliabilityResult
+	): void {
+		if (this.store.ReciverInn === reciverINN) {
+			if (reliability.red) {
+				this.store.ReciverStatus = ReciverStatus.Unreliable;
+			} else if (reliability.yellow) {
+				this.store.ReciverStatus = ReciverStatus.PartlyReliable;
+			} else {
+				this.store.ReciverStatus = ReciverStatus.Reliable;
 			}
-			this.LastError = error;
 		}
-
-		return false;
 	}
 
-	public async GetIsBadReliabilityAsync(reciverINN: string): Promise<boolean> {
-		this.LastError = null;
+	public SetDisableLoCOffers(reciverINN: string): Observable<boolean> {
+		this.lastError = null;
 
-		let url = this.ApiDomain + `api/Document/reliability/${reciverINN}?v=${this.ApiVersion}`;
+		return this.letterService
+			.apiLcEnableLcOffersClientIdPost$Json({
+				clientId: this.storage.getClientID(),
+				branchId: this.storage.getBranchID(),
+				contractor: reciverINN,
+			})
+			.pipe(
+				map((response) => {
+					if (!response && response.success) {
+						return true;
+					}
+				}),
+				catchError((error) => {
+					this.lastError = error;
 
-		try {
-			let result: {red: boolean, yellow: boolean, green: boolean} = await this.GetAsync(url, this.HttpOptions);
+					return of(false);
+				})
+			);
+	}
 
-			if (this.Store.ReciverInn === reciverINN) {
-				if (result.red) {
-					this.Store.ReciverStatus = ReciverStatus.Unreliable;
-				} else if (result.yellow) {
-					this.Store.ReciverStatus = ReciverStatus.PartlyReliable;
-				} else {
-					this.Store.ReciverStatus = ReciverStatus.Reliable;
+	public GetAccountList(): Observable<ApiAccount[]> {
+		this.lastError = null;
+
+		const url =
+			this.storage.apiDomain +
+			`api/Account/clients/${this.storage.getClientID()}?branchId=${this.storage.getBranchID()}&account=${this.storage.getAccountID()}&v=${
+				this.storage.apiVersion
+			}`;
+
+		return this.http.get<ApiAccountList>(url).pipe(
+			map((response) => {
+				// if (response?.accounts?.length === 0) {
+				if (
+					!response ||
+					!response.accounts ||
+					0 === response.accounts.length
+				) {
+					return null;
 				}
-			}
 
-			return result.yellow || result.red || (!result.red && !result.yellow && !result.green);
-		} catch (error: any) {
-			if (401 === error.status) {
-				document.location.href = "/";
-			}
-			this.LastError = error;
-		}
+				return response.accounts;
+			}),
+			catchError((error) => {
+				this.lastError = error;
 
-		return false;
+				return of([]);
+			})
+		);
 	}
 
-	public async SetDisableLoCOffersAsync(reciverINN: string): Promise<boolean> {
-		this.LastError = null;
+	public GetCommision(total: number): Observable<number> {
+		this.lastError = null;
 
-		let url = this.ApiDomain + `api/LC/enableLCOffers/${this.ClientID}?branchId=${this.BranchID}&contractor=${reciverINN}`;
+		const url =
+			this.storage.apiDomain +
+			`api/LC/calculateCommission?total=${total}`;
 
-		try {
-			let result = await this.PostAsync(url, null, this.HttpOptions);
+		return this.http.get<{ commissionValue: number }>(url).pipe(
+			map((response) => response?.commissionValue),
+			catchError((error) => {
+				this.lastError = error;
 
-			if (null !== result && result.success) {
-				return true;
-			}
-		} catch (error: any) {
-			if (401 === error.status) {
-				document.location.href = "/";
-			}
-			this.LastError = error;
-		}
-
-		return false;
+				return of(0);
+			})
+		);
 	}
 
-	public async GetAccountListAsync(): Promise<ApiAccount[]> {
-		this.LastError = null;
+	public SearchClientByInn(inn: string): Observable<ClientSearch[]> {
+		this.lastError = null;
 
-		let url = this.ApiDomain + `api/Account/clients/${this.ClientID}?branchId=${this.BranchID}&account=${this.AccountID}&v=${this.ApiVersion}`;
+		const url =
+			this.storage.apiDomain +
+			`api/Document/clients/searchByInn/${inn}?v=${this.storage.apiVersion}`;
 
-		try {
-			let result: ApiAccountList = await this.GetAsync(url, this.HttpOptions);
-
-			if (!result || !result.accounts || 0 === result.accounts.length) {
-				return null;
-			}
-
-			return result.accounts;
-		} catch (error: any) {
-			if (401 === error.status) {
-				document.location.href = "/";
-			}
-			this.LastError = error;
-		}
-
-		return null;
+		return this.http.get<ClientSearch[]>(url).pipe(
+			filter((result) => result?.length > 0),
+		);
 	}
 
-	public async GetCommisionAsync(total: number): Promise<number> {
-		this.LastError = null;
+	public SearchBankByBik(bik: string): Observable<BankSearch> {
+		this.lastError = null;
 
-		let url = this.ApiDomain + `api/LC/calculateCommission?total=${total}`;
+		const url =
+			this.storage.apiDomain +
+			`api/Document/getReceiverBanks/${bik}?v=${this.storage.apiVersion}`;
 
-		try {
-			let result: {"commissionValue": number} = await this.GetAsync(url, this.HttpOptions);
+		return this.http.get<ClientSearch[]>(url).pipe(
+			map((response) => {
+				if (response && response.length > 0) {
+					return response[0];
+				}
+			}),
+			catchError((error) => {
+				this.lastError = error;
 
-			if (null !== result && !!result.commissionValue) {
-				return result.commissionValue;
-			}
-		} catch (error: any) {
-			if (401 === error.status) {
-				document.location.href = "/";
-			}
-			this.LastError = error;
-		}
-
-		return 0;
-	}
-
-	public async SearchClientByInn(inn: string): Promise<ClientSearch[]> {
-		this.LastError = null;
-
-		let url = this.ApiDomain + `api/Document/clients/searchByInn/${inn}?v=${this.ApiVersion}`;
-
-		try {
-			let result: ClientSearch[] = await this.GetAsync(url, this.HttpOptions);
-
-			if (null !== result && result.length > 0) {
-				return result;
-			}
-		} catch (error: any) {
-			if (401 === error.status) {
-				document.location.href = "/";
-			}
-			this.LastError = error;
-		}
-
-		return [];
-	}
-
-	public async SearchBankByBik(bik: string): Promise<BankSearch> {
-		this.LastError = null;
-
-		let url = this.ApiDomain + `api/Document/getReceiverBanks/${bik}?v=${this.ApiVersion}`;
-
-		try {
-			let result: BankSearch[] = await this.GetAsync(url, this.HttpOptions);
-
-			if (null !== result && result.length > 0) {
-				return result[0];
-			}
-		} catch (error: any) {
-			if (401 === error.status) {
-				document.location.href = "/";
-			}
-			this.LastError = error;
-		}
-
-		return null;
+				return of(null);
+			})
+		);
 	}
 }

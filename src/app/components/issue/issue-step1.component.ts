@@ -83,8 +83,8 @@ export class IssueStep1Component implements OnInit {
 		}
 		this.CommisionRequestStarted = true;
 		let sum = this.Issue1Group.controls.IssueSum.value as number;
-		let result: number = await this.AccountServiceInstance.GetCommisionAsync(sum);
-		if (null !== this.AccountServiceInstance.LastError) {
+		let result: number = await this.AccountServiceInstance.GetCommision(sum).toPromise();
+		if (null !== this.AccountServiceInstance.lastError) {
 			alert("Ошибка при получении размера коммисии.");
 		}
 		this.Commission = result;

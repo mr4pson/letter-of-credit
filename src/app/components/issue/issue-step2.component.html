@@ -21,7 +21,7 @@
 
 	<div class="reciver-bank-holder">
 		<psb-text-input class="reciver-bik-field" label="БИК" formControlName="BikControl" [maskSettings]="{mask: '000000000'}"
-			[description]="this.LocInstance.ReciverBankName"></psb-text-input>
+			[description]="this.LocInstance?.ReciverBankName"></psb-text-input>
 
 
 		<psb-text-input class="reciver-acc-field" label="Расчётный счёт" formControlName="AccountControl"

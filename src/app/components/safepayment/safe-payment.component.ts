@@ -134,8 +134,8 @@ export class SafePaymentComponent {
 		}
 		this.IsDisableOffersCalled = true;
 
-		let result = await this.AccountServiceInstance.SetDisableLoCOffersAsync(this.Store.ReciverInn);
-		if (!result && null !== this.AccountServiceInstance.LastError) {
+		let result = await this.AccountServiceInstance.SetDisableLoCOffers(this.Store.ReciverInn);
+		if (!result && null !== this.AccountServiceInstance.lastError) {
 			alert("Не удалось изменить режим предложения покрытого аккредитива.");
 		}
 

@@ -52,7 +52,7 @@ export class IssueComponent implements OnInit {
 			}
 		});
 
-		observer.observe(document.querySelector("smb-app"), {"subtree": true, "childList": true});
+		// observer.observe(document.querySelector("smb-app"), {"subtree": true, "childList": true});
 
 		this.Store.SetIssueComponent(this);
 	}

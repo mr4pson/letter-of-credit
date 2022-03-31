@@ -1,37 +1,42 @@
-import {HttpClient} from "@angular/common/http";
-import {Injectable} from "@angular/core";
-import {Partner} from "../classes/interfaces/api-partner.interface";
-import {ServiceBase} from "./service-base";
-import {StoreService} from "./state.service";
+import { HttpClient } from "@angular/common/http";
+import { Injectable } from "@angular/core";
+import { of } from "rxjs";
+import { catchError, map } from "rxjs/operators";
+import { Partner } from "../classes/interfaces/api-partner.interface";
+import { StorageService } from "../services/storage.service";
 
 @Injectable()
-export class PartnersService extends ServiceBase {
-	public LastError: object = null;
+export class PartnersService {
+	public lastError: object = null;
 
-	constructor(HttpClientInstance: HttpClient, public Store: StoreService) {
-		super(HttpClientInstance);
-	}
+	constructor(
+		private http: HttpClient,
+		public storage: StorageService
+	) {}
 
 	public async GetListAsync(): Promise<Partner[]> {
-		this.LastError = null;
+		this.lastError = null;
 
-		let url = this.ApiDomain + `api/EDOWAR/partners/partners?v=${this.ApiVersion}`;
+		const url =
+			this.storage.apiDomain +
+			`api/EDOWAR/partners/partners?v=${this.storage.apiVersion}`;
 
-		try {
-			let result: Partner[] = await this.GetAsync(url, this.HttpOptions);
+		return this.http
+			.get<Partner[]>(url)
+			.pipe(
+				map((partners) => {
+					if (!partners || !partners.length) {
+						return null;
+					}
 
-			if (!result || 0 === result.length) {
-				return null;
-			}
+					return partners;
+				}),
+				catchError((error) => {
+					this.lastError = error;
 
-			return result;
-		} catch (error: any) {
-			if (401 === error.status) {
-				document.location.href = "/";
-			}
-			this.LastError = error;
-		}
-
-		return [];
+					return of([]);
+				})
+			)
+			.toPromise();
 	}
 }

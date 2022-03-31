@@ -58,8 +58,13 @@ loc-inner,
 		display: inline-block;
 	}
 
+	psb-tooltip {
+		height: 16px;
+	}
+
 	psb-tooltip psb-icon svg {
 		color: $black-alpha-38 !important;
+		cursor: pointer;
 	}
 }
 

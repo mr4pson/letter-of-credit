@@ -1,6 +1,6 @@
 import {BrowserModule} from '@angular/platform-browser';
-import {NgModule, LOCALE_ID} from '@angular/core';
-import {HttpClientModule} from "@angular/common/http";
+import {NgModule, LOCALE_ID, ApplicationRef} from '@angular/core';
+import {HttpClientModule, HTTP_INTERCEPTORS} from "@angular/common/http";
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {ReactiveFormsModule} from '@angular/forms';
 
@@ -48,6 +48,14 @@ import {BaseModalModule} from "@psb/fe-ui-kit/src/components/base-modal";
 import {TemplateTypeModule} from "@psb/fe-ui-kit/src/directives/template-type";
 import {PhoneInputModule} from "@psb/fe-ui-kit/src/components/phone-input";
 import {HeadingModule} from "@psb/fe-ui-kit/src/components/heading";
+import { ApiModule } from 'src/api/api.module';
+import { ApiConfigurationParams } from 'src/api/api-configuration';
+
+import { removeNgStyles, createNewHosts, createInputTransfer } from '@angularclass/hmr';
+import { StorageService } from './services/storage.service';
+import { HttpErrorInterceptor } from './http-error.interceptor';
+import { NoticeModule } from '@psb/fe-ui-kit';
+import { ErrorHandlerService } from './services/error-handler.service';
 
 @NgModule({
 	declarations: [
@@ -68,6 +76,7 @@ import {HeadingModule} from "@psb/fe-ui-kit/src/components/heading";
 		IssueStep5Component,
 	],
 	imports: [
+		ApiModule.forRoot({ rootUrl: "" } as ApiConfigurationParams),
 		BrowserModule,
 		BrowserAnimationsModule,
 		HttpClientModule,
@@ -93,10 +102,49 @@ import {HeadingModule} from "@psb/fe-ui-kit/src/components/heading";
 		DatepickerModule,
 		BaseModalModule,
 		PhoneInputModule,
+		NoticeModule,
 	],
 	providers: [
 		{provide: LOCALE_ID, useValue: 'ru'},
+		{ provide: HTTP_INTERCEPTORS, useClass: HttpErrorInterceptor, multi: true },
+		StorageService,
+		ErrorHandlerService,
 	],
 	bootstrap: [AppComponent]
 })
-export class AppModule { }
+export class AppModule {
+	constructor(public appRef: ApplicationRef) {}
+  hmrOnInit(store) {
+    if (!store || !store.state) return;
+    console.log('HMR store', store);
+    console.log('store.state.data:', store.state.data)
+    // inject AppStore here and update it
+    // this.AppStore.update(store.state)
+    if ('restoreInputValues' in store) {
+      store.restoreInputValues();
+    }
+    // change detection
+    this.appRef.tick();
+    delete store.state;
+    delete store.restoreInputValues;
+  }
+  hmrOnDestroy(store) {
+    var cmpLocation = this.appRef.components.map(cmp => cmp.location.nativeElement);
+    // recreate elements
+    store.disposeOldHosts = createNewHosts(cmpLocation)
+    // inject your AppStore and grab state then set it on store
+    // var appState = this.AppStore.get()
+    store.state = {data: 'yolo'};
+    // store.state = Object.assign({}, appState)
+    // save input values
+    store.restoreInputValues  = createInputTransfer();
+    // remove styles
+    removeNgStyles();
+  }
+  hmrAfterDestroy(store) {
+    // display new elements
+    store.disposeOldHosts()
+    delete store.disposeOldHosts;
+    // anything you need done the component is removed
+  }
+}

@@ -3,9 +3,11 @@
 	"version": "1.0.0",
 	"scripts": {
 		"ng": "ng",
+		"hmr": "ng serve --configuration hmr",
 		"start": "ng serve --liveReload=true --open",
 		"build": "ng build --outputPath=../../server/www/inner --prod=true --optimization=true --commonChunk=true --aot=true --buildOptimizer=true --vendor-chunk=true --progress=true --sourceMap=false --base-href /",
-		"build-light": "ng build --outputPath=../../server/www/inner --prod=false --commonChunk=true --vendor-chunk=true --progress=true --sourceMap=false --base-href /"
+		"build-light": "ng build --outputPath=../../server/www/inner --prod=false --commonChunk=true --vendor-chunk=true --progress=true --sourceMap=false --base-href /",
+		"open-api-codegen": "ng-openapi-gen --input open-api.json --output src/api"
 	},
 	"private": true,
 	"dependencies": {
@@ -22,6 +24,7 @@
 		"@psb/fe-ui-kit": "file:modules/fe-ui-kit-2.27.0.tgz",
 		"@psb/icons": "file:modules/icons-0.3.0.tgz",
 		"@psb/validations": "file:modules/validations-0.14.0.tgz",
+		"@w11k/ngx-componentdestroyed": "^5.0.2",
 		"angular-imask": "~6.2.2",
 		"ngx-dropzone": "~3.0.0",
 		"ngx-mask": "^12.0.0",
@@ -35,6 +38,7 @@
 		"@angular-devkit/build-angular": "~0.1002.3",
 		"@angular/cli": "~10.2.3",
 		"@angular/compiler-cli": "~10.2.5",
+		"@angularclass/hmr": "^3.0.0",
 		"@types/node": "^12.20.33",
 		"remove-files-webpack-plugin": "^1.4.5",
 		"ts-node": "~8.3.0",

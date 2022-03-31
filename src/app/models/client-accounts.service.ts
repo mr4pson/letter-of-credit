@@ -4,23 +4,26 @@ import {ClientAccount} from "./client-account.model";
 
 @Injectable()
 export class ClientAccountsService {
-	constructor(private AccountServiceInstance: AccountService) { }
+	constructor(private accountServiceInstance: AccountService) { }
 
 	public async FetchAccountsAsync(): Promise<ClientAccount[]> {
-		let accounts: ClientAccount[] = [];
-		let result = await this.AccountServiceInstance.GetAccountListAsync();
-		if (0 == result?.length || null !== this.AccountServiceInstance.LastError) {
+		const accounts = await this.accountServiceInstance.GetAccountList().toPromise();
+
+		if (!accounts?.length || this.accountServiceInstance.lastError) {
 			alert("Ошибка при получении списка счетов.");
 			return;
 		}
 
-		for (let i = 0; i < result.length; i++) {
-			let account = new ClientAccount();
-			account.Balance = result[i].balance;
-			account.AccountCode = result[i].code;
-			accounts.push(account);
-		}
+		const newAccounts: ClientAccount[] = [];
 
-		return accounts;
+		accounts.forEach(account => {
+			const newAccount = new ClientAccount();
+			newAccount.Balance = account.balance;
+			newAccount.AccountCode = account.code;
+			accounts.push(account);
+		});
+		
+
+		return newAccounts;
 	}
 }

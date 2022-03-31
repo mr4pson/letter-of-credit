@@ -2,6 +2,8 @@ import {Component, Input, OnInit} from "@angular/core";
 import {FormControl, FormGroup} from "@angular/forms";
 import {InputAutocompleteComponent} from "@psb/fe-ui-kit/src/components/input-autocomplete/input-autocomplete.component";
 import {getRequiredFormControlValidator} from '@psb/validations/required';
+import { OnDestroyMixin, untilComponentDestroyed } from "@w11k/ngx-componentdestroyed";
+import { tap } from "rxjs/operators";
 import {Partner} from "src/app/classes/interfaces/api-partner.interface";
 import {ClientSearch} from "src/app/classes/interfaces/client-search.interface";
 import {AccountService} from "src/app/models/account.service";
@@ -13,7 +15,7 @@ import {PartnersService} from "src/app/models/partners.service";
 	templateUrl: "issue-step2.component.html",
 	styleUrls: ["issue-step2.component.scss"]
 })
-export class IssueStep2Component implements OnInit {
+export class IssueStep2Component extends OnDestroyMixin implements OnInit {
 	public Issue2Group = new FormGroup({
 		InnControl: new FormControl('', [
 			getRequiredFormControlValidator("Укажите ИНН контрагента"),
@@ -38,7 +40,9 @@ export class IssueStep2Component implements OnInit {
 	constructor(
 		private AccountServiceInstance: AccountService,
 		private Partners: PartnersService,
-	) { }
+	) { 
+		super();
+	}
 
 	ngOnInit() {
 		var that = this;
@@ -128,7 +132,7 @@ export class IssueStep2Component implements OnInit {
 		}
 	}
 
-	public async SearchInnAsync() {
+	public SearchInnAsync() {
 		let inn = this.Issue2Group.controls.InnControl.value.trim();
 		if (inn === this.CurrentSearchInn) {
 			return;
@@ -140,30 +144,37 @@ export class IssueStep2Component implements OnInit {
 			return;
 		}
 
-		let foundInnList: ClientSearch[] = await this.AccountServiceInstance.SearchClientByInn(inn);
 		this.FoundInnList = [];
-		if (foundInnList.length > 0) {
-			for (let index in foundInnList) {
-				foundInnList[index].innFound = foundInnList[index].inn.substring(0, inn.length);
-				foundInnList[index].innTail = foundInnList[index].inn.substring(inn.length);
-				this.FoundInnList.push(foundInnList[index]);
-			}
-		}
+		this.AccountServiceInstance.SearchClientByInn(inn).pipe(
+			tap(foundInnList => {
+				foundInnList.forEach(foundInn => {
+					foundInn.innFound = foundInn.inn.substring(0, inn.length);
+					foundInn.innTail = foundInn.inn.substring(inn.length);
+					this.FoundInnList.push(foundInn);
+				});
+			}),
+			untilComponentDestroyed(this),
+		).subscribe();
 	}
 
-	private async SearchBankAsync() {
+	private SearchBankAsync() {
 		this.Issue2Group.controls.BikControl.setErrors(null);
 
-		let bik = this.Issue2Group.controls.BikControl.value;
-		let bank = await this.AccountServiceInstance.SearchBankByBik(bik);
-		if (null === bank) {
-			this.Issue2Group.controls.BikControl.setErrors({"incorrect": "Банк не определен. Проверьте БИК"});
-			this.Issue2Group.controls.BikControl.markAsTouched();
-			this.LocInstance.ReciverBankName = "";
-			return;
-		}
-
-		this.LocInstance.ReciverBankName = bank.fullName;
-		this.LocInstance.ReciverBankBik = bik;
+		const bik = this.Issue2Group.controls.BikControl.value;
+		this.AccountServiceInstance.SearchBankByBik(bik).pipe(
+			tap(bank => {
+				if (null === bank) {
+					this.Issue2Group.controls.BikControl.setErrors({"incorrect": "Банк не определен. Проверьте БИК"});
+					this.Issue2Group.controls.BikControl.markAsTouched();
+					this.LocInstance.ReciverBankName = "";
+					return;
+				}
+		
+				this.LocInstance.ReciverBankName = bank.fullName;
+				this.LocInstance.ReciverBankBik = bik;
+			}),
+			untilComponentDestroyed(this),
+		).subscribe();
+		
 	}
 }
