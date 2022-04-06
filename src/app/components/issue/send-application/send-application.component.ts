@@ -4,11 +4,11 @@ import {getRequiredFormControlValidator} from "@psb/validations/required/validat
 import {LetterOfCredit} from "src/app/models/letter-of-credit.model";
 
 @Component({
-	selector: "loc-issue-step5",
-	templateUrl: "issue-step5.component.html",
-	styleUrls: ["issue-step5.component.scss"]
+	selector: "send-application",
+	templateUrl: "send-application.component.html",
+	styleUrls: ["send-application.component.scss"]
 })
-export class IssueStep5Component implements OnInit {
+export class SendApplicationComponent implements OnInit {
 	public Issue5Group = new FormGroup({
 		AgreeWithTerms: new FormControl(true),
 		CreateLocTemplate: new FormControl(true),
@@ -24,6 +24,10 @@ export class IssueStep5Component implements OnInit {
 
 	ngOnInit(): void {
 		var that = this;
+
+		if (!that.LocInstance) {
+			return;
+		}
 
 		this.Issue5Group.get("ContactPersone")?.valueChanges.subscribe(() => {
 			that.LocInstance.ContactPersone = that.Issue5Group.controls.ContactPersone.valid ?

@@ -2,6 +2,11 @@
 
 @import "assets/_colors.scss";
 
+body, * {
+	font-family: 'Roboto', sans-serif;
+	font-family: 'Inter', sans-serif;
+}
+
 .loc-backdrop {
 	background-color: $black-alpha-50;
 

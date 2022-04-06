@@ -1,21 +1,21 @@
-import {Component, Input, OnInit} from "@angular/core";
-import {FormControl, FormGroup} from "@angular/forms";
-import {InputAutocompleteComponent} from "@psb/fe-ui-kit/src/components/input-autocomplete/input-autocomplete.component";
-import {getRequiredFormControlValidator} from '@psb/validations/required';
+import { Component, Input, OnInit } from "@angular/core";
+import { FormControl, FormGroup } from "@angular/forms";
+import { InputAutocompleteComponent } from "@psb/fe-ui-kit/src/components/input-autocomplete/input-autocomplete.component";
+import { getRequiredFormControlValidator } from "@psb/validations/required";
 import { OnDestroyMixin, untilComponentDestroyed } from "@w11k/ngx-componentdestroyed";
 import { tap } from "rxjs/operators";
-import {Partner} from "src/app/classes/interfaces/api-partner.interface";
-import {ClientSearch} from "src/app/classes/interfaces/client-search.interface";
-import {AccountService} from "src/app/models/account.service";
-import {LetterOfCredit} from "src/app/models/letter-of-credit.model";
-import {PartnersService} from "src/app/models/partners.service";
+import { Partner } from "src/app/classes/interfaces/api-partner.interface";
+import { ClientSearch } from "src/app/classes/interfaces/client-search.interface";
+import { AccountService } from "src/app/models/account.service";
+import { LetterOfCredit } from "src/app/models/letter-of-credit.model";
+import { PartnersService } from "src/app/models/partners.service";
 
 @Component({
-	selector: "loc-issue-step2",
-	templateUrl: "issue-step2.component.html",
-	styleUrls: ["issue-step2.component.scss"]
+	selector: "counterparty",
+	templateUrl: "counterparty.component.html",
+	styleUrls: ["counterparty.component.scss"],
 })
-export class IssueStep2Component extends OnDestroyMixin implements OnInit {
+export class СounterpartyComponent extends OnDestroyMixin implements OnInit {
 	public Issue2Group = new FormGroup({
 		InnControl: new FormControl('', [
 			getRequiredFormControlValidator("Укажите ИНН контрагента"),

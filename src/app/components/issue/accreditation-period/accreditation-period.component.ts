@@ -1,18 +1,20 @@
-import {Component, Input, OnInit} from "@angular/core";
-import {FormArray, FormControl, FormGroup} from "@angular/forms";
-import {getRequiredFormControlValidator} from "@psb/validations/required";
-import {ClosingDoc} from "src/app/models/closing-doc.model";
-import {LetterOfCredit} from "src/app/models/letter-of-credit.model";
+import { Component, Input, OnInit } from "@angular/core";
+import { FormArray, FormControl, FormGroup } from "@angular/forms";
+import { getRequiredFormControlValidator } from "@psb/validations/required";
+import { ClosingDoc } from "src/app/models/closing-doc.model";
+import { LetterOfCredit } from "src/app/models/letter-of-credit.model";
 
 @Component({
-	selector: "loc-issue-step4",
-	templateUrl: "issue-step4.component.html",
-	styleUrls: ["issue-step4.component.scss"]
+	selector: "accreditation-period",
+	templateUrl: "accreditation-period.component.html",
+	styleUrls: ["accreditation-period.component.scss"],
 })
-export class IssueStep4Component implements OnInit {
+export class AccreditationPeriodComponent implements OnInit {
 	public Issue4Group = new FormGroup({
 		EndLocDate: new FormControl("", [
-			getRequiredFormControlValidator("Укажите дату окончания аккредитива"),
+			getRequiredFormControlValidator(
+				"Укажите дату окончания аккредитива"
+			),
 		]),
 		LocDaysLength: new FormControl(""),
 		PerhapsDigitalDoc: new FormControl(true),
@@ -30,13 +32,20 @@ export class IssueStep4Component implements OnInit {
 
 	ngOnInit(): void {
 		var that = this;
+
+		
+		if (!that.LocInstance) {
+			return;
+		}
 		this.Issue4Group.get("EndLocDate")?.valueChanges.subscribe(() => {
 			if ("" === that.Issue4Group.controls.EndLocDate.value) {
 				return;
 			}
 
-			that.LocInstance.EndLocDate = that.Issue4Group.controls.EndLocDate.valid ?
-				that.Issue4Group.controls.EndLocDate.value : "";
+			that.LocInstance.EndLocDate = that.Issue4Group.controls.EndLocDate
+				.valid
+				? that.Issue4Group.controls.EndLocDate.value
+				: "";
 
 			that.SetLocDays();
 		});
@@ -57,17 +66,29 @@ export class IssueStep4Component implements OnInit {
 			that.SetLocDate(days);
 		});
 
-		this.Issue4Group.get("PerhapsDigitalDoc")?.valueChanges.subscribe(() => {
-			that.LocInstance.PerhapsDigitalDoc = this.Issue4Group.controls.PerhapsDigitalDoc.value;
-		});
+		this.Issue4Group.get("PerhapsDigitalDoc")?.valueChanges.subscribe(
+			() => {
+				that.LocInstance.PerhapsDigitalDoc =
+					this.Issue4Group.controls.PerhapsDigitalDoc.value;
+			}
+		);
 
-		this.Issue4Group.get("AllowUsePartOfLoc")?.valueChanges.subscribe(() => {
-			that.LocInstance.AllowUsePartOfLoc = this.Issue4Group.controls.AllowUsePartOfLoc.value;
-		});
+		this.Issue4Group.get("AllowUsePartOfLoc")?.valueChanges.subscribe(
+			() => {
+				that.LocInstance.AllowUsePartOfLoc =
+					this.Issue4Group.controls.AllowUsePartOfLoc.value;
+			}
+		);
 
-		this.Issue4Group.controls.EndLocDate.setValue(this.LocInstance.EndLocDate);
-		this.Issue4Group.controls.PerhapsDigitalDoc.setValue(that.LocInstance.PerhapsDigitalDoc);
-		this.Issue4Group.controls.AllowUsePartOfLoc.setValue(that.LocInstance.AllowUsePartOfLoc);
+		this.Issue4Group.controls.EndLocDate.setValue(
+			this.LocInstance.EndLocDate
+		);
+		this.Issue4Group.controls.PerhapsDigitalDoc.setValue(
+			that.LocInstance.PerhapsDigitalDoc
+		);
+		this.Issue4Group.controls.AllowUsePartOfLoc.setValue(
+			that.LocInstance.AllowUsePartOfLoc
+		);
 
 		if (this.LocInstance.ClosingDocs.length > 0) {
 			for (let index in this.LocInstance.ClosingDocs) {
@@ -80,7 +101,8 @@ export class IssueStep4Component implements OnInit {
 		this.Issue4Group.get("ClosingDoc")?.valueChanges.subscribe(() => {
 			that.LocInstance.ClosingDocs = [];
 			for (let index in that.Issue4Group.controls.ClosingDoc.value) {
-				let item: ClosingDoc = that.Issue4Group.controls.ClosingDoc.value[index];
+				let item: ClosingDoc =
+					that.Issue4Group.controls.ClosingDoc.value[index];
 				if ("" === item.Document.trim()) {
 					continue;
 				}
@@ -98,11 +120,20 @@ export class IssueStep4Component implements OnInit {
 
 	private SetLocDays(): void {
 		let nowDate = new Date();
-		let locDays = this.Issue4Group.controls.EndLocDate.valid ?
-			Math.ceil((this.LocInstance.EndLocDate.getTime() - nowDate.getTime()) / 1000 / 3600 / 24) : "";
+		let locDays = this.Issue4Group.controls.EndLocDate.valid
+			? Math.ceil(
+					(this.LocInstance.EndLocDate.getTime() -
+						nowDate.getTime()) /
+						1000 /
+						3600 /
+						24
+			  )
+			: "";
 
 		if (this.Issue4Group.controls.LocDaysLength.value != locDays) {
-			this.Issue4Group.controls.LocDaysLength.setValue(locDays.toString());
+			this.Issue4Group.controls.LocDaysLength.setValue(
+				locDays.toString()
+			);
 		}
 	}
 
@@ -111,7 +142,9 @@ export class IssueStep4Component implements OnInit {
 	}
 
 	public IsValid(): boolean {
-		this.Issue4Group.controls.EndLocDate.setValue(this.Issue4Group.controls.EndLocDate.value);
+		this.Issue4Group.controls.EndLocDate.setValue(
+			this.Issue4Group.controls.EndLocDate.value
+		);
 
 		this.Issue4Group.controls.EndLocDate.markAsTouched();
 
@@ -123,8 +156,12 @@ export class IssueStep4Component implements OnInit {
 			new FormGroup({
 				Document: new FormControl(null !== item ? item.Document : ""),
 				Amount: new FormControl(null !== item ? item.Amount : 1),
-				OnlyOriginalDocument: new FormControl(null !== item ? item.OnlyOriginalDocument : true),
-				AdditionalRequirements: new FormControl(null !== item ? item.AdditionalRequirements : ""),
+				OnlyOriginalDocument: new FormControl(
+					null !== item ? item.OnlyOriginalDocument : true
+				),
+				AdditionalRequirements: new FormControl(
+					null !== item ? item.AdditionalRequirements : ""
+				),
 			})
 		);
 	}

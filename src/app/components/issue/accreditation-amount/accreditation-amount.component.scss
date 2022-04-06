@@ -1,0 +1,58 @@
+@import "../../../../assets/colors";
+
+.accredit-amount {
+	&__info {
+		font-size: 16px;
+		line-height: 24px;
+		color: #666;
+		margin-bottom: 28px;
+	}
+}
+
+.accredit-sum {
+	margin-top: 24px;
+
+	&__form-field {
+		width: 200px;
+		display: inline-block;
+	}
+}
+
+.commission {
+	display: flex;
+	align-items: center;
+
+	&__sum {
+		margin-left: 8px;
+		font-size: 18px;
+		color: $black-alpha-87;
+	}
+
+	&__tooltip {
+		margin-left: 15px;
+	}
+}
+
+.debit-account {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	width: 330px;
+	padding-right: 30px;
+	margin-bottom: 10px;
+
+	&__sum {
+		color: $black-alpha-38;
+		font-size: 16px;
+		top: 26px;
+		right: 60px;
+	}
+
+	&__tooltip {
+		margin: 0 0 5px 10px;
+	}
+
+	&__attribute {
+		display: inline-block;
+	}
+}

@@ -1,0 +1,54 @@
+<div class="accredit-amount" [formGroup]="this.Issue1Group">
+	<div class="accredit-sum">
+		<psb-number-input
+			label="Сумма аккредитива"
+			formControlName="IssueSum"
+			suffix=" ₽"
+			class="accredit-sum__form-field"
+		></psb-number-input>
+	</div>
+
+	<psb-text>
+		<div class="commission">
+			<span>Комиссия за выпуск аккредитива:</span>
+			<span class="commission__sum">{{ this.FormattedCommission }}</span>
+			<psb-tooltip
+				class="commission__tooltip"
+				tooltipType="white"
+				text="Рассчитывается комиссия за открытие аккредитива, взимаемая ПСБ. Возможны комиссии сторонних банков."
+			></psb-tooltip>
+		</div>
+	</psb-text>
+
+	<div class="debit-account">
+		<div class="debit-account__sum">{{ this.AccountSum }}</div>
+		<psb-input-select
+			label="Счёт списания"
+			[options]="this.Accounts"
+			class="debit-account__attribute"
+			placeholder="Выберите атрибут"
+			formControlName="SelectedAccount"
+		>
+		</psb-input-select>
+		<psb-tooltip
+			class="debit-account__tooltip"
+			tooltipType="white"
+			text="Сумма аккредитива будет автоматически списана с расчетного счета на счет по учету покрытия после согласования Заявления на выпуск аккредитива"
+		></psb-tooltip>
+	</div>
+
+	<p class="accredit-amount__info">
+		Полный перечень тарифов по
+		<a
+			href="https://www.psbank.ru/MediumBusiness/CashService/RKO/Documentary"
+			target="_blank"
+			>ссылке</a
+		>.
+	</p>
+
+	<p class="accredit-amount__info">
+		Документы о поставке товара/выполнении работ не представлены
+		контрагентом до даты окончания аккредитива? Мы вернем денежные средства
+		вам на расчётный счёт на следующий день.
+	</p>
+</div>

@@ -3,12 +3,12 @@ import {MatDialog} from "@angular/material/dialog";
 import {FormatHelper} from "src/app/classes/format-helper";
 import {LetterOfCredit} from "src/app/models/letter-of-credit.model";
 import {StoreService} from "src/app/models/state.service";
-import {IssueSuccessComponent} from "./issue-success.component";
-import {IssueStep1Component} from "./issue-step1.component";
-import {IssueStep2Component} from "./issue-step2.component";
-import {IssueStep3Component} from "./issue-step3.component";
-import {IssueStep4Component} from "./issue-step4.component";
-import {IssueStep5Component} from "./issue-step5.component";
+import {IssueSuccessComponent} from "./issue-success/issue-success.component";
+import {AccreditationAmountComponent} from "./accreditation-amount/accreditation-amount.component";
+import {СounterpartyComponent} from "./counterparty/counterparty.component";
+import {CounterpartyContractComponent} from "./counterparty-contract/counterparty-contract.component";
+import {AccreditationPeriodComponent} from "./accreditation-period/accreditation-period.component";
+import {SendApplicationComponent} from "./send-application/send-application.component";
 import {ButtonType} from "@psb/fe-ui-kit/src/components/button";
 import {SuccessModalComponent, SuccessModalType} from "@psb/fe-ui-kit/src/components/success-modal";
 import {PsbDomHelper} from "src/app/classes/psb-dom.helper";
@@ -24,14 +24,14 @@ export class IssueComponent implements OnInit {
 
 	public ButtonType = ButtonType;
 
-	public CurrentStep = 1;
+	public CurrentStep = 5;
 	public LocInstance: LetterOfCredit;
 
-	@ViewChild(IssueStep1Component) Step1Component: IssueStep1Component;
-	@ViewChild(IssueStep2Component) Step2Component: IssueStep2Component;
-	@ViewChild(IssueStep3Component) Step3Component: IssueStep3Component;
-	@ViewChild(IssueStep4Component) Step4Component: IssueStep4Component;
-	@ViewChild(IssueStep5Component) Step5Component: IssueStep5Component;
+	@ViewChild(AccreditationAmountComponent) Step1Component: AccreditationAmountComponent;
+	@ViewChild(СounterpartyComponent) Step2Component: СounterpartyComponent;
+	@ViewChild(CounterpartyContractComponent) Step3Component: CounterpartyContractComponent;
+	@ViewChild(AccreditationPeriodComponent) Step4Component: AccreditationPeriodComponent;
+	@ViewChild(SendApplicationComponent) Step5Component: SendApplicationComponent;
 
 	constructor(
 		private Store: StoreService,
@@ -125,7 +125,7 @@ export class IssueComponent implements OnInit {
 					return;
 				}
 
-				this.Store.IssueStep4Text = "до " + this.LocInstance.EndLocDate.toLocaleDateString("ru-RU", {year: "numeric", month: "long", day: "numeric"});
+				this.Store.IssueStep4Text = "до " + this.LocInstance?.EndLocDate.toLocaleDateString("ru-RU", {year: "numeric", month: "long", day: "numeric"});
 
 				this.CurrentStep = 5;
 				break;

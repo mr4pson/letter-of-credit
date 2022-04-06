@@ -8,13 +8,12 @@ import {ReliableSign} from "src/app/classes/reliable-sign";
 import {SafePaymentButton} from "src/app/classes/safe-payment-button";
 import {AccountService} from "src/app/models/account.service";
 import {StoreService} from "src/app/models/state.service";
-import {SafePaymentEmailComponent} from "./safe-payment-email.component";
+import {SafePaymentEmailComponent} from "./safe-payment-email/safe-payment-email.component";
 
 @Component({
 	selector: "safe-payment",
 	templateUrl: "safe-payment.component.html",
-	styleUrls: ["safe-payment.component.scss"],
-	encapsulation: ViewEncapsulation.None
+	styleUrls: ["safe-payment.component.scss"]
 })
 export class SafePaymentComponent {
 	@ViewChild(SafePaymentEmailComponent) EmailComponent: HTMLElement;

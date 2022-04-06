@@ -1,0 +1,179 @@
+@import "../../../../assets/colors";
+
+.counterparty-contract {
+	&__date-picker {
+		margin-top: 24px;
+	}
+
+	.reciver-nds {
+		margin-right: 40px;
+	}
+
+	&__date-picker,
+	&__nds-select {
+		width: 280px;
+		display: inline-block;
+	}
+
+	&__nds-actions {
+		display: flex;
+		flex-direction: row;
+
+		psb-button:first-child {
+			margin-right: 8px;
+		}
+
+		&--inactive button {
+			border: solid 1px $black-alpha-12;
+		}
+	}
+
+	&__nds-actions,
+	&__nds-select {
+		padding-top: 24px;
+	}
+
+	&__scan-title {
+		margin: 52px 0 20px 0;
+	}
+}
+
+psb-datepicker.counterparty-contract__date-picker,
+psb-input-select.counterparty-contract__nds-select,
+psb-text-input.contract-info {
+	width: 280px;
+	display: block;
+}
+
+.contract-subject {
+	display: flex;
+	align-items: center;
+	width: 100%;
+	padding-top: 24px;
+
+	&__info {
+		width: 95%;
+		display: inline-block;
+	}
+}
+
+div.file-uploader {
+	display: block;
+	border: none;
+	width: 570px;
+	height: auto;
+	position: relative;
+	background: #f5f5f5;
+	border-radius: 12px;
+	margin: 20px 0 40px 0;
+	padding: 20px 24px 10px 24px;
+
+	&__info {
+		display: flex;
+		justify-content: space-between;
+		font-size: 12px;
+		color: $black-alpha-38;
+	}
+
+	&__tooltip-info {
+		display: flex;
+	}
+
+	&__uploaded-files {
+		display: flex;
+		position: relative;
+		padding: 10px 0;
+	}
+
+	&__upload-btn {
+		width: 96px;
+		height: 114px;
+		margin-top: 20px;
+		border-radius: 12px;
+		background-color: #0000000f;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		margin: 10px 6px 10px 0;
+		min-width: 96px;
+	}
+
+	.center-image {
+		position: absolute;
+		left: 50%;
+		top: 50%;
+		margin-top: -8px;
+		margin-left: -26px;
+		z-index: 1;
+	}
+
+	.error-message {
+		position: absolute;
+		bottom: 5px;
+		white-space: nowrap;
+		overflow: hidden;
+		font-size: 12px;
+		letter-spacing: 0.4px;
+		color: $status-error;
+		max-width: 570px;
+	}
+
+	ngx-simplebar {
+		z-index: 10;
+	}
+}
+
+.tooltip {
+	margin-left: 8px;
+}
+
+// No oppottunity to override without importants
+.dropzone-preview {
+	background-image: none !important;
+	background-color: white !important;
+	width: 96px !important;
+	height: 114px !important;
+	box-shadow: 0px 0px 8px rgba(0, 0, 0, 0.04) !important;
+	border-radius: 12px !important;
+	padding: 0 !important;
+	min-width: 96px !important;
+	min-height: 0 !important;
+	margin: 10px 6px !important;
+	transition: all 0.1s;
+
+	&:hover {
+		background-image: none !important;
+		min-width: 104px !important;
+		height: 122px !important;
+		margin: 6px 2px !important;
+
+		&__file-name {
+			max-width: 84px;
+		}
+	}
+
+	&__file-size {
+		position: absolute;
+		bottom: 30px;
+		left: 10px;
+		font-size: 12px;
+		letter-spacing: 0.4px;
+		color: $black-alpha-20;
+	}
+
+	&__file-name {
+		position: absolute;
+		bottom: 10px;
+		left: 10px;
+		font-size: 12px;
+		letter-spacing: 0.4px;
+		color: $black-alpha-87;
+		overflow: hidden;
+		max-width: 76px;
+		white-space: nowrap;
+	}
+
+	&:last-child {
+		margin-right: 0 !important;
+	}
+}

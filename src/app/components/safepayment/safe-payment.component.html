@@ -1,42 +1,113 @@
-<div [formGroup]="this.SPayGroup">
-	<div class="company-row">
-		<svg class="raiting-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-			<path d="M12 21C16.5 19.5 20 15 20 11V6C18 4 14.4464 3 12 3C9.55359 3 6 4 4.00001 6L4 11C4 15 7.5 19.5 12 21Z" [attr.fill]="this.CurrentReliableColor()" />
-			<path d="M7 10H9V12H7V10Z" fill="white" />
-			<path d="M11 10H13V12H11V10Z" fill="white" />
-			<path d="M17 10H15V12H17V10Z" fill="white" />
-		</svg>
+<div [formGroup]="SPayGroup">
+  <div class="company-info">
+    <svg
+      class="company-info__raiting-icon"
+      width="24"
+      height="24"
+      viewBox="0 0 24 24"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <path
+        d="M12 21C16.5 19.5 20 15 20 11V6C18 4 14.4464 3 12 3C9.55359 3 6 4 4.00001 6L4 11C4 15 7.5 19.5 12 21Z"
+        [attr.fill]="CurrentReliableColor()"
+      ></path>
+      <path
+        d="M7 10H9V12H7V10Z"
+        fill="white"
+      ></path>
+      <path
+        d="M11 10H13V12H11V10Z"
+        fill="white"
+      ></path>
+      <path
+        d="M17 10H15V12H17V10Z"
+        fill="white"
+      ></path>
+    </svg>
 
-		<span class="company-title">{{this.Store.ReciverName}} имеет {{this.CurrentReliableText()}} рейтинг</span>
+    <span class="company-info__title">
+      {{Store.ReciverName}} имеет {{CurrentReliableText()}} рейтинг
+    </span>
 
-		<div class="info-icon">
-			<psb-tooltip class="svg-holder" tooltipType="white" text="Рейтинг предоставлен СКБ Контур"></psb-tooltip>
-		</div>
-	</div>
+    <div class="company-info__info-icon">
+      <psb-tooltip
+        class="svg-holder"
+        tooltipType="white"
+        text="Рейтинг предоставлен СКБ Контур"
+      ></psb-tooltip>
+    </div>
+  </div>
 
-	<p>Для снижения риска сделки используйте инструмент «Покрытый аккредитив». Деньги надёжно хранятся в банке до момента поставки или оказания услуг и будут перечислены поставщику после выполнения условий аккредитива.</p>
+  <p>
+    Для снижения риска сделки используйте инструмент «Покрытый аккредитив». Деньги надёжно хранятся в банке до момента поставки или оказания услуг и будут перечислены поставщику после выполнения условий аккредитива.
+  </p>
 
-	<ng-container *ngIf="this.IsShowAgenda">
-		<safe-payment-agenda></safe-payment-agenda>
+  <ng-container *ngIf="IsShowAgenda">
+    <safe-payment-agenda></safe-payment-agenda>
 
-		<p>Узнать больше можно, пройдя по <a href="https://www.psbank.ru/MediumBusiness/CashService/RKO/Documentary" target="_blank">ссылке</a>, по телефону 8 800 333 25 50 или получить информацию на
-			<span class="email-link" (click)="this.ShowEmail()">e-mail</span>.
-		</p>
-	</ng-container>
+    <p>
+      Узнать больше можно, пройдя по
+      <a
+        href="https://www.psbank.ru/MediumBusiness/CashService/RKO/Documentary"
+        target="_blank"
+      >
+        ссылке
+      </a>
+      , по телефону 8 800 333 25 50 или получить информацию на
+      <span
+        class="email-link"
+        (click)="ShowEmail()"
+      >
+        e-mail
+      </span>
+      .
+    </p>
+  </ng-container>
 
-	<ng-container *ngIf="this.IsShowEmail">
-		<safe-payment-email #safePaymentEmail (TakeValidEmail)="this.TakeEmail($event)"></safe-payment-email>
+  <ng-container *ngIf="IsShowEmail">
+    <safe-payment-email
+      #safePaymentEmail
+      (TakeValidEmail)="TakeEmail($event)"
+    ></safe-payment-email>
 
-		<p>При нажатии на кнопку "Получить" вы соглашаетесь на однократную демонстрацию вам рекламных материалов.</p>
-	</ng-container>
+    <p>
+      При нажатии на кнопку "Получить" вы соглашаетесь на однократную демонстрацию вам рекламных материалов.
+    </p>
+  </ng-container>
 
-	<div class="payment-buttons">
-		<psb-button [type]="this.ButtonType.Primary" [size]="ButtonSize.Medium" (click)="this.DoSafePay()"> Совершить безопасный платёж </psb-button>
-		<psb-button [type]="this.ButtonType.Text" [size]="ButtonSize.Medium" (click)="this.CloseDialog(SafePaymentButton.RefusePay)"> Отказаться от платежа </psb-button>
-		<psb-button [type]="this.ButtonType.Text" [size]="ButtonSize.Medium" (click)="this.CloseDialog(SafePaymentButton.OrdinalPay)"> Отправить обычный платёж </psb-button>
-	</div>
+  <div class="actions">
+    <psb-button
+			class="actions__payment-btn"
+      [type]="ButtonType.Primary"
+      [size]="ButtonSize.Medium"
+      (click)="DoSafePay()"
+    >
+      Совершить безопасный платёж
+    </psb-button>
+    <psb-button
+			class="actions__payment-btn"
+      [type]="ButtonType.Text"
+      [size]="ButtonSize.Medium"
+      (click)="CloseDialog(SafePaymentButton.RefusePay)"
+    >
+      Отказаться от платежа
+    </psb-button>
+    <psb-button
+			class="actions__payment-btn"
+      [type]="ButtonType.Text"
+      [size]="ButtonSize.Medium"
+      (click)="CloseDialog(SafePaymentButton.OrdinalPay)"
+    >
+      Отправить обычный платёж
+    </psb-button>
+  </div>
 
-	<div>
-		<psb-checkbox label="Больше не предлагать безопасный платёж с этим контрагентом" formControlName="DontWantSafePayment" name="dont-want-safe-payment"></psb-checkbox>
-	</div>
+  <div>
+    <psb-checkbox
+      label="Больше не предлагать безопасный платёж с этим контрагентом"
+      formControlName="DontWantSafePayment"
+      name="dont-want-safe-payment"
+    ></psb-checkbox>
+  </div>
 </div>

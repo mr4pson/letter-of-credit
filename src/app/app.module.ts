@@ -20,16 +20,17 @@ import {EmptyComponent} from './components/empty/empty.component';
 import {CloseIconComponent} from "./components/close-icon/close-icon.component";
 import {WaitSpinnerComponent} from "./components/wait-spinner/wait-spinner.component";
 import {SafePaymentComponent} from "./components/safepayment/safe-payment.component";
-import {SafePaymentAgendaComponent} from "./components/safepayment/safe-payment-agenda.component";
-import {SafePaymentEmailComponent} from "./components/safepayment/safe-payment-email.component";
+import {SafePaymentAgendaComponent} from "./components/safepayment/safe-paymet-agenda/safe-payment-agenda.component";
+import {SafePaymentEmailComponent} from "./components/safepayment/safe-payment-email/safe-payment-email.component";
 import {IssueComponent} from "./components/issue/issue.component";
-import {IssueStepsComponent} from "./components/issue/issue-steps.component";
-import {IssueSuccessComponent} from "./components/issue/issue-success.component";
-import {IssueStep1Component} from "./components/issue/issue-step1.component";
-import {IssueStep2Component} from "./components/issue/issue-step2.component";
-import {IssueStep3Component} from "./components/issue/issue-step3.component";
-import {IssueStep4Component} from "./components/issue/issue-step4.component";
-import {IssueStep5Component} from "./components/issue/issue-step5.component";
+import {IssueStepsComponent} from "./components/issue/issue-steps/issue-steps.component";
+import {IssueSuccessComponent} from "./components/issue/issue-success/issue-success.component";
+import { AccreditationAmountComponent } from './components/issue/accreditation-amount/accreditation-amount.component';
+import { СounterpartyComponent } from './components/issue/counterparty/counterparty.component';
+import { CounterpartyContractComponent } from './components/issue/counterparty-contract/counterparty-contract.component';
+import { AccreditationPeriodComponent } from './components/issue/accreditation-period/accreditation-period.component';
+import { ClosingDocComponent } from './components/issue/accreditation-period/closing-doc/closing-doc.component';
+import {SendApplicationComponent} from "./components/issue/send-application/send-application.component";
 
 import {TooltipModule} from "@psb/fe-ui-kit/src/components/tooltip";
 import {CheckboxModule} from "@psb/fe-ui-kit/src/components/checkbox";
@@ -54,7 +55,7 @@ import { ApiConfigurationParams } from 'src/api/api-configuration';
 import { removeNgStyles, createNewHosts, createInputTransfer } from '@angularclass/hmr';
 import { StorageService } from './services/storage.service';
 import { HttpErrorInterceptor } from './http-error.interceptor';
-import { NoticeModule } from '@psb/fe-ui-kit';
+
 import { ErrorHandlerService } from './services/error-handler.service';
 
 @NgModule({
@@ -69,11 +70,12 @@ import { ErrorHandlerService } from './services/error-handler.service';
 		IssueStepsComponent,
 		IssueSuccessComponent,
 		WaitSpinnerComponent,
-		IssueStep1Component,
-		IssueStep2Component,
-		IssueStep3Component,
-		IssueStep4Component,
-		IssueStep5Component,
+		AccreditationAmountComponent,
+		СounterpartyComponent,
+		CounterpartyContractComponent,
+		AccreditationPeriodComponent,
+		SendApplicationComponent,
+		ClosingDocComponent,
 	],
 	imports: [
 		ApiModule.forRoot({ rootUrl: "" } as ApiConfigurationParams),
@@ -102,7 +104,6 @@ import { ErrorHandlerService } from './services/error-handler.service';
 		DatepickerModule,
 		BaseModalModule,
 		PhoneInputModule,
-		NoticeModule,
 	],
 	providers: [
 		{provide: LOCALE_ID, useValue: 'ru'},
@@ -110,41 +111,43 @@ import { ErrorHandlerService } from './services/error-handler.service';
 		StorageService,
 		ErrorHandlerService,
 	],
-	bootstrap: [AppComponent]
+	bootstrap: [AppComponent],
 })
 export class AppModule {
 	constructor(public appRef: ApplicationRef) {}
-  hmrOnInit(store) {
-    if (!store || !store.state) return;
-    console.log('HMR store', store);
-    console.log('store.state.data:', store.state.data)
-    // inject AppStore here and update it
-    // this.AppStore.update(store.state)
-    if ('restoreInputValues' in store) {
-      store.restoreInputValues();
-    }
-    // change detection
-    this.appRef.tick();
-    delete store.state;
-    delete store.restoreInputValues;
-  }
-  hmrOnDestroy(store) {
-    var cmpLocation = this.appRef.components.map(cmp => cmp.location.nativeElement);
-    // recreate elements
-    store.disposeOldHosts = createNewHosts(cmpLocation)
-    // inject your AppStore and grab state then set it on store
-    // var appState = this.AppStore.get()
-    store.state = {data: 'yolo'};
-    // store.state = Object.assign({}, appState)
-    // save input values
-    store.restoreInputValues  = createInputTransfer();
-    // remove styles
-    removeNgStyles();
-  }
-  hmrAfterDestroy(store) {
-    // display new elements
-    store.disposeOldHosts()
-    delete store.disposeOldHosts;
-    // anything you need done the component is removed
-  }
+	hmrOnInit(store) {
+		if (!store || !store.state) return;
+		console.log("HMR store", store);
+		console.log("store.state.data:", store.state.data);
+		// inject AppStore here and update it
+		// this.AppStore.update(store.state)
+		if ("restoreInputValues" in store) {
+			store.restoreInputValues();
+		}
+		// change detection
+		this.appRef.tick();
+		delete store.state;
+		delete store.restoreInputValues;
+	}
+	hmrOnDestroy(store) {
+		var cmpLocation = this.appRef.components.map(
+			(cmp) => cmp.location.nativeElement
+		);
+		// recreate elements
+		store.disposeOldHosts = createNewHosts(cmpLocation);
+		// inject your AppStore and grab state then set it on store
+		// var appState = this.AppStore.get()
+		store.state = { data: "yolo" };
+		// store.state = Object.assign({}, appState)
+		// save input values
+		store.restoreInputValues = createInputTransfer();
+		// remove styles
+		removeNgStyles();
+	}
+	hmrAfterDestroy(store) {
+		// display new elements
+		store.disposeOldHosts();
+		delete store.disposeOldHosts;
+		// anything you need done the component is removed
+	}
 }

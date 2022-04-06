@@ -1,0 +1,64 @@
+<div class="counterparty" [formGroup]="Issue2Group">
+	<ng-template #innSelectHeader>
+		<p>Найдено в ЕГРЮЛ</p>
+	</ng-template>
+
+	<psb-input-autocomplete
+		#innAutocomplete
+		class="counterparty-autocomplete"
+		label="ИНН контрагента"
+		formControlName="InnControl"
+		maxHeight="320px"
+		optionId="inn"
+		optionLabel="shortName"
+		[minSearchLength]="5"
+		[delay]="500"
+		[maskSettings]="{ mask: '000000000000' }"
+		[description]="InnCompany"
+		[options]="FoundInnList"
+		(search)="SearchInnAsync()"
+		(selectItem)="SelectInn(innAutocomplete)"
+	>
+		<ng-template
+			psbTemplateType="heading"
+			*ngIf="this.FoundInnList.length > 0"
+		>
+			<div class="counterparty-autocomplete__header">Найдено в ЕГРЮЛ</div>
+		</ng-template>
+
+		<ng-template let-option="option" psbTemplateType="option">
+			{{ option.shortName }}
+			<div class="counterparty-autocomplete__inn">
+				ИНН
+				<span class="counterparty-autocomplete__inn-info">{{
+					option.innFound
+				}}</span
+				>{{ option.innTail }} - КПП {{ option.kpp }}
+			</div>
+		</ng-template>
+	</psb-input-autocomplete>
+
+	<div class="counterparty-bank-holder">
+		<psb-text-input
+			class="counterparty-bank-holder__bik"
+			label="БИК"
+			formControlName="BikControl"
+			[maskSettings]="{ mask: '000000000' }"
+			[description]="this.LocInstance?.ReciverBankName"
+		></psb-text-input>
+
+		<psb-text-input
+			class="counterparty-bank-holder__acc"
+			label="Расчётный счёт"
+			formControlName="AccountControl"
+			[maskSettings]="{ mask: '000 00 000 0 0000 0000000' }"
+			description="Счёт юр.лица"
+		></psb-text-input>
+	</div>
+
+	<p class="counterparty__info">
+		Свяжитесь с вашим контрагентом и согласуйте оплату
+		<br />
+		по аккредитиву. Договор изменять не обязательно.
+	</p>
+</div>

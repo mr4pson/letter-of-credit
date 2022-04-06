@@ -1,0 +1,168 @@
+<div class="counterparty-contract" [formGroup]="Issue3Group">
+	<psb-datepicker
+		class="counterparty-contract__date-picker paint-disabled-as-normal"
+		label="Дата заключения договора"
+		formControlName="ContractDate"
+		[maxValidDate]="MaxContractDate"
+	></psb-datepicker>
+
+	<div class="counterparty-contract__nds-actions">
+		<psb-button
+			[type]="SelectedNds > 0 ? ButtonType.Primary : ButtonType.Text"
+			[class.nds-buttons--inactive]="SelectedNds === 0"
+			(click)="SetVat()"
+		>
+			НДС включён
+		</psb-button>
+		<psb-button
+			[type]="0 == SelectedNds ? ButtonType.Primary : ButtonType.Text"
+			[class.nds-buttons--inactive]="SelectedNds > 0"
+			(click)="UnSetVat()"
+		>
+			Без НДС
+		</psb-button>
+	</div>
+
+	<psb-input-select
+		label="Сумма НДС"
+		[options]="NdsList"
+		class="counterparty-contract__nds-select"
+		placeholder="Выберите атрибут"
+		formControlName="SelectedNds"
+	></psb-input-select>
+
+	<psb-text-input
+		class="contract-info"
+		label="Название и номер договора"
+		formControlName="Contract"
+		description="Например, договор купли-продажи"
+	></psb-text-input>
+
+	<div class="contract-subject">
+		<psb-text-input
+			class="contract-subject__info"
+			label="Предмет договора (Наименование Товаров/Услуг/Работ)"
+			formControlName="ContractInfo"
+			description="Например, поставка оборудования для деревообработки – токарный станок - 2 шт."
+		></psb-text-input>
+
+		<psb-tooltip
+			class="tooltip"
+			tooltipType="white"
+			text="Рекомендуем указывать краткое, но четкое и понятное описание товара, самые существенные его характеристики. При необходимости указывается масса или число единиц товара, его цена. Информацию можно взять в договоре и в счете на оплату."
+		></psb-tooltip>
+	</div>
+
+	<psb-heading type="3" class="counterparty-contract__scan-title"
+		>Прикрепите скан договора (необязательно)</psb-heading
+	>
+
+	<psb-text [color]="'secondary'"
+		>Если вы хотите, чтобы наши сотрудники проверили соответствие<br />заявления
+		на выпуск аккредитива условиям вашего договора.</psb-text
+	>
+
+	<div class="file-uploader" ngx-dropzone (change)="OnSelectFile($event)">
+		<div class="file-uploader__info">
+			<div>
+				<span class="main-color">Выберите файлы</span> или перетяните их
+				в эту область.
+			</div>
+			<div class="file-uploader__tooltip-info">
+				Какие файлы подойдут?
+				<psb-tooltip
+					class="tooltip"
+					tooltipType="white"
+					text="Приложите документы, связанные с проведением операции: счёт, инвойс или спецификацию. Подойдут сканы в tiff, pdf и документы в xml, doc, docx, xls, xlsx."
+				></psb-tooltip>
+			</div>
+		</div>
+
+		<ngx-simplebar
+			[options]="{ autoHide: true }"
+			#simpleBarRef
+			(wheel)="WheelScroll($event, simpleBarRef)"
+		>
+			<div class="file-uploader__uploaded-files">
+				<div class="file-uploader__upload-btn">
+					<!-- <psb-icon>menu</psb-icon> -->
+					<svg
+						width="20"
+						height="20"
+						viewBox="0 0 20 20"
+						fill="none"
+						xmlns="http://www.w3.org/2000/svg"
+					>
+						<path
+							d="M9 19C9 19.5523 9.44771 20 10 20C10.5523 20 11 19.5523 11 19V11H19C19.5523 11 20 10.5523 20 10C20 9.44771 19.5523 9 19 9H11V1C11 0.447715 10.5523 0 10 0C9.44771 0 9 0.447716 9 1V9H1C0.447715 9 0 9.44771 0 10C0 10.5523 0.447716 11 1 11H9V19Z"
+							fill="white"
+						/>
+					</svg>
+				</div>
+
+				<ng-container *ngFor="let f of Files">
+					<ngx-dropzone-preview
+						[removable]="true"
+						(removed)="OnRemoveFile(f)"
+						class="dropzone-preview"
+					>
+						<ngx-dropzone-label>
+							<svg
+								width="20"
+								height="20"
+								viewBox="0 0 20 20"
+								fill="none"
+								xmlns="http://www.w3.org/2000/svg"
+							>
+								<g>
+									<path
+										d="M19.0432 9.97725C19.5968 9.97725 20.0507 10.4271 19.9954 10.9779C19.832 12.6067 19.2714 14.1761 18.3564 15.5456C17.2551 17.1938 15.6897 18.4785 13.8583 19.2371C12.0269 19.9957 10.0116 20.1941 8.06741 19.8074C6.12319 19.4207 4.33731 18.4661 2.9356 17.0644C1.53389 15.6627 0.579321 13.8768 0.192591 11.9326C-0.194139 9.98836 0.00434303 7.97312 0.762941 6.1417C1.52154 4.31029 2.80618 2.74495 4.45442 1.64363C5.82393 0.728554 7.39335 0.167986 9.02212 0.00456619C9.57289 -0.0506954 10.0228 0.403233 10.0228 0.956774V1.45791C10.0228 2.01145 9.57205 2.45331 9.02343 2.5269C7.89112 2.67878 6.80371 3.08745 5.8465 3.72704C4.61033 4.55302 3.64684 5.72703 3.0779 7.10059C2.50895 8.47415 2.36008 9.98558 2.65013 11.4438C2.94018 12.9019 3.65611 14.2413 4.70739 15.2926C5.75867 16.3439 7.09808 17.0598 8.55625 17.3499C10.0144 17.6399 11.5258 17.4911 12.8994 16.9221C14.273 16.3532 15.447 15.3897 16.273 14.1535C16.9125 13.1963 17.3212 12.1089 17.4731 10.9766C17.5467 10.428 17.9885 9.97725 18.5421 9.97725H19.0432Z"
+										fill="black"
+										fill-opacity="0.24"
+									/>
+									<animateTransform
+										attributeName="transform"
+										type="rotate"
+										from="0 9.97725 9.97725"
+										to="360 9.97725 9.97725"
+										dur="1000ms"
+										repeatCount="indefinite"
+									></animateTransform>
+								</g>
+							</svg>
+
+							<div class="dropzone-preview__file-size">
+								{{ f.SizeFormatted }}
+							</div>
+							<div
+								class="dropzone-preview__file-name"
+								title="{{ f.Native.name }}"
+							>
+								<span>{{ f.Native.name }}</span>
+							</div>
+						</ngx-dropzone-label>
+					</ngx-dropzone-preview>
+				</ng-container>
+			</div>
+		</ngx-simplebar>
+
+		<svg
+			class="center-image"
+			width="52"
+			height="40"
+			viewBox="0 0 52 40"
+			fill="none"
+			xmlns="http://www.w3.org/2000/svg"
+		>
+			<path
+				d="M30.16 0C24.7366 0 20.1459 3.16201 17.94 7.62998C16.7659 6.84244 15.405 6.26861 13.8775 6.26861C10.0019 6.26861 6.91031 9.25649 6.695 12.9805C2.81938 14.3418 0 17.864 0 22.0984C0 27.4964 4.50125 31.8813 10.0425 31.8813H18.72C19.0938 31.8852 19.4431 31.6953 19.6341 31.3787C19.8209 31.0621 19.8209 30.6743 19.6341 30.3577C19.4431 30.0411 19.0938 29.8511 18.72 29.8551H10.0425C5.6225 29.8551 2.08 26.4002 2.08 22.0984C2.08 18.5169 4.55813 15.5014 7.93 14.5951C8.38906 14.4645 8.69781 14.045 8.6775 13.582C8.67344 13.4395 8.6775 13.3683 8.6775 13.3604C8.6775 10.5466 10.9891 8.29483 13.8775 8.29483C15.3237 8.29483 16.64 8.86075 17.5825 9.78284C17.8303 10.0163 18.1837 10.1192 18.5209 10.048C18.8622 9.97675 19.1425 9.74722 19.2725 9.43458C20.9097 5.12886 25.1591 2.02622 30.16 2.02622C36.5787 2.02622 41.7625 7.07989 41.7625 13.3287C41.7625 13.7917 41.7259 14.2468 41.665 14.7217C41.6284 15.0067 41.7178 15.2916 41.9087 15.5093C42.0997 15.7269 42.38 15.8536 42.6725 15.8615H42.7375C46.7147 15.8615 49.92 18.9839 49.92 22.8583C49.92 26.7326 46.7147 29.8551 42.7375 29.8551H33.28C32.9062 29.8511 32.5569 30.0411 32.3659 30.3577C32.1791 30.6743 32.1791 31.0621 32.3659 31.3787C32.5569 31.6953 32.9062 31.8852 33.28 31.8813H42.7375C47.84 31.8813 52 27.8288 52 22.8583C52 18.2478 48.3681 14.5832 43.7775 14.0569C43.7937 13.8115 43.8425 13.582 43.8425 13.3287C43.8425 5.98368 37.7 0 30.16 0ZM26 17.2862L25.2525 17.9827L20.0525 23.0482C19.6381 23.4519 19.6381 24.1009 20.0525 24.5046C20.4669 24.9082 21.1331 24.9082 21.5475 24.5046L24.96 21.1803V38.973C24.9559 39.3371 25.1509 39.6775 25.4759 39.8635C25.8009 40.0455 26.1991 40.0455 26.5241 39.8635C26.8491 39.6775 27.0441 39.3371 27.04 38.973V21.1803L30.4525 24.5046C30.8669 24.9082 31.5331 24.9082 31.9475 24.5046C32.3619 24.1009 32.3619 23.4519 31.9475 23.0482L26.7475 17.9827L26 17.2862Z"
+				fill="black"
+				fill-opacity="0.12"
+			/>
+		</svg>
+
+		<div class="error-message" *ngIf="ErrorMessage.length > 0">
+			{{ ErrorMessage }}
+		</div>
+	</div>
+</div>
