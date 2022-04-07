@@ -1,4 +1,4 @@
-<div [formGroup]="SPayGroup">
+<div [formGroup]="sPayGroup">
   <div class="company-info">
     <svg
       class="company-info__raiting-icon"
@@ -10,7 +10,7 @@
     >
       <path
         d="M12 21C16.5 19.5 20 15 20 11V6C18 4 14.4464 3 12 3C9.55359 3 6 4 4.00001 6L4 11C4 15 7.5 19.5 12 21Z"
-        [attr.fill]="CurrentReliableColor()"
+        [attr.fill]="currentReliableColor()"
       ></path>
       <path
         d="M7 10H9V12H7V10Z"
@@ -27,7 +27,7 @@
     </svg>
 
     <span class="company-info__title">
-      {{Store.ReciverName}} имеет {{CurrentReliableText()}} рейтинг
+      {{store.reciverName}} имеет {{currentReliableText()}} рейтинг
     </span>
 
     <div class="company-info__info-icon">
@@ -57,7 +57,7 @@
       , по телефону 8 800 333 25 50 или получить информацию на
       <span
         class="email-link"
-        (click)="ShowEmail()"
+        (click)="showEmail()"
       >
         e-mail
       </span>
@@ -68,7 +68,7 @@
   <ng-container *ngIf="IsShowEmail">
     <safe-payment-email
       #safePaymentEmail
-      (TakeValidEmail)="TakeEmail($event)"
+      (takeValidEmail)="takeEmail($event)"
     ></safe-payment-email>
 
     <p>
@@ -81,7 +81,7 @@
 			class="actions__payment-btn"
       [type]="ButtonType.Primary"
       [size]="ButtonSize.Medium"
-      (click)="DoSafePay()"
+      (click)="doSafePay()"
     >
       Совершить безопасный платёж
     </psb-button>
@@ -89,7 +89,7 @@
 			class="actions__payment-btn"
       [type]="ButtonType.Text"
       [size]="ButtonSize.Medium"
-      (click)="CloseDialog(SafePaymentButton.RefusePay)"
+      (click)="closeDialog(SafePaymentButton.RefusePay)"
     >
       Отказаться от платежа
     </psb-button>
@@ -97,7 +97,7 @@
 			class="actions__payment-btn"
       [type]="ButtonType.Text"
       [size]="ButtonSize.Medium"
-      (click)="CloseDialog(SafePaymentButton.OrdinalPay)"
+      (click)="closeDialog(SafePaymentButton.OrdinalPay)"
     >
       Отправить обычный платёж
     </psb-button>

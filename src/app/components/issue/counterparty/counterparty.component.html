@@ -1,4 +1,4 @@
-<div class="counterparty" [formGroup]="Issue2Group">
+<div class="counterparty" [formGroup]="issue2Group">
 	<ng-template #innSelectHeader>
 		<p>Найдено в ЕГРЮЛ</p>
 	</ng-template>
@@ -14,14 +14,14 @@
 		[minSearchLength]="5"
 		[delay]="500"
 		[maskSettings]="{ mask: '000000000000' }"
-		[description]="InnCompany"
-		[options]="FoundInnList"
-		(search)="SearchInnAsync()"
-		(selectItem)="SelectInn(innAutocomplete)"
+		[description]="innCompany"
+		[options]="foundInnList"
+		(search)="searchInnAsync()"
+		(selectItem)="selectInn(innAutocomplete)"
 	>
 		<ng-template
 			psbTemplateType="heading"
-			*ngIf="this.FoundInnList.length > 0"
+			*ngIf="this.foundInnList.length > 0"
 		>
 			<div class="counterparty-autocomplete__header">Найдено в ЕГРЮЛ</div>
 		</ng-template>
@@ -44,7 +44,7 @@
 			label="БИК"
 			formControlName="BikControl"
 			[maskSettings]="{ mask: '000000000' }"
-			[description]="this.LocInstance?.ReciverBankName"
+			[description]="this.locInstance?.reciverBankName"
 		></psb-text-input>
 
 		<psb-text-input

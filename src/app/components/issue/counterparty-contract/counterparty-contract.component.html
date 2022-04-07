@@ -1,23 +1,23 @@
-<div class="counterparty-contract" [formGroup]="Issue3Group">
+<div class="counterparty-contract" [formGroup]="issue3Group">
 	<psb-datepicker
 		class="counterparty-contract__date-picker paint-disabled-as-normal"
 		label="Дата заключения договора"
 		formControlName="ContractDate"
-		[maxValidDate]="MaxContractDate"
+		[maxValidDate]="maxContractDate"
 	></psb-datepicker>
 
 	<div class="counterparty-contract__nds-actions">
 		<psb-button
-			[type]="SelectedNds > 0 ? ButtonType.Primary : ButtonType.Text"
-			[class.nds-buttons--inactive]="SelectedNds === 0"
-			(click)="SetVat()"
+			[type]="selectedNds > 0 ? ButtonType.Primary : ButtonType.Text"
+			[class.nds-buttons--inactive]="selectedNds === 0"
+			(click)="setVat()"
 		>
 			НДС включён
 		</psb-button>
 		<psb-button
-			[type]="0 == SelectedNds ? ButtonType.Primary : ButtonType.Text"
-			[class.nds-buttons--inactive]="SelectedNds > 0"
-			(click)="UnSetVat()"
+			[type]="0 == selectedNds ? ButtonType.Primary : ButtonType.Text"
+			[class.nds-buttons--inactive]="selectedNds > 0"
+			(click)="unSetVat()"
 		>
 			Без НДС
 		</psb-button>
@@ -25,7 +25,7 @@
 
 	<psb-input-select
 		label="Сумма НДС"
-		[options]="NdsList"
+		[options]="ndsList"
 		class="counterparty-contract__nds-select"
 		placeholder="Выберите атрибут"
 		formControlName="SelectedNds"
@@ -62,7 +62,7 @@
 		на выпуск аккредитива условиям вашего договора.</psb-text
 	>
 
-	<div class="file-uploader" ngx-dropzone (change)="OnSelectFile($event)">
+	<div class="file-uploader" ngx-dropzone (change)="onSelectFile($event)">
 		<div class="file-uploader__info">
 			<div>
 				<span class="main-color">Выберите файлы</span> или перетяните их
@@ -81,7 +81,7 @@
 		<ngx-simplebar
 			[options]="{ autoHide: true }"
 			#simpleBarRef
-			(wheel)="WheelScroll($event, simpleBarRef)"
+			(wheel)="wheelScroll($event, simpleBarRef)"
 		>
 			<div class="file-uploader__uploaded-files">
 				<div class="file-uploader__upload-btn">
@@ -100,10 +100,10 @@
 					</svg>
 				</div>
 
-				<ng-container *ngFor="let f of Files">
+				<ng-container *ngFor="let f of files">
 					<ngx-dropzone-preview
 						[removable]="true"
-						(removed)="OnRemoveFile(f)"
+						(removed)="onRemoveFile(f)"
 						class="dropzone-preview"
 					>
 						<ngx-dropzone-label>
@@ -132,13 +132,13 @@
 							</svg>
 
 							<div class="dropzone-preview__file-size">
-								{{ f.SizeFormatted }}
+								{{ f.sizeFormatted }}
 							</div>
 							<div
 								class="dropzone-preview__file-name"
-								title="{{ f.Native.name }}"
+								title="{{ f.native.name }}"
 							>
-								<span>{{ f.Native.name }}</span>
+								<span>{{ f.native.name }}</span>
 							</div>
 						</ngx-dropzone-label>
 					</ngx-dropzone-preview>
@@ -161,8 +161,8 @@
 			/>
 		</svg>
 
-		<div class="error-message" *ngIf="ErrorMessage.length > 0">
-			{{ ErrorMessage }}
+		<div class="error-message" *ngIf="errorMessage.length > 0">
+			{{ errorMessage }}
 		</div>
 	</div>
 </div>

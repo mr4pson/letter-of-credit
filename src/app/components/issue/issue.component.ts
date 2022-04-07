@@ -1,192 +1,199 @@
-import {Component, OnInit, ViewChild, ViewEncapsulation} from '@angular/core';
-import {MatDialog} from "@angular/material/dialog";
-import {FormatHelper} from "src/app/classes/format-helper";
-import {LetterOfCredit} from "src/app/models/letter-of-credit.model";
-import {StoreService} from "src/app/models/state.service";
-import {IssueSuccessComponent} from "./issue-success/issue-success.component";
-import {AccreditationAmountComponent} from "./accreditation-amount/accreditation-amount.component";
-import {СounterpartyComponent} from "./counterparty/counterparty.component";
-import {CounterpartyContractComponent} from "./counterparty-contract/counterparty-contract.component";
-import {AccreditationPeriodComponent} from "./accreditation-period/accreditation-period.component";
-import {SendApplicationComponent} from "./send-application/send-application.component";
-import {ButtonType} from "@psb/fe-ui-kit/src/components/button";
-import {SuccessModalComponent, SuccessModalType} from "@psb/fe-ui-kit/src/components/success-modal";
-import {PsbDomHelper} from "src/app/classes/psb-dom.helper";
+import { Component, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
+
+import { IssueSuccessComponent } from './issue-success/issue-success.component';
+import { AccreditationAmountComponent } from './accreditation-amount/accreditation-amount.component';
+import { СounterpartyComponent } from './counterparty/counterparty.component';
+import { CounterpartyContractComponent } from './counterparty-contract/counterparty-contract.component';
+import { AccreditationPeriodComponent } from './accreditation-period/accreditation-period.component';
+import { SendApplicationComponent } from './send-application/send-application.component';
+
+import { FormatHelper } from 'src/app/classes/format-helper';
+import { LetterOfCredit } from 'src/app/models/letter-of-credit.model';
+import { StoreService } from 'src/app/models/state.service';
+import { ButtonType } from '@psb/fe-ui-kit/src/components/button';
+import { SuccessModalComponent, SuccessModalType } from '@psb/fe-ui-kit/src/components/success-modal';
+import { PsbDomHelper } from 'src/app/classes/psb-dom.helper';
 
 @Component({
-	selector: "loc-issue",
-	templateUrl: "issue.component.html",
-	styleUrls: ["issue.component.scss"],
-	encapsulation: ViewEncapsulation.None
+  selector: 'loc-issue',
+  templateUrl: 'issue.component.html',
+  styleUrls: ['issue.component.scss'],
+  encapsulation: ViewEncapsulation.None,
 })
 export class IssueComponent implements OnInit {
-	public AllowIssue = false;
+  public allowIssue = false;
 
-	public ButtonType = ButtonType;
+  public ButtonType = ButtonType;
 
-	public CurrentStep = 5;
-	public LocInstance: LetterOfCredit;
+  public currentStep = 5;
+  public locInstance: LetterOfCredit;
 
-	@ViewChild(AccreditationAmountComponent) Step1Component: AccreditationAmountComponent;
-	@ViewChild(СounterpartyComponent) Step2Component: СounterpartyComponent;
-	@ViewChild(CounterpartyContractComponent) Step3Component: CounterpartyContractComponent;
-	@ViewChild(AccreditationPeriodComponent) Step4Component: AccreditationPeriodComponent;
-	@ViewChild(SendApplicationComponent) Step5Component: SendApplicationComponent;
+  @ViewChild(AccreditationAmountComponent) step1Component: AccreditationAmountComponent;
+  @ViewChild(СounterpartyComponent) step2Component: СounterpartyComponent;
+  @ViewChild(CounterpartyContractComponent) step3Component: CounterpartyContractComponent;
+  @ViewChild(AccreditationPeriodComponent) step4Component: AccreditationPeriodComponent;
+  @ViewChild(SendApplicationComponent) step5Component: SendApplicationComponent;
 
-	constructor(
-		private Store: StoreService,
-		private Dialog: MatDialog,
-	) { }
+  constructor(
+    private store: StoreService,
+    private dialog: MatDialog,
+  ) { }
 
-	ngOnInit(): void {
-		const that = this;
-		let observer = new MutationObserver(function () {
-			let newPaymentButton = PsbDomHelper.GetNewPaymentButtonElement();
-			if (null === newPaymentButton) {
-				return;
-			}
+  ngOnInit(): void {
+    const observer = new MutationObserver(() => {
+      const newPaymentButton = PsbDomHelper.getNewPaymentButtonElement();
+      if (null === newPaymentButton) {
+        return;
+      }
 
-			if (null === PsbDomHelper.GetNewLocPaymentButtonElement()) {
-				that.CreateNewLocButton(newPaymentButton, that);
-				that.AllowIssue = false;
-			}
-		});
+      if (null === PsbDomHelper.getNewLocPaymentButtonElement()) {
+        this.createNewLocButton(newPaymentButton);
+        this.allowIssue = false;
+      }
+    });
 
-		// observer.observe(document.querySelector("smb-app"), {"subtree": true, "childList": true});
+    // observer.observe(document.querySelector("smb-app"), {"subtree": true, "childList": true});
 
-		this.Store.SetIssueComponent(this);
-	}
+    this.store.setIssueComponent(this);
+  }
 
-	private CreateNewLocButton(newPaymentButton: Element, that: IssueComponent): void {
-		let btn = document.createElement("button");
-		btn.classList.add("btn", "btn-default", "btn-default-left", "waves-effect", "new-payment", "js-new-loc");
-		btn.innerText = "Новый покрытый аккредитив";
-		btn.style.cssText = "position: absolute;top: 51px;right: 0;";
+  private createNewLocButton(newPaymentButton: Element): void {
+    const btn = document.createElement('button');
+    btn.classList.add('btn', 'btn-default', 'btn-default-left', 'waves-effect', 'new-payment', 'js-new-loc');
+    btn.innerText = 'Новый покрытый аккредитив';
+    btn.style.cssText = 'position: absolute;top: 51px;right: 0;';
 
-		btn.addEventListener("click", function () {
-			that.DoOpenIssue();
-		});
+    btn.addEventListener('click', () => {
+      this.doOpenIssue();
+    });
 
-		newPaymentButton.after(btn);
-	}
+    newPaymentButton.after(btn);
+  }
 
-	public BackEvent() {
-		switch (this.CurrentStep) {
-			case 1:
-				this.CloseIssue();
-				break;
-			case 2:
-				this.CurrentStep = 1;
-				break;
-			case 3:
-				this.CurrentStep = 2;
-				break;
-			case 4:
-				this.CurrentStep = 3;
-				break;
-			case 5:
-				this.CurrentStep = 4;
-				break;
-		}
-	}
+  public backEvent() {
+    switch (this.currentStep) {
+      case 1:
+        this.closeIssue();
+        break;
+      case 2:
+        this.currentStep = 1;
+        break;
+      case 3:
+        this.currentStep = 2;
+        break;
+      case 4:
+        this.currentStep = 3;
+        break;
+      case 5:
+        this.currentStep = 4;
+        break;
+    }
+  }
 
-	public NextEvent() {
-		switch (this.CurrentStep) {
-			case 1:
-				if (!this.Step1Component.IsValid()) {
-					return;
-				}
+  public nextEvent() {
+    switch (this.currentStep) {
+      case 1:
+        if (!this.step1Component.isValid()) {
+          return;
+        }
 
-				this.Store.IssueStep1Text = FormatHelper.GetSumFormatted(Number(this.Step1Component.IssueSum) + Number(this.Step1Component.Commission));
-				this.Store.PaymentSum = this.Step1Component.IssueSum;
+        this.store.issueStep1Text =
+          FormatHelper.getSumFormatted(Number(this.step1Component.IssueSum) + Number(this.step1Component.commission));
 
-				this.CurrentStep = 2;
-				break;
-			case 2:
-				if (!this.Step2Component.IsValid()) {
-					return;
-				}
+        this.store.paymentSum = this.step1Component.IssueSum;
 
-				this.Store.IssueStep2Text = this.LocInstance.ReciverName;
+        this.currentStep = 2;
+        break;
+      case 2:
+        if (!this.step2Component.isValid()) {
+          return;
+        }
 
-				this.CurrentStep = 3;
-				break;
-			case 3:
-				if (!this.Step3Component.IsValid()) {
-					return;
-				}
+        this.store.issueStep2Text = this.locInstance.reciverName;
 
-				this.Store.IssueStep3Text = this.LocInstance.ContractDate.toLocaleDateString("ru-RU", {year: "numeric", month: "long", day: "numeric"});
+        this.currentStep = 3;
+        break;
+      case 3:
+        if (!this.step3Component.isValid()) {
+          return;
+        }
 
-				this.CurrentStep = 4;
-				break;
-			case 4:
-				if (!this.Step4Component.IsValid()) {
-					return;
-				}
+        this.store.issueStep3Text = this.locInstance.contractDate.toLocaleDateString(
+          'ru-RU',
+          { year: 'numeric', month: 'long', day: 'numeric' },
+        );
 
-				this.Store.IssueStep4Text = "до " + this.LocInstance?.EndLocDate.toLocaleDateString("ru-RU", {year: "numeric", month: "long", day: "numeric"});
+        this.currentStep = 4;
+        break;
+      case 4:
+        if (!this.step4Component.isValid()) {
+          return;
+        }
 
-				this.CurrentStep = 5;
-				break;
-			case 5:
-				if (!this.Step5Component.IsValid()) {
-					return;
-				}
+        this.store.issueStep4Text = `до ${this.locInstance?.endLocDate.toLocaleDateString(
+          'ru-RU',
+          { year: 'numeric', month: 'long', day: 'numeric' },
+        )}`;
 
-				this.OpenSuccessDialog();
-				break;
-		}
-	}
+        this.currentStep = 5;
+        break;
+      case 5:
+        if (!this.step5Component.isValid()) {
+          return;
+        }
 
-	public DoOpenIssue() {
-		this.LocInstance = new LetterOfCredit();
-		if (this.Store.AllowIssue) {
-			this.LocInstance.ReciverInn = this.Store.ReciverInn;
-			this.LocInstance.ReciverName = this.Store.ReciverName;
-			this.LocInstance.ReciverBankBik = this.Store.ReciverBankBik;
-			this.LocInstance.ReciverBankName = this.Store.ReciverBankName;
-			this.LocInstance.ReciverAccount = this.Store.ReciverAccount;
-		} else {
-			this.Store.RestoreDefaultState();
-		}
+        this.openSuccessDialog();
+        break;
+    }
+  }
 
-		this.CurrentStep = 1;
+  public doOpenIssue() {
+    this.locInstance = new LetterOfCredit();
+    if (this.store.allowIssue) {
+      this.locInstance.reciverInn = this.store.reciverInn;
+      this.locInstance.reciverName = this.store.reciverName;
+      this.locInstance.reciverBankBik = this.store.reciverBankBik;
+      this.locInstance.reciverBankName = this.store.reciverBankName;
+      this.locInstance.reciverAccount = this.store.reciverAccount;
+    } else {
+      this.store.restoreDefaultState();
+    }
 
-		PsbDomHelper.HideDocuments();
-		this.AllowIssue = true;
-	}
+    this.currentStep = 1;
 
-	private OpenSuccessDialog() {
-		this.CurrentStep = 1;
+    PsbDomHelper.hideDocuments();
+    this.allowIssue = true;
+  }
 
-		let exampleData: any = {
-			title: 'Заявка отправлена',
-			component: IssueSuccessComponent,
-		};
+  private openSuccessDialog() {
+    this.currentStep = 1;
 
-		const type = SuccessModalType.Succeed;
+    const exampleData: any = {
+      title: 'Заявка отправлена',
+      component: IssueSuccessComponent,
+    };
 
-		let dialog = this.Dialog.open(SuccessModalComponent, {
-			data: {
-				...exampleData,
-				type,
-			},
-			panelClass: ["loc-overlay", "hide-scrollbar"],
-		});
+    const type = SuccessModalType.Succeed;
 
-		const that = this;
+    const dialog = this.dialog.open(SuccessModalComponent, {
+      data: {
+        ...exampleData,
+        type,
+      },
+      panelClass: ['loc-overlay', 'hide-scrollbar'],
+    });
 
-		dialog.afterClosed().subscribe(() => {
-			that.AllowIssue = false;
-			PsbDomHelper.ShowDocuments();
-		});
+    dialog.afterClosed().subscribe(() => {
+      this.allowIssue = false;
+      PsbDomHelper.showDocuments();
+    });
 
-		this.Store.SetSuccessDialog(dialog);
-	}
+    this.store.setSuccessDialog(dialog);
+  }
 
-	private CloseIssue() {
-		this.AllowIssue = false;
-		PsbDomHelper.ShowDocuments();
-	}
+  private closeIssue() {
+    this.allowIssue = false;
+    PsbDomHelper.showDocuments();
+  }
 }

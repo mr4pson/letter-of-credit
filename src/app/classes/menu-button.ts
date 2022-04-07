@@ -1,59 +1,58 @@
-import {Router} from "@angular/router";
-import {StoreService} from "../models/state.service";
-
+import { Router } from '@angular/router';
 export class MenuButton {
-	public constructor(private RouterInstance: Router, private Store: StoreService) { }
+  public constructor(
+    private route: Router,
+  ) { }
 
-	public AppendMenuBidItem() {
-		let that = this;
-		let observer = new MutationObserver(function () {
-			let menu = document.querySelector("smb-app .menu.main-menu .menu-items");
-			if (null === menu) {
-				return;
-			}
+  public appendMenuBidItem() {
+    const observer = new MutationObserver(() => {
+      const menu = document.querySelector('smb-app .menu.main-menu .menu-items');
+      if (null === menu) {
+        return;
+      }
 
-			observer.disconnect();
+      observer.disconnect();
 
-			let li = document.createElement("li");
-			li.classList.add("tooltip-link", "hover");
+      const li = document.createElement('li');
+      li.classList.add('tooltip-link', 'hover');
 
-			let link = document.createElement("a");
-			link.href = "#";
-			link.onclick = () => false;
-			link.classList.add("menu-item", "waves-effect", "bid-menu-item");
+      const link = document.createElement('a');
+      link.href = '#';
+      link.onclick = () => false;
+      link.classList.add('menu-item', 'waves-effect', 'bid-menu-item');
 
-			let linkIcon = document.createElement("span");
-			linkIcon.classList.add("menu-icon", "menu-icon-account", "icon", "smb-file-document-box");
+      const linkIcon = document.createElement('span');
+      linkIcon.classList.add('menu-icon', 'menu-icon-account', 'icon', 'smb-file-document-box');
 
-			let linkText = document.createElement("span");
-			linkText.classList.add("menu-text");
-			linkText.textContent = "Заявки"
+      const linkText = document.createElement('span');
+      linkText.classList.add('menu-text');
+      linkText.textContent = 'Заявки';
 
-			link.appendChild(linkIcon);
-			link.appendChild(linkText);
+      link.appendChild(linkIcon);
+      link.appendChild(linkText);
 
-			let tooltip = document.createElement("div");
-			tooltip.classList.add("tooltip-right");
+      const tooltip = document.createElement('div');
+      tooltip.classList.add('tooltip-right');
 
-			let tooltipInner = document.createElement("span");
-			tooltipInner.classList.add("tooltip-content", "animation-fadein");
-			tooltipInner.textContent = "Заявки";
+      const tooltipInner = document.createElement('span');
+      tooltipInner.classList.add('tooltip-content', 'animation-fadein');
+      tooltipInner.textContent = 'Заявки';
 
-			tooltip.appendChild(tooltipInner);
+      tooltip.appendChild(tooltipInner);
 
-			li.appendChild(link);
-			li.appendChild(tooltip);
+      li.appendChild(link);
+      li.appendChild(tooltip);
 
-			menu.appendChild(li);
+      menu.appendChild(li);
 
-			link.addEventListener('click', () => that.Navigate2Bid(that));
-			tooltip.addEventListener('click', () => that.Navigate2Bid(that));
-		});
+      link.addEventListener('click', () => this.navigate2Bid());
+      tooltip.addEventListener('click', () => this.navigate2Bid());
+    });
 
-		observer.observe(document.querySelector("smb-app"), {"subtree": true, "childList": true});
-	}
+    observer.observe(document.querySelector('smb-app'), { subtree: true, childList: true });
+  }
 
-	private Navigate2Bid(that: MenuButton) {
-		that.RouterInstance.navigateByUrl("/bid");
-	}
+  private navigate2Bid() {
+    this.route.navigateByUrl('/bid');
+  }
 }

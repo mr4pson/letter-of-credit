@@ -1,85 +1,87 @@
-import {Injectable} from "@angular/core";
-import {MatDialog, MatDialogConfig, MatDialogRef} from "@angular/material/dialog";
-import {BaseModalComponent} from "@psb/fe-ui-kit/src/components/base-modal";
-import {SuccessModalComponent} from "@psb/fe-ui-kit/src/components/success-modal";
-import {ReciverStatus} from "../classes/reciver-status";
-import {SafePaymentButton} from "../classes/safe-payment-button";
-import {IssueComponent} from "../components/issue/issue.component";
-import {WaitSpinnerComponent} from "../components/wait-spinner/wait-spinner.component";
+import { Injectable } from '@angular/core';
+import { MatDialog, MatDialogConfig, MatDialogRef } from '@angular/material/dialog';
+
+import { ReciverStatus } from '../classes/reciver-status';
+import { SafePaymentButton } from '../classes/safe-payment-button';
+import { IssueComponent } from '../components/issue/issue.component';
+import { WaitSpinnerComponent } from '../components/wait-spinner/wait-spinner.component';
+
+import { BaseModalComponent } from '@psb/fe-ui-kit/src/components/base-modal';
+import { SuccessModalComponent } from '@psb/fe-ui-kit/src/components/success-modal';
 
 @Injectable()
 export class StoreService {
-	public Dialog: MatDialog;
-	public SafePaymentDialog: MatDialogRef<BaseModalComponent, any>;
-	private WaitDialog: MatDialogRef<WaitSpinnerComponent, any>;
-	private SuccessIsuueDialog: MatDialogRef<SuccessModalComponent, any>;
+  public dialog: MatDialog;
+  public safePaymentDialog: MatDialogRef<BaseModalComponent, any>;
+  private waitDialog: MatDialogRef<WaitSpinnerComponent, any>;
+  private successIsuueDialog: MatDialogRef<SuccessModalComponent, any>;
 
-	public ClientEmail: string;
+  public clientEmail: string;
 
-	public ReciverStatus: ReciverStatus = ReciverStatus.Unknown;
-	public ReciverInn = "";
-	public ReciverName = "";
-	public ReciverBankBik = "";
-	public ReciverBankName = "";
-	public ReciverAccount = "";
-	public PaymentSum = 0;
+  public reciverStatus: ReciverStatus = ReciverStatus.Unknown;
+  public reciverInn = '';
+  public reciverName = '';
+  public reciverBankBik = '';
+  public reciverBankName = '';
+  public reciverAccount = '';
+  public paymentSum = 0;
 
-	public AllowIssue = false;
+  public allowIssue = false;
 
-	public IssueStep1Text = "";
-	public IssueStep2Text = "";
-	public IssueStep3Text = "";
-	public IssueStep4Text = "";
+  public issueStep1Text = '';
+  public issueStep2Text = '';
+  public issueStep3Text = '';
+  public issueStep4Text = '';
 
-	public RestoreDefaultState() {
-		this.SafePaymentDialog?.close(SafePaymentButton.RefusePay);
-		this.SafePaymentDialog = null;
+  private issueComponent: IssueComponent;
 
-		this.ClientEmail = "";
+  public restoreDefaultState() {
+    this.safePaymentDialog?.close(SafePaymentButton.RefusePay);
+    this.safePaymentDialog = null;
 
-		this.ReciverInn = "";
-		this.ReciverStatus = ReciverStatus.Unknown;
-		this.ReciverName = "";
-		this.ReciverBankBik = "";
-		this.ReciverBankName = "";
-		this.ReciverAccount = "";
-		this.PaymentSum = 0;
+    this.clientEmail = '';
 
-		this.AllowIssue = false;
-	}
+    this.reciverInn = '';
+    this.reciverStatus = ReciverStatus.Unknown;
+    this.reciverName = '';
+    this.reciverBankBik = '';
+    this.reciverBankName = '';
+    this.reciverAccount = '';
+    this.paymentSum = 0;
 
-	public OpenWaitDialog() {
-		const dialogConfig = new MatDialogConfig();
-		dialogConfig.disableClose = true;
-		dialogConfig.panelClass = ["loc-overlay-spinner", "hide-scrollbar"];
-		dialogConfig.backdropClass = "loc-backdrop";
+    this.allowIssue = false;
+  }
 
-		if (null !== this.WaitDialog) {
-			this.CloseWaitDialog();
-		}
+  public openWaitDialog() {
+    const dialogConfig = new MatDialogConfig();
+    dialogConfig.disableClose = true;
+    dialogConfig.panelClass = ['loc-overlay-spinner', 'hide-scrollbar'];
+    dialogConfig.backdropClass = 'loc-backdrop';
 
-		this.WaitDialog = this.Dialog?.open(WaitSpinnerComponent, dialogConfig);
-	}
+    if (null !== this.waitDialog) {
+      this.closeWaitDialog();
+    }
 
-	public CloseWaitDialog() {
-		this.WaitDialog?.close();
-	}
+    this.waitDialog = this.dialog?.open(WaitSpinnerComponent, dialogConfig);
+  }
 
-	public SetSuccessDialog(dialog: MatDialogRef<any, any>) {
-		this.SuccessIsuueDialog = dialog;
-	}
+  public closeWaitDialog() {
+    this.waitDialog?.close();
+  }
 
-	public CloseSuccessDialog() {
-		this.SuccessIsuueDialog?.close();
-		this.SuccessIsuueDialog = null;
-	}
+  public setSuccessDialog(dialog: MatDialogRef<any, any>) {
+    this.successIsuueDialog = dialog;
+  }
 
-	private IssueComponent: IssueComponent;
-	public SetIssueComponent(instance: IssueComponent): void {
-		this.IssueComponent = instance;
-	}
+  public closeSuccessDialog() {
+    this.successIsuueDialog?.close();
+    this.successIsuueDialog = null;
+  }
+  public setIssueComponent(instance: IssueComponent): void {
+    this.issueComponent = instance;
+  }
 
-	public OpenIssue(): void {
-		this.IssueComponent?.DoOpenIssue();
-	}
+  public openIssue(): void {
+    this.issueComponent?.doOpenIssue();
+  }
 }

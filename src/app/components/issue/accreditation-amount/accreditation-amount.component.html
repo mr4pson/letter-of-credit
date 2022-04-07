@@ -1,4 +1,4 @@
-<div class="accredit-amount" [formGroup]="this.Issue1Group">
+<div class="accredit-amount" [formGroup]="issue1Group">
 	<div class="accredit-sum">
 		<psb-number-input
 			label="Сумма аккредитива"
@@ -11,7 +11,7 @@
 	<psb-text>
 		<div class="commission">
 			<span>Комиссия за выпуск аккредитива:</span>
-			<span class="commission__sum">{{ this.FormattedCommission }}</span>
+			<span class="commission__sum">{{ formattedCommission }}</span>
 			<psb-tooltip
 				class="commission__tooltip"
 				tooltipType="white"
@@ -21,10 +21,10 @@
 	</psb-text>
 
 	<div class="debit-account">
-		<div class="debit-account__sum">{{ this.AccountSum }}</div>
+		<div class="debit-account__sum">{{ accountSum }}</div>
 		<psb-input-select
 			label="Счёт списания"
-			[options]="this.Accounts"
+			[options]="accounts"
 			class="debit-account__attribute"
 			placeholder="Выберите атрибут"
 			formControlName="SelectedAccount"

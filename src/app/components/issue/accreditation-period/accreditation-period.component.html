@@ -1,10 +1,10 @@
-<div class="accreditation-period" [formGroup]="Issue4Group">
+<div class="accreditation-period" [formGroup]="issue4Group">
 	<div class="accreditation-dates">
 		<div class="accreditation-dates__expiration-date">
 			<psb-datepicker
 				label="Дата окончания аккредитива"
 				formControlName="EndLocDate"
-				[minValidDate]="MinEndLocDate"
+				[minValidDate]="minEndLocDate"
 			></psb-datepicker>
 
 			<psb-tooltip
@@ -40,7 +40,7 @@
 		></closing-doc>
 	</ng-container>
 
-	<button class="add-doc-btn" (click)="AddClosingDoc()">
+	<button class="add-doc-btn" (click)="addClosingDoc()">
 		<div>
 			<svg
 				width="22"

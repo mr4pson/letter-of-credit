@@ -1,34 +1,32 @@
-import {ApiAccount} from "../classes/interfaces/api-account.interface";
+import { ApiAccount } from '../classes/interfaces/api-account.interface';
 
 export class ClientAccount {
-	public Title = "Расчётный";
-	public AccountCode = "";
-	private AccountCodeFormatted = "";
-	public Balance = 0;
-	private BalanceFormatted = "";
+  public title = 'Расчётный';
+  public accountCode = '';
+  public balance = 0;
+  private accountCodeFormatted = '';
+  private balanceFormatted = '';
 
-	public constructor(data: ApiAccount = null) {
-		if (null !== data) {
-			this.AccountCode = data.code;
-			this.Balance = data.balance;
-		}
-	}
+  public constructor(data: ApiAccount = null) {
+    if (null !== data) {
+      this.accountCode = data.code;
+      this.balance = data.balance;
+    }
+  }
 
-	public GetFormattedBalance(): string {
-		if ("" === this.BalanceFormatted) {
-			this.BalanceFormatted = this.Balance.toString().replace(/\d(?=(\d{3})+$)/g, '$& ') + " ₽";
-		}
+  public getFormattedBalance(): string {
+    if ('' === this.balanceFormatted) {
+      this.balanceFormatted =  `${this.balance.toString().replace(/\d(?=(\d{3})+$)/g, '$& ')} ₽`;
+    }
 
-		return this.BalanceFormatted;
-	}
+    return this.balanceFormatted;
+  }
 
-	public GetFormattedAccountCode() {
-		if ("" === this.AccountCodeFormatted) {
-			this.AccountCodeFormatted = this.AccountCode.substr(0, 3) + " " + this.AccountCode.substr(3, 2) + " " +
-				this.AccountCode.substr(5, 3) + " " + this.AccountCode.substr(8, 1) + " " +
-				this.AccountCode.substr(9, 4) + " " + this.AccountCode.substr(13);
-		}
+  public getFormattedAccountCode() {
+    if ('' === this.accountCodeFormatted) {
+      this.accountCodeFormatted = `${this.accountCode.substr(0, 3)} ${this.accountCode.substr(3, 2)} ${this.accountCode.substr(5, 3)} ${this.accountCode.substr(8, 1)} ${this.accountCode.substr(9, 4)} ${this.accountCode.substr(13)}`;
+    }
 
-		return this.AccountCodeFormatted;
-	}
+    return this.accountCodeFormatted;
+  }
 }

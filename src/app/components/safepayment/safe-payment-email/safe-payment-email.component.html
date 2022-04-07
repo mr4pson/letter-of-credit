@@ -1,12 +1,12 @@
 <div class="email-form">
   <psb-text-input
     label="Email"
-    [formControl]="EmailFormControl"
+    [formControl]="emailFormControl"
     class="email-form"
   ></psb-text-input>
 
   <svg
-    *ngIf="EmailFormControl.valid"
+    *ngIf="emailFormControl.valid"
     class="email-form__green-check"
     width="24"
     height="24"
@@ -23,7 +23,7 @@
   <psb-button
     [type]="ButtonType.Text"
     [size]="ButtonSize.Medium"
-    (click)="TakeEmail()"
+    (click)="takeEmail()"
     class="email-form__button"
   >
     Получить материалы

@@ -1,11 +1,9 @@
-import {Component} from '@angular/core';
-import {StoreService} from 'src/app/models/state.service';
+import { Component } from '@angular/core';
 
 @Component({
-	selector: "loc-empty",
-	template: "",
-	styles: []
+  selector: 'loc-empty',
+  template: '',
+  styles: [],
 })
 export class EmptyComponent {
-	constructor(private Store: StoreService) { }
 }

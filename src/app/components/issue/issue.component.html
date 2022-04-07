@@ -1,7 +1,7 @@
 <div class="issue">
   <div
     class="issue__back-btn back-btn"
-    (click)="this.BackEvent()"
+    (click)="backEvent()"
   >
     <div class="back-btn__arrow">&larr;</div>
     <div class="back-btn__label">Назад</div>
@@ -18,26 +18,26 @@
         ></psb-tooltip>
       </div>
 
-      <accreditation-amount *ngIf="1 === this.CurrentStep"></accreditation-amount>
+      <accreditation-amount *ngIf="1 === currentStep"></accreditation-amount>
 
       <counterparty
-        *ngIf="2 === this.CurrentStep"
-        [LocInstance]="this.LocInstance"
+        *ngIf="2 === currentStep"
+        [locInstance]="locInstance"
       ></counterparty>
 
       <counterparty-contract
-        *ngIf="3 === this.CurrentStep"
-        [LocInstance]="this.LocInstance"
+        *ngIf="3 === currentStep"
+        [locInstance]="locInstance"
       ></counterparty-contract>
 
       <accreditation-period
-        *ngIf="4 === this.CurrentStep"
-        [LocInstance]="this.LocInstance"
+        *ngIf="4 === currentStep"
+        [locInstance]="locInstance"
       ></accreditation-period>
 
       <send-application
-        *ngIf="5 === this.CurrentStep"
-        [LocInstance]="this.LocInstance"
+        *ngIf="5 === currentStep"
+        [locInstance]="locInstance"
       ></send-application>
     </div>
 
@@ -46,13 +46,13 @@
         <div class="dots-holder"></div>
       </div>
 
-      <loc-issue-steps [CurrentStep]="this.CurrentStep"></loc-issue-steps>
+      <loc-issue-steps [currentStep]="currentStep"></loc-issue-steps>
     </div>
   </div>
   <div class="issue__footer">
     <psb-button
       [type]="ButtonType.Primary"
-      (click)="this.NextEvent()"
+      (click)="nextEvent()"
     >
       Далее
     </psb-button>

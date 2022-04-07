@@ -1,13 +1,13 @@
 export class ClosingDoc {
-	public AdditionalRequirements = "";
-	public Amount = 1;
-	public Document = "";
-	public OnlyOriginalDocument = true;
+  public additionalRequirements = '';
+  public amount = 1;
+  public document = '';
+  public onlyOriginalDocument = true;
 
-	public constructor(item: ClosingDoc) {
-		this.AdditionalRequirements = item.AdditionalRequirements;
-		this.Amount = item.Amount;
-		this.Document = item.Document;
-		this.OnlyOriginalDocument = item.OnlyOriginalDocument;
-	}
+  public constructor(item: ClosingDoc) {
+    this.additionalRequirements = item.additionalRequirements;
+    this.amount = item.amount;
+    this.document = item.document;
+    this.onlyOriginalDocument = item.onlyOriginalDocument;
+  }
 }

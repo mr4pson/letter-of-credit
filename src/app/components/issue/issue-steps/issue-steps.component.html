@@ -1,11 +1,11 @@
 <div class="issue-steps">
-  <div class="issue-steps__title">ШАГ {{CurrentStep}} из 5</div>
+  <div class="issue-steps__title">ШАГ {{currentStep}} из 5</div>
   <div class="issue-steps__body">
     <div
       class="step-item"
 			*ngFor="let step of steps; let i = index"
-      [class.step-item--active]="CurrentStep === i + 1"
-      [class.step-item--done]="CurrentStep > i + 1"
+      [class.step-item--active]="currentStep === i + 1"
+      [class.step-item--done]="currentStep > i + 1"
     >
       <div class="step-item__circle">
         <svg

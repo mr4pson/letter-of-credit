@@ -1,7 +1,7 @@
-import {PartnerBank} from "./api-partner-bank.interface";
+import { PartnerBank } from './api-partner-bank.interface';
 
 export interface Partner {
-	shortName: string;
-	inn: string;
-	banks: PartnerBank[];
+  shortName: string;
+  inn: string;
+  banks: PartnerBank[];
 }

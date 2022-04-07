@@ -1,4 +1,4 @@
 export class FileUploaded {
-	public Native: File;
-	public SizeFormatted: string;
+  public native: File;
+  public sizeFormatted: string;
 }

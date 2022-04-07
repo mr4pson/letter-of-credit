@@ -1,6 +1,6 @@
 export enum BidStatus {
-	None,
-	Waiting,
-	Decline,
-	Accepted,
+  None,
+  Waiting,
+  Decline,
+  Accepted,
 }

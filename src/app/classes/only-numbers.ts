@@ -1,12 +1,17 @@
 export class OnlyNumbers {
-	private static AllowKeys = ["Backspace", "ArrowLeft", "ArrowRight", "Tab", "Delete"];
+  private static allowKeys = ['Backspace', 'ArrowLeft', 'ArrowRight', 'Tab', 'Delete'];
 
-	public static IsValid(event: KeyboardEvent) {
-		if (!/^[0-9]*$/.test(event.key) && OnlyNumbers.AllowKeys.indexOf(event.key) < 0 && !(event.ctrlKey && "v" == event.key.toLowerCase())) {
-			event.preventDefault();
-			return false;
-		}
+  public static isValid(event: KeyboardEvent) {
+    if (
+      !/^[0-9]*$/.test(event.key)
+      && OnlyNumbers.allowKeys.indexOf(event.key) < 0
+      && !(event.ctrlKey && 'v' === event.key.toLowerCase())
+    ) {
+      event.preventDefault();
 
-		return true;
-	}
+      return false;
+    }
+
+    return true;
+  }
 }

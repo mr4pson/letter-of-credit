@@ -1,4 +1,4 @@
 export interface ApiAccount {
-	balance: number;
-	code: string;
+  balance: number;
+  code: string;
 }

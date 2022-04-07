@@ -1,36 +1,36 @@
-import {Component, EventEmitter, Output, ViewEncapsulation} from "@angular/core";
-import {FormControl} from '@angular/forms';
-import {ButtonSize, ButtonType} from "@psb/fe-ui-kit/src/components/button";
-import {getRequiredFormControlValidator} from '@psb/validations/required';
-import {getEmailFormControlValidator} from '@psb/validations/email';
-import {StoreService} from "src/app/models/state.service";
+import { Component, EventEmitter, Output } from '@angular/core';
+import { FormControl } from '@angular/forms';
+
+import { ButtonSize, ButtonType } from '@psb/fe-ui-kit/src/components/button';
+import { getRequiredFormControlValidator } from '@psb/validations/required';
+import { getEmailFormControlValidator } from '@psb/validations/email';
+import { StoreService } from 'src/app/models/state.service';
 
 @Component({
-	selector: "safe-payment-email",
-	templateUrl: "safe-payment-email.component.html",
-	styleUrls: ["safe-payment-email.component.scss"],
-	encapsulation: ViewEncapsulation.None
+  selector: 'safe-payment-email',
+  templateUrl: 'safe-payment-email.component.html',
+  styleUrls: ['safe-payment-email.component.scss'],
 })
 export class SafePaymentEmailComponent {
-	public ButtonType = ButtonType;
-	public ButtonSize = ButtonSize;
+  public ButtonType = ButtonType;
+  public ButtonSize = ButtonSize;
 
-	public EmailFormControl = new FormControl(this.Store.ClientEmail, [
-		getRequiredFormControlValidator("Вы забыли написать email."),
-		getEmailFormControlValidator("Вы написали некорректный email."),
-	]);
+  public emailFormControl = new FormControl(this.store.clientEmail, [
+    getRequiredFormControlValidator('Вы забыли написать email.'),
+    getEmailFormControlValidator('Вы написали некорректный email.'),
+  ]);
 
-	constructor(public Store: StoreService) { }
+  constructor(public store: StoreService) { }
 
-	@Output() TakeValidEmail = new EventEmitter();
+  @Output() takeValidEmail = new EventEmitter<string>();
 
-	public TakeEmail(): void {
-		this.EmailFormControl.markAllAsTouched();
+  public takeEmail(): void {
+    this.emailFormControl.markAllAsTouched();
 
-		if (!this.EmailFormControl.valid) {
-			return;
-		}
+    if (!this.emailFormControl.valid) {
+      return;
+    }
 
-		this.TakeValidEmail.emit(this.EmailFormControl.value.toString().trim());
-	}
+    this.takeValidEmail.emit(this.emailFormControl.value.toString().trim());
+  }
 }

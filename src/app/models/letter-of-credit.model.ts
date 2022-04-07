@@ -1,22 +1,22 @@
-import {ClosingDoc} from "./closing-doc.model";
+import { ClosingDoc } from './closing-doc.model';
 
 export class LetterOfCredit {
-	public ReciverInn = "";
-	public ReciverName = "";
-	public ReciverBankBik = "";
-	public ReciverBankName = "";
-	public ReciverAccount = "";
+  public reciverInn = '';
+  public reciverName = '';
+  public reciverBankBik = '';
+  public reciverBankName = '';
+  public reciverAccount = '';
 
-	public ContractDate: Date = null;
-	public Contract = "";
-	public ContractInfo = "";
+  public contractDate: Date = null;
+  public contract = '';
+  public contractInfo = '';
 
-	public EndLocDate: Date = null;
+  public endLocDate: Date = null;
 
-	public ClosingDocs: ClosingDoc[] = [];
-	public PerhapsDigitalDoc = true;
-	public AllowUsePartOfLoc = true;
+  public closingDocs: ClosingDoc[] = [];
+  public perhapsDigitalDoc = true;
+  public allowUsePartOfLoc = true;
 
-	public ContactPersone = "";
-	public ContactPhone = "";
+  public contactPersone = '';
+  public contactPhone = '';
 }
