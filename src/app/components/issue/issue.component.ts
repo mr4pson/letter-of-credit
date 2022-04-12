@@ -7,8 +7,8 @@ import { СounterpartyComponent } from './counterparty/counterparty.component';
 import { CounterpartyContractComponent } from './counterparty-contract/counterparty-contract.component';
 import { AccreditationPeriodComponent } from './accreditation-period/accreditation-period.component';
 import { SendApplicationComponent } from './send-application/send-application.component';
+import { FormatHelper } from './helpers/format-helper';
 
-import { FormatHelper } from 'src/app/classes/format-helper';
 import { LetterOfCredit } from 'src/app/models/letter-of-credit.model';
 import { StoreService } from 'src/app/models/state.service';
 import { ButtonType } from '@psb/fe-ui-kit/src/components/button';
@@ -26,7 +26,7 @@ export class IssueComponent implements OnInit {
 
   public ButtonType = ButtonType;
 
-  public currentStep = 5;
+  public currentStep = 1;
   public locInstance: LetterOfCredit;
 
   @ViewChild(AccreditationAmountComponent) step1Component: AccreditationAmountComponent;
@@ -94,16 +94,16 @@ export class IssueComponent implements OnInit {
   public nextEvent() {
     switch (this.currentStep) {
       case 1:
-        if (!this.step1Component.isValid()) {
-          return;
-        }
+        // if (!this.step1Component.isValid()) {
+        //   return;
+        // }
 
-        this.store.issueStep1Text =
-          FormatHelper.getSumFormatted(Number(this.step1Component.IssueSum) + Number(this.step1Component.commission));
+        // this.store.issueStep1Text =
+        //   FormatHelper.getSumFormatted(Number(this.step1Component.issueSum) + Number(this.step1Component.commission));
 
-        this.store.paymentSum = this.step1Component.IssueSum;
+        // this.store.paymentSum = this.step1Component.issueSum;
 
-        this.currentStep = 2;
+        // this.currentStep = 2;
         break;
       case 2:
         if (!this.step2Component.isValid()) {

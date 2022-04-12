@@ -3,7 +3,7 @@ import { MatDialog } from '@angular/material/dialog';
 
 import { SafePaymentHelper } from './classes/safe-payment.helper';
 import { SafePaymentComponent } from './components/safepayment/safe-payment.component';
-import { AccountService } from './models/account.service';
+import { AccountService } from './services/account.service';
 import { StoreService } from './models/state.service';
 
 import { BaseModalComponent } from '@psb/fe-ui-kit';
@@ -31,17 +31,17 @@ export class AppComponent {
     this.safePaymentHelper.hookMainPagePaymentButton();
     this.safePaymentHelper.hookDocPagePaymentButton();
 
-    const exampleData: any = {
-      title: 'Рекомендуем безопасный платёж',
-      component: SafePaymentComponent,
-    };
+    // const exampleData: any = {
+    //   title: 'Рекомендуем безопасный платёж',
+    //   component: SafePaymentComponent,
+    // };
 
-    this.store.safePaymentDialog = this.dialog.open(BaseModalComponent, {
-      data: {
-        ...exampleData,
-      },
-      panelClass: ['loc-overlay', 'loc-payment'],
-      backdropClass: 'loc-backdrop',
-    });
+    // this.store.safePaymentDialog = this.dialog.open(BaseModalComponent, {
+    //   data: {
+    //     ...exampleData,
+    //   },
+    //   panelClass: ['loc-overlay', 'loc-payment'],
+    //   backdropClass: 'loc-backdrop',
+    // });
   }
 }

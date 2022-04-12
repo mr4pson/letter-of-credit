@@ -8,9 +8,9 @@ import { ApiAccount } from '../classes/interfaces/api-account.interface';
 import { BankSearch } from '../classes/interfaces/bank-search.interface';
 import { ClientSearch } from '../classes/interfaces/client-search.interface';
 import { ReciverStatus } from '../classes/reciver-status';
-import { StorageService } from '../services/storage.service';
-import { ReliabilityResult } from './reliability.interface';
-import { StoreService } from './state.service';
+import { StorageService } from './storage.service';
+import { ReliabilityResult } from '../models/reliability.interface';
+import { StoreService } from '../models/state.service';
 
 import { LetterService } from 'src/api/services';
 
@@ -110,8 +110,6 @@ export class AccountService {
   }
 
   public getAccountList(): Observable<ApiAccount[]> {
-    this.lastError = null;
-
     const url =
       `${this.storage.apiDomain}api/Account/clients/${this.storage.getClientID()}?branchId=${this.storage.getBranchID()}&account=${this.storage.getAccountID()}&v=${
         this.storage.apiVersion
@@ -125,11 +123,6 @@ export class AccountService {
         }
 
         return response.accounts;
-      }),
-      catchError((error) => {
-        this.lastError = error;
-
-        return of([]);
       }),
     );
   }

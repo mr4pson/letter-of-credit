@@ -31,6 +31,7 @@ import { MaterialModule } from './material/material-module';
 import { ModelsModule } from './models/models.module';
 import { ErrorHandlerService } from './services/error-handler.service';
 import { StorageService } from './services/storage.service';
+import { FormatMoneyPipe } from './pipes/format-number.pipe';
 
 import { BaseModalModule } from '@psb/fe-ui-kit/src/components/base-modal';
 import { ButtonModule } from '@psb/fe-ui-kit/src/components/button';
@@ -56,6 +57,7 @@ import { ApiModule } from 'src/api/api.module';
 registerLocaleData(ru);
 @NgModule({
   declarations: [
+    // Components
     AppComponent,
     EmptyComponent,
     SafePaymentComponent,
@@ -72,6 +74,8 @@ registerLocaleData(ru);
     AccreditationPeriodComponent,
     SendApplicationComponent,
     ClosingDocComponent,
+    // Pipes
+    FormatMoneyPipe,
   ],
   imports: [
     ApiModule.forRoot({ rootUrl: '' } as ApiConfigurationParams),

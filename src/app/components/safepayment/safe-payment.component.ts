@@ -9,7 +9,7 @@ import { PsbDomHelper } from 'src/app/classes/psb-dom.helper';
 import { ReciverStatus } from 'src/app/classes/reciver-status';
 import { ReliableSign } from 'src/app/classes/reliable-sign';
 import { SafePaymentButton } from 'src/app/classes/safe-payment-button';
-import { AccountService } from 'src/app/models/account.service';
+import { AccountService } from 'src/app/services/account.service';
 import { StoreService } from 'src/app/models/state.service';
 
 

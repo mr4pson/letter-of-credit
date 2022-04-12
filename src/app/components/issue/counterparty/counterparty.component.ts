@@ -7,7 +7,7 @@ import { InputAutocompleteComponent } from '@psb/fe-ui-kit/src/components/input-
 import { getRequiredFormControlValidator } from '@psb/validations/required';
 import { Partner } from 'src/app/classes/interfaces/api-partner.interface';
 import { ClientSearch } from 'src/app/classes/interfaces/client-search.interface';
-import { AccountService } from 'src/app/models/account.service';
+import { AccountService } from 'src/app/services/account.service';
 import { LetterOfCredit } from 'src/app/models/letter-of-credit.model';
 import { PartnersService } from 'src/app/models/partners.service';
 

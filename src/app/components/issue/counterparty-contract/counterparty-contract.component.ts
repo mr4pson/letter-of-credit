@@ -1,11 +1,12 @@
-import { Component, Input, OnInit, ViewEncapsulation } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
+
+import { FormatHelper } from '../helpers/format-helper';
 
 import { ButtonType } from '@psb/fe-ui-kit/src/components/button';
 import { SelectedItem } from '@psb/fe-ui-kit/src/components/input-select';
 import { getRequiredFormControlValidator } from '@psb/validations/required';
 import { SimplebarAngularComponent } from 'simplebar-angular/lib/simplebar-angular.component';
-import { FormatHelper } from 'src/app/classes/format-helper';
 import { FileUploaded } from 'src/app/models/file-upload.model';
 import { LetterOfCredit } from 'src/app/models/letter-of-credit.model';
 

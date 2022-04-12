@@ -1,7 +1,7 @@
 import { MatDialog } from '@angular/material/dialog';
 
 import { SafePaymentComponent } from '../components/safepayment/safe-payment.component';
-import { AccountService } from '../models/account.service';
+import { AccountService } from '../services/account.service';
 import { StoreService } from '../models/state.service';
 import { PaymentFields } from './payment-fields';
 import { PaymentForm } from './payment-form';
@@ -113,7 +113,7 @@ export class SafePaymentHelper {
 
       // tslint:disable-next-line: prefer-for-of
       buttons.forEach((oldElement) => {
-        const newElement = oldElement.cloneNode(true);
+        const newElement = oldElement?.cloneNode(true);
 
         (oldElement as HTMLElement)?.classList.add(this.oldPayButtonHideClassName);
         (newElement as HTMLElement)?.classList.add(this.newSafePayButtonClassName);

@@ -1,23 +1,34 @@
-import { Component, OnInit, ViewEncapsulation } from '@angular/core';
-import { FormControl, FormGroup } from '@angular/forms';
+import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { OnDestroyMixin } from '@w11k/ngx-componentdestroyed';
+import { catchError, map, switchMap, tap } from 'rxjs/operators';
+import { Observable, of } from 'rxjs';
+
+import { ClientAccountService } from '../services/client-accounts.service';
+import { getFormattedBalance } from '../helpers/client-account.helper';
+import { ClientAccount } from '../interfaces/client-account.interface';
 
 import { SelectedItem } from '@psb/fe-ui-kit/src/components/input-select';
 import { getMinMaxFormControlValidator } from '@psb/validations/minMax';
 import { getRequiredFormControlValidator } from '@psb/validations/required/validation';
-import { FormatHelper } from 'src/app/classes/format-helper';
-import { AccountService } from 'src/app/models/account.service';
-import { ClientAccountsService } from 'src/app/models/client-accounts.service';
+import { AccountService } from 'src/app/services/account.service';
 import { StoreService } from 'src/app/models/state.service';
+import { ErrorHandlerService } from 'src/app/services/error-handler.service';
+import { ButtonType } from '@psb/fe-ui-kit';
 
 @Component({
   selector: 'accreditation-amount',
   templateUrl: 'accreditation-amount.component.html',
   styleUrls: ['accreditation-amount.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class AccreditationAmountComponent implements OnInit {
-  public issue1Group = new FormGroup({
-    IssueSum: new FormControl('', {
+export class AccreditationAmountComponent extends OnDestroyMixin implements OnInit {
+  public commission = 0;
+  public ButtonType = ButtonType;
+  public form = new FormGroup({
+    IssueSum: new FormControl(null, {
       validators: [
+        Validators.required,
         getRequiredFormControlValidator('Укажите сумму аккредитива'),
         getMinMaxFormControlValidator({
           min: 1,
@@ -27,107 +38,98 @@ export class AccreditationAmountComponent implements OnInit {
       ],
       updateOn: 'blur',
     }),
-    SelectedAccount: new FormControl(),
+    SelectedAccount: new FormControl(null,  [
+      Validators.required,
+      getRequiredFormControlValidator('Выберите счет из списка'),
+    ]),
   });
-  public commission = 0;
-  public formattedCommission = '0,00';
-  public accounts: SelectedItem[] = [];
 
-  private commisionRequestStarted = false;
-  private commisionsHasDelayedRequest = false;
+  public comission$ = this.form.get('IssueSum').valueChanges.pipe(
+    switchMap(issueSum => (
+      this.accountService.getCommision(Number(issueSum))
+    )),
+    map((commission) => {
+      this.commission = commission;
+
+      return this.commission;
+    }),
+    catchError(() => {
+      this.errorHandlerService.handleError('Ошибка при получении размера коммисии.');
+      this.commission = 0;
+
+      return of(this.commission);
+    }),
+  );
+
+  public accounts$: Observable<SelectedItem[]> = this.clientAccountService.getClientAccounts().pipe(
+    map(clientAccounts => (
+      clientAccounts.map(clientAccount => ({
+        id: clientAccount.accountCode,
+        label: clientAccount.title,
+        value: clientAccount,
+      }))
+    )),
+    tap((accounts) => {
+      if (accounts.length > 0) {
+        this.form.controls.SelectedAccount.setValue(
+          accounts[0].label,
+        );
+      }
+    }),
+    catchError(() => {
+      this.errorHandlerService.handleError('Ошибка при получении списка счетов.');
+
+      return of([]);
+    }),
+  );
 
   constructor(
     private store: StoreService,
-    private accountServiceInstance: AccountService,
-    private clientAccountsServiceInstance: ClientAccountsService,
-  ) {}
+    private accountService: AccountService,
+    private clientAccountService: ClientAccountService,
+    private errorHandlerService: ErrorHandlerService,
+  ) {
+    super();
+  }
 
   ngOnInit(): void {
     if (this.store.paymentSum > 0) {
-      this.issue1Group.controls.IssueSum.setValue(this.store.paymentSum);
+      this.form.controls.IssueSum.setValue(this.store.paymentSum);
+    }
+  }
+
+  public getAccountSum(accounts: Array<SelectedItem<ClientAccount>>): string {
+    const selectedAccount = accounts.find(
+      account => account.label === this.form.controls.SelectedAccount.value,
+    );
+
+    if (!selectedAccount) {
+      return;
     }
 
-    this.fillAccountsAsync();
+    return getFormattedBalance(selectedAccount.value);
+  }
 
-    this.issue1Group.get('IssueSum')?.valueChanges.subscribe(() => {
-      this.fetchCommissionAsync();
+  public get issueSum(): number {
+    return this.form.controls.IssueSum.value;
+  }
+
+  public handleSubmit(): void {
+    Object.values(this.form.controls).forEach((control) => {
+      control.markAllAsTouched();
+      control.updateValueAndValidity();
     });
 
-    if (this.issue1Group.get('IssueSum').value > 0) {
-      this.fetchCommissionAsync();
+    if (!this.isFormValid()) {
+      this.store.issueStep1Text = (this.issueSum + this.commission).toString();
+      this.store.paymentSum = this.issueSum;
+
+      // this.currentStep = 2;
+      console.log(this.form);
     }
   }
 
-  public isValid(): boolean {
-    this.issue1Group.controls.IssueSum.setValue(
-      this.issue1Group.controls.IssueSum.value.toString(),
-    );
-    this.issue1Group.controls.IssueSum.markAsTouched();
-
-    return this.issue1Group.controls.IssueSum.valid;
-  }
-
-  public get IssueSum(): number {
-    return this.issue1Group.controls.IssueSum.value;
-  }
-
-  public async fetchCommissionAsync() {
-    if (!this.issue1Group.controls.IssueSum.valid) {
-      this.commission = 0;
-      this.formattedCommission = FormatHelper.getSumFormatted(
-        this.commission,
-      );
-      return;
-    }
-    if (this.commisionRequestStarted) {
-      this.commisionsHasDelayedRequest = true;
-      return;
-    }
-    this.commisionRequestStarted = true;
-    const sum = this.issue1Group.controls.IssueSum.value as number;
-    const result: number = await this.accountServiceInstance.getCommision(sum).toPromise();
-    if (null !== this.accountServiceInstance.lastError) {
-      alert('Ошибка при получении размера коммисии.');
-    }
-    this.commission = result;
-    this.formattedCommission = FormatHelper.getSumFormatted(
-      this.commission,
-    );
-    this.commisionRequestStarted = false;
-
-    if (
-      this.commisionsHasDelayedRequest &&
-      sum !== (this.issue1Group.controls.IssueSum.value as number)
-    ) {
-      this.fetchCommissionAsync();
-    }
-    this.commisionsHasDelayedRequest = false;
-  }
-
-  private async fillAccountsAsync() {
-    const list =
-      await this.clientAccountsServiceInstance.fetchAccountsAsync();
-    // tslint:disable-next-line: forin
-    for (const index in list) {
-      const instance: SelectedItem = {
-        id: list[index].accountCode,
-        label: list[index].title,
-        value: list[index],
-      };
-
-      this.accounts.push(instance);
-    }
-
-    if (this.accounts.length > 0) {
-      this.issue1Group.controls.SelectedAccount.setValue(
-        this.accounts[0].label,
-      );
-    }
-  }
-
-  public get accountSum(): string {
-    return this.accounts.find(
-      e => e.label === this.issue1Group.controls.SelectedAccount.value,
-    )?.value.GetFormattedBalance();
+  private isFormValid(): boolean {
+    return this.form.valid;
   }
 }
