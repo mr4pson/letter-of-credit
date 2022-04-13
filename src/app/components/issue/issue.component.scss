@@ -1,0 +1,93 @@
+@import "../../../assets/colors";
+
+.issue-container {
+	padding: 32px 56px 0 56px;
+	background-color: white;
+
+	p {
+		font-size: 16px;
+		line-height: 24px;
+		color: #666;
+		margin-bottom: 28px;
+	}
+
+	input {
+		font-size: 16px;
+	}
+
+	.issue-header {
+		margin-left: -24px;
+		margin-right: -24px;
+		width: 100%;
+		display: flex;
+		flex-direction: row;
+		padding-bottom: 16px;
+		cursor: pointer;
+
+		.back-arrow {
+			width: 24px;
+		}
+
+		.back-arrow,
+		.back-title {
+			color: #0009;
+			cursor: pointer;
+			font-size: 14px;
+			line-height: 16px;
+		}
+	}
+
+	.issue-content {
+		width: 100%;
+		display: flex;
+		flex-direction: row;
+		justify-content: space-between;
+	}
+
+	.issue-footer {
+		padding-bottom: 12px;
+	}
+
+	.right-part {
+		width: 308px;
+		display: flex;
+
+		.vertical-dots {
+			width: 47px;
+
+			.dots-holder {
+				border-left: dotted 1px #ccc;
+				width: 1px;
+				height: 100%;
+				margin-left: 6px;
+			}
+		}
+	}
+
+	.left-part {
+		padding-right: 16px;
+		width: 576px;
+
+		.svg-holder {
+			margin-left: 10px;
+			cursor: pointer;
+			float: right;
+		}
+
+		.issue-title {
+			display: inline-block;
+
+			span {
+				font-size: 20px;
+				line-height: 24px;
+				color: #000000de;
+				letter-spacing: 0.15px;
+				font-weight: 600;
+			}
+
+			.svg-holder {
+				margin-top: 5px;
+			}
+		}
+	}
+}

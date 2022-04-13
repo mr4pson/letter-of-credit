@@ -1,0 +1,98 @@
+@import "../../../assets/_colors.scss";
+
+.issue-steps {
+	.step-title {
+		font-size: 12px;
+		line-height: 36px;
+		letter-spacing: 1.5px;
+		color: #9e9e9e;
+		margin-bottom: 8px;
+	}
+
+	.step-list {
+		.step-item {
+			display: flex;
+			flex-direction: row;
+			margin-left: -47px;
+			margin-bottom: 8px;
+
+			.step-item-circle {
+				height: 36px;
+				width: 47px;
+
+				.blue-dot {
+					display: none;
+					margin-left: 1px;
+
+					circle {
+						fill: white;
+						stroke: $main-blue;
+					}
+				}
+			}
+
+			.step-item-text {
+				height: 36px;
+				display: flex;
+				flex-direction: column;
+
+				span {
+					line-height: 18px;
+					color: #9e9e9e;
+				}
+
+				.step-item-title {
+					font-size: 14px;
+				}
+
+				.step-item-value {
+					white-space: nowrap;
+					overflow: hidden;
+					font-size: 12px;
+					display: none;
+					max-width: 247px;
+					text-overflow: ellipsis;
+				}
+			}
+
+			&.active {
+				.step-item-circle .gray-dot {
+					display: none;
+				}
+
+				.step-item-circle .blue-dot {
+					display: inline-block;
+				}
+
+				.step-item-text .step-item-title {
+					color: #424242;
+				}
+			}
+
+			&.done {
+				.step-item-circle .gray-dot {
+					display: none;
+				}
+
+				.step-item-circle .blue-dot {
+					display: inline-block;
+					margin-top: 14px;
+
+					circle {
+						fill: $main-blue;
+					}
+				}
+
+				.step-item-text {
+					.step-item-title {
+						color: #383ad1;
+					}
+
+					.step-item-value {
+						display: inline-block;
+					}
+				}
+			}
+		}
+	}
+}

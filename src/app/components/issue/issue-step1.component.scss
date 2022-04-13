@@ -1,0 +1,50 @@
+@import "../../../assets/colors";
+
+.issue-step1 {
+	.issue-sum {
+		margin-top: 24px;
+	}
+
+	.commission {
+		display: inline-block;
+
+		.commission-sum {
+			margin-left: 8px;
+			font-size: 18px;
+			color: $black-alpha-87;
+		}
+
+		.svg-holder {
+			margin-top: 4px;
+		}
+	}
+
+	.account-helper {
+		position: relative;
+		width: 330px;
+		padding-right: 30px;
+		margin-bottom: 10px;
+
+		.account-sum {
+			position: absolute;
+			color: $black-alpha-38;
+			font-size: 16px;
+			top: 26px;
+			right: 60px;
+		}
+
+		.svg-holder {
+			position: absolute;
+			margin-top: 29px;
+		}
+
+		.loc-form-field {
+			width: 200px;
+			display: inline-block;
+		}
+
+		.accounts-holder {
+			display: inline-block;
+		}
+	}
+}
