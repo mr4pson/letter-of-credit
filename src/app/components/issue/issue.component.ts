@@ -26,8 +26,8 @@ export class IssueComponent implements OnInit {
 
   public ButtonType = ButtonType;
 
-  public currentStep = 1;
-  public locInstance: LetterOfCredit;
+  public currentStep = 2;
+  public locInstance = {} as LetterOfCredit;
 
   @ViewChild(AccreditationAmountComponent) step1Component: AccreditationAmountComponent;
   @ViewChild(СounterpartyComponent) step2Component: СounterpartyComponent;
@@ -106,13 +106,13 @@ export class IssueComponent implements OnInit {
         // this.currentStep = 2;
         break;
       case 2:
-        if (!this.step2Component.isValid()) {
-          return;
-        }
+        // if (!this.step2Component.isValid()) {
+        //   return;
+        // }
 
-        this.store.issueStep2Text = this.locInstance.reciverName;
+        // this.store.issueStep2Text = this.locInstance.reciverName;
 
-        this.currentStep = 3;
+        // this.currentStep = 3;
         break;
       case 3:
         if (!this.step3Component.isValid()) {

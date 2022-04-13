@@ -6,7 +6,7 @@ import { catchError, filter, map } from 'rxjs/operators';
 import { ApiAccountList } from '../classes/interfaces/api-account-list.interface';
 import { ApiAccount } from '../classes/interfaces/api-account.interface';
 import { BankSearch } from '../classes/interfaces/bank-search.interface';
-import { ClientSearch } from '../classes/interfaces/client-search.interface';
+import { Client } from '../components/issue/interfaces/client.interface';
 import { ReciverStatus } from '../classes/reciver-status';
 import { StorageService } from './storage.service';
 import { ReliabilityResult } from '../models/reliability.interface';
@@ -143,15 +143,13 @@ export class AccountService {
     );
   }
 
-  public searchClientByInn(inn: string): Observable<ClientSearch[]> {
+  public searchClientByInn(inn: string): Observable<Client[]> {
     this.lastError = null;
 
     const url =
       `${this.storage.apiDomain}api/Document/clients/searchByInn/${inn}?v=${this.storage.apiVersion}`;
 
-    return this.http
-      .get<ClientSearch[]>(url)
-      .pipe(filter(result => result?.length > 0));
+    return this.http.get<Client[]>(url);
   }
 
   public searchBankByBik(bik: string): Observable<BankSearch> {
@@ -160,7 +158,7 @@ export class AccountService {
     const url =
       `${this.storage.apiDomain}api/Document/getReceiverBanks/${bik}?v=${this.storage.apiVersion}`;
 
-    return this.http.get<ClientSearch[]>(url).pipe(
+    return this.http.get<Client[]>(url).pipe(
       map((response) => {
         if (response && response.length > 0) {
           return response[0];

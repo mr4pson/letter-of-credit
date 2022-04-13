@@ -1,15 +1,20 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { OnDestroyMixin, untilComponentDestroyed } from '@w11k/ngx-componentdestroyed';
-import { tap } from 'rxjs/operators';
+import { catchError, filter, map, startWith, switchMap, tap } from 'rxjs/operators';
+import { EMPTY, forkJoin, merge, Observable, of } from 'rxjs';
 
-import { InputAutocompleteComponent } from '@psb/fe-ui-kit/src/components/input-autocomplete/input-autocomplete.component';
+import { getAccountValidator, getInnSizeValidator } from '../validators';
+
 import { getRequiredFormControlValidator } from '@psb/validations/required';
 import { Partner } from 'src/app/classes/interfaces/api-partner.interface';
-import { ClientSearch } from 'src/app/classes/interfaces/client-search.interface';
+import { Client } from 'src/app/components/issue/interfaces/client.interface';
 import { AccountService } from 'src/app/services/account.service';
 import { LetterOfCredit } from 'src/app/models/letter-of-credit.model';
 import { PartnersService } from 'src/app/models/partners.service';
+import { BankSearch } from 'src/app/classes/interfaces/bank-search.interface';
+import { ButtonType } from '@psb/fe-ui-kit';
+import { StoreService } from 'src/app/models/state.service';
 
 @Component({
   selector: 'counterparty',
@@ -17,28 +22,77 @@ import { PartnersService } from 'src/app/models/partners.service';
   styleUrls: ['counterparty.component.scss'],
 })
 export class СounterpartyComponent extends OnDestroyMixin implements OnInit {
-  public issue2Group = new FormGroup({
-    InnControl: new FormControl('', [
+  @Input() locInstance = {} as LetterOfCredit;
+
+  public clientCompanyName = this.locInstance?.reciverName;
+  public ButtonType = ButtonType;
+
+  public form = new FormGroup({
+    inn: new FormControl('', [
       getRequiredFormControlValidator('Укажите ИНН контрагента'),
-      this.innSizeValidator,
+      getInnSizeValidator('Укажите ИНН 10 или 12 цифр'),
     ]),
-    BikControl: new FormControl('', [
+    bik: new FormControl('', [
       getRequiredFormControlValidator('Укажите БИК банка получателя'),
     ]),
-    AccountControl: new FormControl('', [
+    account: new FormControl('', [
       getRequiredFormControlValidator('Укажите счет получателя'),
-      this.accountValidator,
+      getAccountValidator('Некорректный счёт получателя'),
     ]),
   });
 
-  public foundInnList: ClientSearch[] = [];
-  public innCompany = '';
-  private currentSearchInn = '';
-  private partnerList: Partner[] = [];
+  public clients$: Observable<Client[]> = this.innControl.valueChanges.pipe(
+    switchMap((innSearch: string) => {
+      if (!innSearch) {
+        return of([]);
+      }
 
-  @Input() locInstance: LetterOfCredit;
+      return of(innSearch).pipe(
+        filter((inn: string) => inn?.length === 10 || inn?.length === 12),
+        tap((val) => {
+          console.log(val);
+        }),
+        switchMap((inn: string) => forkJoin([
+          of(inn),
+          this.accountServiceInstance.searchClientByInn(inn).pipe(
+            catchError((error) => {
+              console.log(error);
+
+              return EMPTY;
+            }),
+          ),
+        ])),
+        map(([inn, clients]) => (
+          clients.map(client => ({
+            ...client,
+            innFound: client.inn.substring(0, inn.length),
+            innTail: client.inn.substring(inn.length),
+          }))
+        )),
+      );
+    }),
+  );
+
+  private partners$: Observable<Partner[]> = this.partners.getPartners().pipe(
+    catchError((error) => {
+      console.log(error);
+
+      return of<Partner[]>([]);
+    }),
+  );
+
+  get innControl() {
+    return this.form.controls.inn;
+  }
+  get bikControl() {
+    return this.form.controls.bik;
+  }
+  get accountControl() {
+    return this.form.controls.account;
+  }
 
   constructor(
+    private store: StoreService,
     private accountServiceInstance: AccountService,
     private partners: PartnersService,
   ) {
@@ -46,132 +100,84 @@ export class СounterpartyComponent extends OnDestroyMixin implements OnInit {
   }
 
   ngOnInit() {
-    if (this.locInstance.reciverInn.length > 0) {
-      this.issue2Group.controls.InnControl.setValue(this.locInstance.reciverInn);
-    }
+    this.innControl.setValue(this.locInstance?.reciverInn);
+    this.bikControl.setValue(this.locInstance?.reciverBankBik);
+    this.accountControl.setValue(this.locInstance?.reciverAccount);
 
-    let prevReciverBik: string;
-    this.issue2Group.get('BikControl')?.valueChanges.subscribe(() => {
-      if (prevReciverBik === this.issue2Group.controls.BikControl.value) {
-        return;
-      }
+    merge(
+      this.bikControl.valueChanges.pipe(
+        switchMap(() => {
+          if (this.bikControl.value?.length === 9) {
+            this.bikControl.setErrors(null);
 
-      prevReciverBik = this.issue2Group.controls.BikControl.value;
+            return this.accountServiceInstance.searchBankByBik(this.bikControl.value);
+          }
 
-      if (this.issue2Group.controls.BikControl.value.length === 9) {
-        this.searchBankAsync();
-        return;
-      }
-
-      this.locInstance.reciverBankName = '';
-    });
-
-    this.issue2Group.get('AccountControl')?.valueChanges.subscribe(() => {
-      this.locInstance.reciverAccount = this.issue2Group.controls.AccountControl.valid ?
-        this.issue2Group.controls.AccountControl.value : '';
-    });
-
-    this.currentSearchInn = '';
-
-    this.issue2Group.controls.InnControl.setValue(this.locInstance.reciverInn);
-    this.innCompany = this.locInstance.reciverName;
-
-    this.issue2Group.controls.BikControl.setValue(this.locInstance.reciverBankBik);
-    this.issue2Group.controls.AccountControl.setValue(this.locInstance.reciverAccount);
-
-    this.initPartnersAsync();
-  }
-
-  private async initPartnersAsync() {
-    if (this.locInstance.reciverInn === '') {
-      this.partnerList = await this.partners.getListAsync();
-    }
-  }
-
-  private innSizeValidator(control: FormControl) {
-    return control.value?.length > 0 && control.value.length !== 10 && control.value.length !== 12 ? { error: 'Укажите ИНН 10 или 12 цифр' } : {};
-  }
-
-  private accountValidator(control: FormControl) {
-    const account: string = control.value?.replaceAll(' ', '');
-    return account?.length > 0 && account.length !== 20 ? { error: 'Некорректный счёт получателя' } : {};
-  }
-
-  public isValid(): boolean {
-    this.issue2Group.controls.InnControl.setValue(this.issue2Group.controls.InnControl.value);
-
-    this.issue2Group.controls.InnControl.markAsTouched();
-    this.issue2Group.controls.BikControl.markAsTouched();
-    this.issue2Group.controls.AccountControl.markAsTouched();
-
-    return this.issue2Group.controls.InnControl.valid &&
-      this.issue2Group.controls.BikControl.valid &&
-      this.issue2Group.controls.AccountControl.valid;
-  }
-
-  public selectInn(inn: InputAutocompleteComponent) {
-    this.innCompany = '';
-    if (!inn.isOpened) {
-      return;
-    }
-    if (inn.selectedOption?.inn) {
-      this.issue2Group.controls.InnControl.setValue(inn.selectedOption.inn);
-      this.innCompany = inn.selectedOption.shortName;
-
-      this.locInstance.reciverInn = inn.selectedOption.inn;
-      this.locInstance.reciverName = inn.selectedOption.shortName;
-
-      if (this.partnerList.length > 0) {
-        const partner: Partner = this.partnerList.find(e => e.inn === this.locInstance.reciverInn);
-        if (null != partner && partner.banks && partner.banks.length > 0) {
-          this.issue2Group.controls.BikControl.setValue(partner.banks[0].bik);
-          this.issue2Group.controls.AccountControl.setValue(partner.banks[0].acc);
-        }
-      }
-    }
-  }
-
-  public searchInnAsync() {
-    const inn = this.issue2Group.controls.InnControl.value.trim();
-    if (inn === this.currentSearchInn) {
-      return;
-    }
-
-    this.currentSearchInn = inn;
-
-    if (inn.length < 5) {
-      return;
-    }
-
-    this.foundInnList = [];
-    this.accountServiceInstance.searchClientByInn(inn).pipe(
-      tap((foundInnList) => {
-        foundInnList.forEach((foundInn) => {
-          foundInn.innFound = foundInn.inn.substring(0, inn.length);
-          foundInn.innTail = foundInn.inn.substring(inn.length);
-          this.foundInnList.push(foundInn);
-        });
-      }),
-      untilComponentDestroyed(this),
-    ).subscribe();
-  }
-
-  private searchBankAsync() {
-    this.issue2Group.controls.BikControl.setErrors(null);
-
-    const bik = this.issue2Group.controls.BikControl.value;
-    this.accountServiceInstance.searchBankByBik(bik).pipe(
-      tap((bank) => {
-        if (null === bank) {
-          this.issue2Group.controls.BikControl.setErrors({ incorrect: 'Банк не определен. Проверьте БИК' });
-          this.issue2Group.controls.BikControl.markAsTouched();
           this.locInstance.reciverBankName = '';
-          return;
-        }
-        this.locInstance.reciverBankName = bank.fullName;
-        this.locInstance.reciverBankBik = bik;
-      }),
+          return of<BankSearch>(null);
+        }),
+        tap((bank) => {
+          if (!bank) {
+            this.bikControl.setErrors({ incorrect: 'Банк не определен. Проверьте БИК' });
+            this.bikControl.markAsTouched();
+            this.locInstance.reciverBankName = '';
+            return;
+          }
+          this.locInstance.reciverBankName = bank.fullName;
+          this.locInstance.reciverBankBik = this.bikControl.value;
+        }),
+      ),
+      this.accountControl.valueChanges.pipe(
+        tap(() => {
+          this.locInstance.reciverAccount = this.accountControl.valid ?
+            this.accountControl.value : '';
+        }),
+      ),
+    ).pipe(
       untilComponentDestroyed(this),
     ).subscribe();
+  }
+
+  public isFormValid(): boolean {
+    return this.form.valid;
+  }
+
+  public selectClient(client: Client) {
+    this.clientCompanyName = '';
+
+    if (client) {
+      this.innControl.setValue(client.inn);
+      this.clientCompanyName = client.shortName;
+      this.locInstance.reciverInn = client.inn;
+      this.locInstance.reciverName = client.shortName;
+
+      this.partners$.pipe(
+        filter(partners => !!partners?.length),
+        tap((partners) => {
+          console.log(partners);
+          const curPartner: Partner = partners.find(partner => partner.inn === this.locInstance.reciverInn);
+          if (curPartner?.banks && curPartner?.banks.length > 0) {
+            this.bikControl.setValue(curPartner.banks[0].bik);
+            this.accountControl.setValue(curPartner.banks[0].acc);
+          }
+        }),
+        untilComponentDestroyed(this),
+      ).subscribe();
+    }
+  }
+
+  public handleSubmit(): void {
+    Object.values(this.form.controls).forEach((control) => {
+      control.markAllAsTouched();
+      control.updateValueAndValidity();
+    });
+
+    if (this.isFormValid()) {
+      this.store.issueStep2Text = this.locInstance.reciverName;
+
+      // this.currentStep = 3;
+
+      console.log(this.form);
+    }
   }
 }
