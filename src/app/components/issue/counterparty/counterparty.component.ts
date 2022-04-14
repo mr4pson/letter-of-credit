@@ -1,7 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { OnDestroyMixin, untilComponentDestroyed } from '@w11k/ngx-componentdestroyed';
-import { catchError, filter, map, startWith, switchMap, tap } from 'rxjs/operators';
+import { catchError, filter, map, switchMap, tap } from 'rxjs/operators';
 import { EMPTY, forkJoin, merge, Observable, of } from 'rxjs';
 
 import { getAccountValidator, getInnSizeValidator } from '../validators';
@@ -15,6 +15,7 @@ import { PartnersService } from 'src/app/models/partners.service';
 import { BankSearch } from 'src/app/classes/interfaces/bank-search.interface';
 import { ButtonType } from '@psb/fe-ui-kit';
 import { StoreService } from 'src/app/models/state.service';
+import { ErrorHandlerService } from 'src/app/services/error-handler.service';
 
 @Component({
   selector: 'counterparty',
@@ -42,40 +43,29 @@ export class СounterpartyComponent extends OnDestroyMixin implements OnInit {
   });
 
   public clients$: Observable<Client[]> = this.innControl.valueChanges.pipe(
-    switchMap((innSearch: string) => {
-      if (!innSearch) {
-        return of([]);
-      }
+    filter((inn: string) => inn?.length === 10 || inn?.length === 12),
+    switchMap((inn: string) => forkJoin([
+      of(inn),
+      this.accountServiceInstance.searchClientByInn(inn).pipe(
+        catchError(() => {
+          this.errorHandlerService.showErrorMesssage('Невозможно получить список Клиентов');
 
-      return of(innSearch).pipe(
-        filter((inn: string) => inn?.length === 10 || inn?.length === 12),
-        tap((val) => {
-          console.log(val);
+          return EMPTY;
         }),
-        switchMap((inn: string) => forkJoin([
-          of(inn),
-          this.accountServiceInstance.searchClientByInn(inn).pipe(
-            catchError((error) => {
-              console.log(error);
-
-              return EMPTY;
-            }),
-          ),
-        ])),
-        map(([inn, clients]) => (
-          clients.map(client => ({
-            ...client,
-            innFound: client.inn.substring(0, inn.length),
-            innTail: client.inn.substring(inn.length),
-          }))
-        )),
-      );
-    }),
+      ),
+    ])),
+    map(([inn, clients]) => (
+      clients.map(client => ({
+        ...client,
+        innFound: client.inn.substring(0, inn.length),
+        innTail: client.inn.substring(inn.length),
+      }))
+    )),
   );
 
   private partners$: Observable<Partner[]> = this.partners.getPartners().pipe(
-    catchError((error) => {
-      console.log(error);
+    catchError(() => {
+      this.errorHandlerService.showErrorMesssage('Невозможно получить список партнеров');
 
       return of<Partner[]>([]);
     }),
@@ -95,14 +85,13 @@ export class СounterpartyComponent extends OnDestroyMixin implements OnInit {
     private store: StoreService,
     private accountServiceInstance: AccountService,
     private partners: PartnersService,
+    private errorHandlerService: ErrorHandlerService,
   ) {
     super();
   }
 
   ngOnInit() {
-    this.innControl.setValue(this.locInstance?.reciverInn);
-    this.bikControl.setValue(this.locInstance?.reciverBankBik);
-    this.accountControl.setValue(this.locInstance?.reciverAccount);
+    this.form.patchValue(this.locInstance);
 
     merge(
       this.bikControl.valueChanges.pipe(
@@ -121,10 +110,16 @@ export class СounterpartyComponent extends OnDestroyMixin implements OnInit {
             this.bikControl.setErrors({ incorrect: 'Банк не определен. Проверьте БИК' });
             this.bikControl.markAsTouched();
             this.locInstance.reciverBankName = '';
+
             return;
           }
           this.locInstance.reciverBankName = bank.fullName;
           this.locInstance.reciverBankBik = this.bikControl.value;
+        }),
+        catchError(() => {
+          this.errorHandlerService.showErrorMesssage('Невозможно получить информацию о банке');
+
+          return EMPTY;
         }),
       ),
       this.accountControl.valueChanges.pipe(
@@ -154,7 +149,6 @@ export class СounterpartyComponent extends OnDestroyMixin implements OnInit {
       this.partners$.pipe(
         filter(partners => !!partners?.length),
         tap((partners) => {
-          console.log(partners);
           const curPartner: Partner = partners.find(partner => partner.inn === this.locInstance.reciverInn);
           if (curPartner?.banks && curPartner?.banks.length > 0) {
             this.bikControl.setValue(curPartner.banks[0].bik);

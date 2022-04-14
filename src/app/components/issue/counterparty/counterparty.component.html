@@ -8,7 +8,6 @@
   </ng-template>
 
 	<ng-container *ngIf="{ clients: clients$ | async }; let clientsObj">
-		{{ clientsObj.clients | json }}
 		<psb-input-autocomplete
 			class="counterparty-autocomplete"
 			label="ИНН контрагента"

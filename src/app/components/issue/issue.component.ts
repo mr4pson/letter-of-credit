@@ -7,7 +7,6 @@ import { СounterpartyComponent } from './counterparty/counterparty.component';
 import { CounterpartyContractComponent } from './counterparty-contract/counterparty-contract.component';
 import { AccreditationPeriodComponent } from './accreditation-period/accreditation-period.component';
 import { SendApplicationComponent } from './send-application/send-application.component';
-import { FormatHelper } from './helpers/format-helper';
 
 import { LetterOfCredit } from 'src/app/models/letter-of-credit.model';
 import { StoreService } from 'src/app/models/state.service';
@@ -23,10 +22,8 @@ import { PsbDomHelper } from 'src/app/classes/psb-dom.helper';
 })
 export class IssueComponent implements OnInit {
   public allowIssue = false;
-
   public ButtonType = ButtonType;
-
-  public currentStep = 2;
+  public currentStep = 3;
   public locInstance = {} as LetterOfCredit;
 
   @ViewChild(AccreditationAmountComponent) step1Component: AccreditationAmountComponent;
@@ -115,16 +112,16 @@ export class IssueComponent implements OnInit {
         // this.currentStep = 3;
         break;
       case 3:
-        if (!this.step3Component.isValid()) {
-          return;
-        }
+        // if (!this.step3Component.isValid()) {
+        //   return;
+        // }
 
-        this.store.issueStep3Text = this.locInstance.contractDate.toLocaleDateString(
-          'ru-RU',
-          { year: 'numeric', month: 'long', day: 'numeric' },
-        );
+        // this.store.issueStep3Text = this.locInstance.contractDate.toLocaleDateString(
+        //   'ru-RU',
+        //   { year: 'numeric', month: 'long', day: 'numeric' },
+        // );
 
-        this.currentStep = 4;
+        // this.currentStep = 4;
         break;
       case 4:
         if (!this.step4Component.isValid()) {

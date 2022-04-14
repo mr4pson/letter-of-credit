@@ -11,11 +11,12 @@ export class ErrorHandlerService implements ErrorHandler {
   private errorMsg = '';
   constructor(@Inject(Injector) private injector: Injector) {}
 
-  handleError(error: string): void {
-    alert(error);
+  // TODO поменять на psb нотификатор
+  showErrorMesssage(message: string): void {
+    alert(message);
   }
 
-  handleStatusError(error: HttpErrorResponse): void {
+  handleError(error: HttpErrorResponse): void {
     console.log(
       `Error code ${error.status}, ` + `body was: ${error.error}`,
    );

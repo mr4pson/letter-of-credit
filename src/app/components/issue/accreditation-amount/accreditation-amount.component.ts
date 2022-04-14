@@ -54,7 +54,7 @@ export class AccreditationAmountComponent extends OnDestroyMixin implements OnIn
       return this.commission;
     }),
     catchError(() => {
-      this.errorHandlerService.handleError('Ошибка при получении размера коммисии.');
+      this.errorHandlerService.showErrorMesssage('Ошибка при получении размера коммисии.');
       this.commission = 0;
 
       return of(this.commission);
@@ -77,7 +77,7 @@ export class AccreditationAmountComponent extends OnDestroyMixin implements OnIn
       }
     }),
     catchError(() => {
-      this.errorHandlerService.handleError('Ошибка при получении списка счетов.');
+      this.errorHandlerService.showErrorMesssage('Ошибка при получении списка счетов.');
 
       return of([]);
     }),
@@ -114,6 +114,10 @@ export class AccreditationAmountComponent extends OnDestroyMixin implements OnIn
     return this.form.controls.IssueSum.value;
   }
 
+  private isFormValid(): boolean {
+    return this.form.valid;
+  }
+
   public handleSubmit(): void {
     Object.values(this.form.controls).forEach((control) => {
       control.markAllAsTouched();
@@ -127,9 +131,5 @@ export class AccreditationAmountComponent extends OnDestroyMixin implements OnIn
       // this.currentStep = 2;
       console.log(this.form);
     }
-  }
-
-  private isFormValid(): boolean {
-    return this.form.valid;
   }
 }

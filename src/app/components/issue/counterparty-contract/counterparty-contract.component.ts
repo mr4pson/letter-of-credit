@@ -1,159 +1,118 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
+import { tap } from 'rxjs/operators';
+import { merge } from 'rxjs';
+import { OnDestroyMixin, untilComponentDestroyed } from '@w11k/ngx-componentdestroyed';
+import { NgxDropzoneChangeEvent } from 'ngx-dropzone';
 
-import { FormatHelper } from '../helpers/format-helper';
+import { NDS_LIST } from '../constants/constants';
+import { FileUploadService } from '../services/file-uploading.service';
 
 import { ButtonType } from '@psb/fe-ui-kit/src/components/button';
 import { SelectedItem } from '@psb/fe-ui-kit/src/components/input-select';
 import { getRequiredFormControlValidator } from '@psb/validations/required';
 import { SimplebarAngularComponent } from 'simplebar-angular/lib/simplebar-angular.component';
-import { FileUploaded } from 'src/app/models/file-upload.model';
 import { LetterOfCredit } from 'src/app/models/letter-of-credit.model';
+import { FileUploaded } from 'src/app/components/issue/interfaces/file-uploaded.interface';
+import { StoreService } from 'src/app/models/state.service';
 
 @Component({
   selector: 'counterparty-contract',
   templateUrl: 'counterparty-contract.component.html',
   styleUrls: ['counterparty-contract.component.scss'],
 })
-export class CounterpartyContractComponent implements OnInit {
-  public issue3Group = new FormGroup({
-    ContractDate: new FormControl('', [
+export class CounterpartyContractComponent extends OnDestroyMixin implements OnInit {
+  @Input() locInstance: LetterOfCredit;
+
+  public files$ = this.fileUploadingService.files$;
+  public errorMessage$ = this.fileUploadingService.errorMessage$;
+
+  public form = new FormGroup({
+    contractDate: new FormControl('', [
       getRequiredFormControlValidator('Укажите дату заключения договора'),
     ]),
-    SelectedNds: new FormControl(),
-    Contract: new FormControl('', [
-      getRequiredFormControlValidator(
-        'Укажите название и номер договора',
-      ),
+    selectedNds: new FormControl(NDS_LIST[2].label),
+    contract: new FormControl('', [
+      getRequiredFormControlValidator('Укажите название и номер договора'),
     ]),
-    ContractInfo: new FormControl('', [
+    contractInfo: new FormControl('', [
       getRequiredFormControlValidator('Укажите предмет договора'),
     ]),
   });
 
-  public ndsList: SelectedItem[] = [];
-
+  public ndsList = NDS_LIST;
   public ButtonType = ButtonType;
-  public errorMessage = '';
   public maxContractDate = new Date();
   public selectedNds = 20;
 
-  public files: FileUploaded[] = [];
-  private extensions = ['tiff', 'pdf', 'xml', 'doc', 'docx', 'xls', 'xlsx'];
+  get contractDateControl() {
+    return this.form.controls.contractDate;
+  }
 
-  @Input() locInstance: LetterOfCredit;
+  get selectedNdsControl() {
+    return this.form.controls.selectedNds;
+  }
+
+  get contractControl() {
+    return this.form.controls.contract;
+  }
+
+  get contractInfoControl() {
+    return this.form.controls.contractInfo;
+  }
+
+  constructor(
+    private store: StoreService,
+    private fileUploadingService: FileUploadService,
+  ) {
+    super();
+  }
 
   ngOnInit(): void {
-    this.initNdsList();
+    this.form.patchValue(this.locInstance);
 
-    if (!this.locInstance) {
-      return;
-    }
-
-    this.issue3Group.get('SelectedNds')?.valueChanges.subscribe(() => {
-      const title = this.issue3Group.controls.SelectedNds.value;
-      this.selectedNds = this.ndsList.find(
-        (el: SelectedItem) => el.label === title,
-      )?.value;
-    });
-
-    this.issue3Group.get('ContractDate')?.valueChanges.subscribe(() => {
-      this.locInstance.contractDate = this.issue3Group.controls.ContractDate.valid
-        ? this.issue3Group.controls.ContractDate.value
-        : '';
-    });
-
-    this.issue3Group.get('Contract')?.valueChanges.subscribe(() => {
-      this.locInstance.contract = this.issue3Group.controls.Contract.valid
-        ? this.issue3Group.controls.Contract.value
-        : '';
-    });
-
-    this.issue3Group.get('ContractInfo')?.valueChanges.subscribe(() => {
-      this.locInstance.contractInfo = this.issue3Group.controls.ContractInfo.valid
-        ? this.issue3Group.controls.ContractInfo.value
-        : '';
-    });
-
-    this.issue3Group.controls.ContractDate.setValue(
-      this.locInstance.contractDate,
-    );
-    this.issue3Group.controls.Contract.setValue(this.locInstance.contract);
-    this.issue3Group.controls.ContractInfo.setValue(
-      this.locInstance.contractInfo,
-    );
+    merge(
+      this.selectedNdsControl.valueChanges.pipe(
+        tap((title: string) => {
+          const selectedNds = this.ndsList.find(
+            (ndsItem: SelectedItem) => ndsItem.label === title,
+          );
+          this.selectedNds = selectedNds?.value;
+        }),
+      ),
+      this.contractDateControl.valueChanges.pipe(
+        tap((contractDate: Date) => {
+          this.locInstance.contractDate = this.contractDateControl.valid
+            ? contractDate
+            : null;
+        }),
+      ),
+      this.contractControl.valueChanges.pipe(
+        tap((contract: string) => {
+          this.locInstance.contract = this.contractControl.valid
+            ? contract
+            : '';
+        }),
+      ),
+      this.contractInfoControl.valueChanges.pipe<string>(
+        tap((contractInfo) => {
+          this.locInstance.contractInfo = this.contractInfoControl.valid
+            ? contractInfo
+            : '';
+        }),
+      ),
+    ).pipe(
+      untilComponentDestroyed(this),
+    ).subscribe();
   }
 
-  public get ContractValue() {
-    return this.issue3Group.controls.Contract.value;
-  }
-
-  public isValid(): boolean {
-    this.issue3Group.controls.ContractDate.setValue(
-      this.issue3Group.controls.ContractDate.value,
-    );
-
-    this.issue3Group.controls.ContractDate.markAsTouched();
-    this.issue3Group.controls.Contract.markAsTouched();
-    this.issue3Group.controls.ContractInfo.markAsTouched();
-
-    return (
-      this.issue3Group.controls.ContractDate.valid &&
-      this.issue3Group.controls.Contract.valid &&
-      this.issue3Group.controls.ContractInfo.valid
-    );
-  }
-
-  public onSelectFile(event: any) {
-    let rejectedFiles = 0;
-
-    // tslint:disable-next-line: forin
-    for (const index in event.addedFiles) {
-      const file: File = event.addedFiles[index];
-      const extension = file.name.split('.').pop().toLowerCase();
-      if (this.extensions.indexOf(extension) < 0) {
-        rejectedFiles += 1;
-        continue;
-      }
-
-      if (
-        this.files.find(
-          f =>
-            f.native.name === file.name && f.native.size === file.size,
-          )
-      ) {
-        this.setErrorMessage(`Файл "${file.name}" уже загружен.`);
-        continue;
-      }
-
-      const instance = new FileUploaded();
-      instance.native = file;
-      instance.sizeFormatted = FormatHelper.getSizeFormatted(
-        instance.native.size,
-      );
-
-      this.files.push(instance);
-    }
-
-    if (rejectedFiles > 0) {
-      this.setErrorMessage('Не все загруженные файлы подходящего типа.');
-    }
-  }
-
-  public onRemoveFile(event: FileUploaded) {
-    if (
-      confirm(
-        `Удалить документ "${event.native.name}" из списка загруженных?`,
-      )
-    ) {
-      this.files.splice(this.files.indexOf(event), 1);
-    }
+  public isFormValid(): boolean {
+    return this.form.valid;
   }
 
   public setVat() {
     if (this.selectedNds === 0) {
-      this.selectedNds = 20;
-      this.issue3Group.controls.SelectedNds.setValue(
+      this.selectedNdsControl.setValue(
         this.ndsList[this.ndsList.length - 1].label,
       );
     }
@@ -161,32 +120,39 @@ export class CounterpartyContractComponent implements OnInit {
 
   public unSetVat() {
     if (this.selectedNds > 0) {
-      this.selectedNds = 0;
-      this.issue3Group.controls.SelectedNds.setValue(
+      this.selectedNdsControl.setValue(
         this.ndsList[0].label,
       );
     }
   }
 
-  public wheelScroll(event: any, el: SimplebarAngularComponent) {
+  public wheelScroll(event: any, el: SimplebarAngularComponent): void {
     event.preventDefault();
     el.SimpleBar.getScrollElement().scrollLeft += event.deltaY;
   }
 
-  private setErrorMessage(message: string) {
-    this.errorMessage = message;
-
-    setTimeout(() => {
-      this.errorMessage = '';
-    },         15000);
+  public handleSelectFiles(event: NgxDropzoneChangeEvent): void {
+    this.fileUploadingService.selectFiles(event);
   }
 
-  private initNdsList() {
-    this.ndsList.push({ id: 1, label: '0%', value: 0 });
-    this.ndsList.push({ id: 2, label: '10%', value: 10 });
-    this.ndsList.push({ id: 3, label: '20%', value: 20 });
-    this.issue3Group.controls.SelectedNds.setValue(
-      this.ndsList[this.ndsList.length - 1].label,
-    );
+  public handleRemoveFile(file: FileUploaded): void {
+    this.fileUploadingService.handleFileRemoval(file);
+  }
+
+  public handleSubmit(): void {
+    Object.values(this.form.controls).forEach((control) => {
+      control.markAllAsTouched();
+      control.updateValueAndValidity();
+    });
+
+    if (this.isFormValid()) {
+      this.store.issueStep3Text =  this.contractDateControl.value.contractDate.toLocaleDateString(
+        'ru-RU',
+        { year: 'numeric', month: 'long', day: 'numeric' },
+      );
+
+      // this.currentStep = 4;
+      console.log(this.form);
+    }
   }
 }

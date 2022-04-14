@@ -39,7 +39,7 @@ export class HttpErrorInterceptor implements HttpInterceptor {
     ).pipe(
       retry(1),
       catchError((error: HttpErrorResponse) => {
-        this.errorHandler.handleStatusError(error);
+        this.errorHandler.handleError(error);
         return throwError(error);
       }),
     ) as Observable<HttpEvent<any>>;
