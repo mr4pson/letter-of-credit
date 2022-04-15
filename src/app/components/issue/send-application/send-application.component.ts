@@ -1,53 +1,117 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input, OnInit } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
+import { MatDialog } from '@angular/material/dialog';
+import { OnDestroyMixin, untilComponentDestroyed } from '@w11k/ngx-componentdestroyed';
+import { merge } from 'rxjs';
+import { tap } from 'rxjs/operators';
 
+import { IssueSuccessComponent } from '../issue-success/issue-success.component';
+
+import { ButtonType, SuccessModalComponent, SuccessModalType } from '@psb/fe-ui-kit';
 import { getRequiredFormControlValidator } from '@psb/validations/required/validation';
+import { PsbDomHelper } from 'src/app/classes/psb-dom.helper';
 import { LetterOfCredit } from 'src/app/models/letter-of-credit.model';
+import { StoreService } from 'src/app/models/state.service';
 
 @Component({
   selector: 'send-application',
   templateUrl: 'send-application.component.html',
   styleUrls: ['send-application.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class SendApplicationComponent implements OnInit {
-  public issue5Group = new FormGroup({
-    AgreeWithTerms: new FormControl(true),
-    CreateLocTemplate: new FormControl(true),
-    ContactPersone: new FormControl('', [
+export class SendApplicationComponent extends OnDestroyMixin implements OnInit {
+  @Input() locInstance: LetterOfCredit;
+
+  public form = new FormGroup({
+    agreeWithTerms: new FormControl(true),
+    createLocTemplate: new FormControl(true),
+    contactPerson: new FormControl('', [
       getRequiredFormControlValidator('Вы забыли написать фамилию, имя и отчество.'),
     ]),
-    ContactPhone: new FormControl('', [
+    contactPhone: new FormControl('', [
       getRequiredFormControlValidator('Укажите контактный телефон ответственного'),
     ]),
   });
 
-  @Input() locInstance: LetterOfCredit;
+  ButtonType = ButtonType;
 
-  ngOnInit(): void {
-    if (!this.locInstance) {
-      return;
-    }
-
-    this.issue5Group.get('ContactPersone')?.valueChanges.subscribe(() => {
-      this.locInstance.contactPersone = this.issue5Group.controls.ContactPersone.valid ?
-        this.issue5Group.controls.ContactPersone.value : '';
-    });
-
-    this.issue5Group.get('ContactPhone')?.valueChanges.subscribe(() => {
-      this.locInstance.contactPhone = this.issue5Group.controls.ContactPhone.valid ?
-        this.issue5Group.controls.ContactPhone.value : '';
-    });
-
-    this.issue5Group.controls.ContactPersone.setValue(this.locInstance.contactPersone);
-    this.issue5Group.controls.ContactPhone.setValue(this.locInstance.contactPhone);
+  get contactPerson() {
+    return this.form.controls.contactPerson;
   }
 
-  public isValid(): boolean {
-    this.issue5Group.controls.ContactPhone.setValue(this.issue5Group.controls.ContactPhone.value);
+  get contactPhone() {
+    return this.form.controls.contactPhone;
+  }
 
-    this.issue5Group.controls.ContactPersone.markAsTouched();
-    this.issue5Group.controls.ContactPhone.markAsTouched();
+  constructor(
+    private store: StoreService,
+    private dialog: MatDialog,
+  ) {
+    super();
+  }
 
-    return this.issue5Group.controls.ContactPersone.valid && this.issue5Group.controls.ContactPhone.valid;
+  ngOnInit(): void {
+    merge(
+      this.contactPerson.valueChanges.pipe(
+        tap((contactPerson) => {
+          this.locInstance.contactPerson = this.form.controls.contactPerson.valid
+            ? contactPerson
+            : '';
+        }),
+      ),
+      this.contactPhone.valueChanges.pipe(
+        tap((contactPhone) => {
+          this.locInstance.contactPhone = this.form.controls.contactPhone.valid
+            ? contactPhone
+            : '';
+        }),
+      ),
+    ).pipe(
+      untilComponentDestroyed(this),
+    ).subscribe();
+
+    this.form.patchValue(this.locInstance);
+  }
+
+  public isFormValid(): boolean {
+    return this.form.valid;
+  }
+
+  public handleSubmit(): void {
+    Object.values(this.form.controls).forEach((control) => {
+      control.markAllAsTouched();
+      control.updateValueAndValidity();
+    });
+
+    if (this.isFormValid()) {
+      this.openSuccessDialog();
+
+      console.log(this.form);
+    }
+  }
+
+  private openSuccessDialog(): void {
+    const exampleData = {
+      title: 'Заявка отправлена',
+      component: IssueSuccessComponent,
+    };
+
+    const type = SuccessModalType.Succeed;
+
+    const dialog = this.dialog.open(SuccessModalComponent, {
+      data: {
+        ...exampleData,
+        type,
+      },
+      panelClass: ['loc-overlay', 'hide-scrollbar'],
+    });
+
+    dialog.afterClosed().subscribe(() => {
+      // this.allowIssue = false;
+      // TODO navigate out
+      PsbDomHelper.showDocuments();
+    });
+
+    this.store.setSuccessDialog(dialog);
   }
 }

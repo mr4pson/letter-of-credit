@@ -23,7 +23,7 @@ import { PsbDomHelper } from 'src/app/classes/psb-dom.helper';
 export class IssueComponent implements OnInit {
   public allowIssue = false;
   public ButtonType = ButtonType;
-  public currentStep = 4;
+  public currentStep = 5;
   public locInstance = {} as LetterOfCredit;
 
   @ViewChild(AccreditationAmountComponent) step1Component: AccreditationAmountComponent;
@@ -34,7 +34,6 @@ export class IssueComponent implements OnInit {
 
   constructor(
     private store: StoreService,
-    private dialog: MatDialog,
   ) { }
 
   ngOnInit(): void {
@@ -137,11 +136,11 @@ export class IssueComponent implements OnInit {
         // this.currentStep = 5;
         break;
       case 5:
-        if (!this.step5Component.isValid()) {
-          return;
-        }
+        // if (!this.step5Component.isValid()) {
+        //   return;
+        // }
 
-        this.openSuccessDialog();
+        // this.openSuccessDialog();
         break;
     }
   }
@@ -162,32 +161,6 @@ export class IssueComponent implements OnInit {
 
     PsbDomHelper.hideDocuments();
     this.allowIssue = true;
-  }
-
-  private openSuccessDialog() {
-    this.currentStep = 1;
-
-    const exampleData: any = {
-      title: 'Заявка отправлена',
-      component: IssueSuccessComponent,
-    };
-
-    const type = SuccessModalType.Succeed;
-
-    const dialog = this.dialog.open(SuccessModalComponent, {
-      data: {
-        ...exampleData,
-        type,
-      },
-      panelClass: ['loc-overlay', 'hide-scrollbar'],
-    });
-
-    dialog.afterClosed().subscribe(() => {
-      this.allowIssue = false;
-      PsbDomHelper.showDocuments();
-    });
-
-    this.store.setSuccessDialog(dialog);
   }
 
   private closeIssue() {

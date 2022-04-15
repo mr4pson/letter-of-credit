@@ -1,4 +1,4 @@
-import { ClosingDoc } from './closing-doc.model';
+import { ClosingDoc } from '../components/issue/interfaces/closing-doc.interface';
 
 export class LetterOfCredit {
   public reciverInn = '';
@@ -17,6 +17,6 @@ export class LetterOfCredit {
   public isDocumentDigital = true;
   public allowUsePartOfLoc = true;
 
-  public contactPersone = '';
+  public contactPerson = '';
   public contactPhone = '';
 }

@@ -1,6 +1,7 @@
-<div
+<form
   class="send-application"
-  [formGroup]="issue5Group"
+  [formGroup]="form"
+  (submit)="handleSubmit()"
 >
   <p class="send-application__description">
     В течение одного рабочего дня после отправки заявления с вами свяжется сотрудник банка, обработает вашу заявку и выпустит покрытый аккредитив для безопасного платежа вашему контрагенту.
@@ -8,7 +9,7 @@
 
   <label class="send-application__agree-checkbox">
     <psb-checkbox
-      formControlName="AgreeWithTerms"
+      formControlName="agreeWithTerms"
       name="only-orig-doc"
     >
       <span>
@@ -25,7 +26,7 @@
   </label>
 
   <psb-checkbox
-    formControlName="CreateLocTemplate"
+    formControlName="createLocTemplate"
     name="only-orig-doc"
   >
     <span>Создать шаблон аккредитива</span>
@@ -39,13 +40,19 @@
     <psb-text-input
       class="contact__name"
       label="ФИО ответственного"
-      formControlName="ContactPersone"
+      formControlName="contactPerson"
     ></psb-text-input>
 
     <psb-phone-input
       class="contact__phone"
       label="Контактный телефон ответственного"
-      formControlName="ContactPhone"
+      formControlName="contactPhone"
     ></psb-phone-input>
   </div>
-</div>
+  <psb-button
+    [isSubmit]="true"
+    [type]="ButtonType.Primary"
+  >
+    Далее
+  </psb-button>
+</form>

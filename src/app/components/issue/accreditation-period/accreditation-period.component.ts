@@ -6,10 +6,10 @@ import { tap } from 'rxjs/operators';
 
 import { ButtonType } from '@psb/fe-ui-kit';
 import { getRequiredFormControlValidator } from '@psb/validations/required';
-import { ClosingDoc } from 'src/app/models/closing-doc.model';
+import { ClosingDoc } from 'src/app/components/issue/interfaces/closing-doc.interface';
 import { LetterOfCredit } from 'src/app/models/letter-of-credit.model';
 import { StoreService } from 'src/app/models/state.service';
-import { getNow, getSubstractDatesDays, getSummedDateDays, getTomorrowDate } from 'src/app/utils/utils';
+import { getSubstractDatesDays, getSummedDateDays, getTomorrowDate } from 'src/app/utils/utils';
 
 
 @Component({
