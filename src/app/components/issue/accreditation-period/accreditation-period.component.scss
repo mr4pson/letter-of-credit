@@ -3,41 +3,6 @@
 .accreditation-period {
 	padding-bottom: 24px;
 
-	// .docs-holder {
-	// 	background: #f5f5f5;
-	// 	padding: 32px 16px;
-	// 	margin-bottom: 24px;
-
-	// 	.doc-fields {
-	// 		display: flex;
-
-	// 		.doc-field {
-	// 			width: 300px;
-	// 			display: inline-block;
-	// 		}
-
-	// 		.count-field {
-	// 			width: 216px;
-	// 			display: inline-block;
-	// 			margin-left: 20px;
-	// 		}
-	// 	}
-
-	// 	.only-orig-doc-holder {
-	// 		display: inline-block;
-	// 		margin-top: -10px;
-
-	// 		psb-tooltip {
-	// 			margin-top: 14px;
-	// 		}
-	// 	}
-
-	// 	.doc-additional-field {
-	// 		display: block;
-	// 		margin-bottom: 24px;
-	// 	}
-	// }
-
 	&__closing-doc-checkbox {
 		display: flex;
 		align-items: center;
@@ -89,12 +54,12 @@
   border: none;
 	cursor: pointer;
 
-	svg {
+	&__icon {
 		float: left;
 		margin-right: 10px;
 	}
 
-	span {
+	&__label {
 		font-weight: bold;
 		font-size: 16px;
 		line-height: 24px;

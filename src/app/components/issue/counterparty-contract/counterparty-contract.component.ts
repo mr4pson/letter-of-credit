@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input, OnInit } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { tap } from 'rxjs/operators';
 import { merge } from 'rxjs';
@@ -6,7 +6,7 @@ import { OnDestroyMixin, untilComponentDestroyed } from '@w11k/ngx-componentdest
 import { NgxDropzoneChangeEvent } from 'ngx-dropzone';
 
 import { NDS_LIST } from '../constants/constants';
-import { FileUploadService } from '../services/file-uploading.service';
+import { FileUploadService } from '../services/file-upload.service';
 
 import { ButtonType } from '@psb/fe-ui-kit/src/components/button';
 import { SelectedItem } from '@psb/fe-ui-kit/src/components/input-select';
@@ -20,12 +20,13 @@ import { StoreService } from 'src/app/models/state.service';
   selector: 'counterparty-contract',
   templateUrl: 'counterparty-contract.component.html',
   styleUrls: ['counterparty-contract.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CounterpartyContractComponent extends OnDestroyMixin implements OnInit {
   @Input() locInstance: LetterOfCredit;
 
-  public files$ = this.fileUploadingService.files$;
-  public errorMessage$ = this.fileUploadingService.errorMessage$;
+  public files$ = this.fileUploadService.files$;
+  public errorMessage$ = this.fileUploadService.errorMessage$;
 
   public form = new FormGroup({
     contractDate: new FormControl('', [
@@ -63,7 +64,7 @@ export class CounterpartyContractComponent extends OnDestroyMixin implements OnI
 
   constructor(
     private store: StoreService,
-    private fileUploadingService: FileUploadService,
+    private fileUploadService: FileUploadService,
   ) {
     super();
   }
@@ -110,7 +111,7 @@ export class CounterpartyContractComponent extends OnDestroyMixin implements OnI
     return this.form.valid;
   }
 
-  public setVat() {
+  public setVat(): void {
     if (this.selectedNds === 0) {
       this.selectedNdsControl.setValue(
         this.ndsList[this.ndsList.length - 1].label,
@@ -118,7 +119,7 @@ export class CounterpartyContractComponent extends OnDestroyMixin implements OnI
     }
   }
 
-  public unSetVat() {
+  public unSetVat(): void {
     if (this.selectedNds > 0) {
       this.selectedNdsControl.setValue(
         this.ndsList[0].label,
@@ -132,11 +133,11 @@ export class CounterpartyContractComponent extends OnDestroyMixin implements OnI
   }
 
   public handleSelectFiles(event: NgxDropzoneChangeEvent): void {
-    this.fileUploadingService.selectFiles(event);
+    this.fileUploadService.selectFiles(event);
   }
 
   public handleRemoveFile(file: FileUploaded): void {
-    this.fileUploadingService.handleFileRemoval(file);
+    this.fileUploadService.handleFileRemoval(file);
   }
 
   public handleSubmit(): void {

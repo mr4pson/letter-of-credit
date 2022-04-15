@@ -1,4 +1,4 @@
-import { Component, forwardRef, Input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, forwardRef, Input } from '@angular/core';
 import { ControlValueAccessor, FormControl, FormGroup, NG_VALUE_ACCESSOR } from '@angular/forms';
 
 @Component({
@@ -12,9 +12,11 @@ import { ControlValueAccessor, FormControl, FormGroup, NG_VALUE_ACCESSOR } from 
       multi: true,
     },
   ],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ClosingDocComponent implements ControlValueAccessor {
   @Input() index: number;
+
   value: any;
   formGroup = new FormGroup({
     Document: new FormControl(),

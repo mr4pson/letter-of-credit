@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input, OnInit } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { OnDestroyMixin, untilComponentDestroyed } from '@w11k/ngx-componentdestroyed';
 import { catchError, filter, map, switchMap, tap } from 'rxjs/operators';
@@ -21,6 +21,7 @@ import { ErrorHandlerService } from 'src/app/services/error-handler.service';
   selector: 'counterparty',
   templateUrl: 'counterparty.component.html',
   styleUrls: ['counterparty.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class СounterpartyComponent extends OnDestroyMixin implements OnInit {
   @Input() locInstance = {} as LetterOfCredit;

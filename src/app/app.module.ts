@@ -32,7 +32,7 @@ import { ModelsModule } from './models/models.module';
 import { ErrorHandlerService } from './services/error-handler.service';
 import { StorageService } from './services/storage.service';
 import { FormatMoneyPipe } from './pipes/format-money.pipe';
-import { FileUploadService } from './components/issue/services/file-uploading.service';
+import { FileUploadService } from './components/issue/services/file-upload.service';
 
 import { BaseModalModule } from '@psb/fe-ui-kit/src/components/base-modal';
 import { ButtonModule } from '@psb/fe-ui-kit/src/components/button';

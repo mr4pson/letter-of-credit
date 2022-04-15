@@ -1,167 +1,191 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input, OnInit } from '@angular/core';
 import { FormArray, FormControl, FormGroup } from '@angular/forms';
+import { OnDestroyMixin, untilComponentDestroyed } from '@w11k/ngx-componentdestroyed';
+import { merge } from 'rxjs';
+import { tap } from 'rxjs/operators';
 
+import { ButtonType } from '@psb/fe-ui-kit';
 import { getRequiredFormControlValidator } from '@psb/validations/required';
 import { ClosingDoc } from 'src/app/models/closing-doc.model';
 import { LetterOfCredit } from 'src/app/models/letter-of-credit.model';
+import { StoreService } from 'src/app/models/state.service';
+import { getNow, getSubstractDatesDays, getSummedDateDays, getTomorrowDate } from 'src/app/utils/utils';
+
 
 @Component({
   selector: 'accreditation-period',
   templateUrl: 'accreditation-period.component.html',
   styleUrls: ['accreditation-period.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class AccreditationPeriodComponent implements OnInit {
-  public issue4Group = new FormGroup({
-    EndLocDate: new FormControl('', [
+export class AccreditationPeriodComponent extends OnDestroyMixin implements OnInit {
+  @Input() locInstance: LetterOfCredit;
+
+  public form = new FormGroup({
+    endLocDate: new FormControl(getTomorrowDate(), [
       getRequiredFormControlValidator(
         'Укажите дату окончания аккредитива',
       ),
     ]),
-    LocDaysLength: new FormControl(''),
-    PerhapsDigitalDoc: new FormControl(true),
-    AllowUsePartOfLoc: new FormControl(true),
-    ClosingDoc: new FormArray([]),
+    locDaysNumber: new FormControl(''),
+    isDocumentDigital: new FormControl(true),
+    allowUsePartOfLoc: new FormControl(true),
+    closingDocs: new FormArray([]),
   });
 
-  public minEndLocDate = new Date();
+  public ButtonType = ButtonType;
+  public minEndLocDate = getTomorrowDate();
+  public currentDate = new Date();
 
-  @Input() locInstance: LetterOfCredit;
+  get endLocDateControl() {
+    return this.form.controls.endLocDate;
+  }
 
-  constructor() {
-    this.minEndLocDate.setDate(this.minEndLocDate.getDate() + 1);
+  get locDaysNumberControl() {
+    return this.form.controls.locDaysNumber;
+  }
+
+  get isDocumentDigitalControl() {
+    return this.form.controls.isDocumentDigital;
+  }
+
+  get allowUsePartOfLocControl() {
+    return this.form.controls.allowUsePartOfLoc;
+  }
+
+  get closingDocsControl(): FormArray {
+    return this.form.controls.closingDocs as FormArray;
+  }
+
+  constructor(
+    private store: StoreService,
+  ) {
+    super();
   }
 
   ngOnInit(): void {
-    if (!this.locInstance) {
-      return;
-    }
-    this.issue4Group.get('EndLocDate')?.valueChanges.subscribe(() => {
-      if ('' === this.issue4Group.controls.EndLocDate.value) {
-        return;
-      }
-
-      this.locInstance.endLocDate = this.issue4Group.controls.EndLocDate.valid
-        ? this.issue4Group.controls.EndLocDate.value
-        : '';
-
-      this.setLocDays();
-    });
-
-    this.issue4Group.get('LocDaysLength')?.valueChanges.subscribe(() => {
-      const daysValue = this.issue4Group.controls.LocDaysLength.value;
-      if ('' === daysValue) {
-        this.issue4Group.controls.EndLocDate.setValue('');
-        return;
-      }
-
-      const days: number = Number(daysValue);
-      if (days < 1 || days > 365) {
-        this.issue4Group.controls.LocDaysLength.setValue('');
-        return;
-      }
-
-      this.setLocDate(days);
-    });
-
-    this.issue4Group.get('PerhapsDigitalDoc')?.valueChanges.subscribe(
-      () => {
-        this.locInstance.perhapsDigitalDoc =
-        this.issue4Group.controls.PerhapsDigitalDoc.value;
-      },
+    this.form.patchValue(
+      this.locInstance ?? {},
     );
 
-    this.issue4Group.get('AllowUsePartOfLoc')?.valueChanges.subscribe(
-      () => {
-        this.locInstance.allowUsePartOfLoc =
-        this.issue4Group.controls.AllowUsePartOfLoc.value;
-      },
-    );
+    merge(
+      this.endLocDateControl.valueChanges.pipe(
+        tap((endLocDate) => {
+          if (!endLocDate) {
 
-    this.issue4Group.controls.EndLocDate.setValue(
-      this.locInstance.endLocDate,
-    );
-    this.issue4Group.controls.PerhapsDigitalDoc.setValue(
-      this.locInstance.perhapsDigitalDoc,
-    );
-    this.issue4Group.controls.AllowUsePartOfLoc.setValue(
-      this.locInstance.allowUsePartOfLoc,
-    );
+            return;
+          }
 
-    if (this.locInstance.closingDocs.length > 0) {
-      // tslint:disable-next-line: forin
-      for (const index in this.locInstance.closingDocs) {
-        this.addClosingDoc(this.locInstance.closingDocs[index]);
-      }
+          this.locInstance.endLocDate = this.endLocDateControl.valid
+            ? endLocDate
+            : '';
+
+          this.setLocDays();
+        }),
+      ),
+      this.locDaysNumberControl.valueChanges.pipe(
+        tap((locDaysNumber) => {
+          if (!locDaysNumber) {
+            this.endLocDateControl.setValue('');
+
+            return;
+          }
+          const days: number = Number(locDaysNumber);
+          if (days < 1 || days > 365) {
+            this.locDaysNumberControl.setValue('');
+
+            return;
+          }
+
+          this.setLocDate(days);
+        }),
+      ),
+      this.isDocumentDigitalControl.valueChanges.pipe(
+        tap(() => this.locInstance.isDocumentDigital = this.isDocumentDigitalControl.value),
+      ),
+      this.allowUsePartOfLocControl.valueChanges.pipe(
+        tap(() => this.locInstance.allowUsePartOfLoc = this.allowUsePartOfLocControl.value),
+      ),
+      this.closingDocsControl.valueChanges.pipe(
+        tap((closingDocs: ClosingDoc[]) => {
+          this.locInstance.closingDocs = [];
+          closingDocs.forEach((closingDoc: ClosingDoc) => {
+            if (!closingDoc.document?.trim()) {
+
+              return;
+            }
+            this.locInstance.closingDocs.push({ ...closingDoc });
+          });
+        }),
+      ),
+    ).pipe(
+      untilComponentDestroyed(this),
+    ).subscribe();
+
+    if (this.locInstance.closingDocs) {
+      this.locInstance.closingDocs.forEach(closingDoc => this.addClosingDoc(closingDoc));
     } else {
       this.addClosingDoc();
     }
+  }
 
-    this.issue4Group.get('ClosingDoc')?.valueChanges.subscribe(() => {
-      this.locInstance.closingDocs = [];
-      // tslint:disable-next-line: forin
-      for (const index in this.issue4Group.controls.ClosingDoc.value) {
-        const item: ClosingDoc =
-          this.issue4Group.controls.ClosingDoc.value[index];
-        if ('' === item.document.trim()) {
-          continue;
-        }
-        const instance = new ClosingDoc(item);
-        this.locInstance.closingDocs.push(instance);
-      }
+  public isFormValid(): boolean {
+    return this.form.valid;
+  }
+
+  public addClosingDoc({
+    document,
+    amount,
+    onlyOriginalDocument,
+    additionalRequirements,
+  } = {} as ClosingDoc): void {
+    const closingDocument = {
+      Document: new FormControl(document),
+      Amount: new FormControl(amount ?? 1),
+      OnlyOriginalDocument: new FormControl(
+        onlyOriginalDocument !== undefined ? onlyOriginalDocument : true,
+      ),
+      AdditionalRequirements: new FormControl(
+        additionalRequirements,
+      ),
+    };
+
+    this.closingDocsControl.push(
+      new FormGroup(closingDocument),
+    );
+  }
+
+  public handleSubmit(): void {
+    Object.values(this.form.controls).forEach((control) => {
+      control.markAllAsTouched();
+      control.updateValueAndValidity();
     });
-  }
 
-  private setLocDate(days: number): void {
-    const nowDate = new Date();
-    nowDate.setDate(nowDate.getDate() + days);
-    this.issue4Group.controls.EndLocDate.setValue(nowDate);
-  }
+    if (this.isFormValid()) {
+      this.store.issueStep4Text = `до ${this.locInstance?.endLocDate.toLocaleDateString(
+        'ru-RU',
+        { year: 'numeric', month: 'long', day: 'numeric' },
+      )}`;
 
-  private setLocDays(): void {
-    const nowDate = new Date();
-    const locDays = this.issue4Group.controls.EndLocDate.valid
-      ? Math.ceil(
-          (this.locInstance.endLocDate.getTime() -
-            nowDate.getTime()) /
-            1000 /
-            3600 /
-            24,
-        )
-      : '';
-
-    if (this.issue4Group.controls.LocDaysLength.value !== locDays) {
-      this.issue4Group.controls.LocDaysLength.setValue(
-        locDays.toString(),
-      );
+      // this.currentStep = 5;
     }
   }
 
-  public get ClosingDocs(): FormArray {
-    return this.issue4Group.get('ClosingDoc') as FormArray;
+  private setLocDate(days: number): void {
+    const summedDate = getSummedDateDays(this.currentDate, days);
+
+    this.endLocDateControl.setValue(summedDate);
   }
 
-  public isValid(): boolean {
-    this.issue4Group.controls.EndLocDate.setValue(
-      this.issue4Group.controls.EndLocDate.value,
-    );
+  private setLocDays(): void {
+    const locDays = this.endLocDateControl.valid
+      ? getSubstractDatesDays(this.endLocDateControl.value, this.currentDate)
+      : '';
 
-    this.issue4Group.controls.EndLocDate.markAsTouched();
-
-    return this.issue4Group.controls.EndLocDate.valid;
-  }
-
-  public addClosingDoc(item: ClosingDoc = null) {
-    this.ClosingDocs.push(
-      new FormGroup({
-        Document: new FormControl(null !== item ? item.document : ''),
-        Amount: new FormControl(null !== item ? item.amount : 1),
-        OnlyOriginalDocument: new FormControl(
-          null !== item ? item.onlyOriginalDocument : true,
-        ),
-        AdditionalRequirements: new FormControl(
-          null !== item ? item.additionalRequirements : '',
-        ),
-      }),
-    );
+    if (this.locDaysNumberControl.value !== locDays && locDays !== 0) {
+      this.locDaysNumberControl.setValue(
+        locDays.toString(),
+      );
+    }
   }
 }

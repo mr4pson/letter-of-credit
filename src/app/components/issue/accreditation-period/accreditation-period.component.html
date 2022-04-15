@@ -1,87 +1,93 @@
-<div class="accreditation-period" [formGroup]="issue4Group">
-	<div class="accreditation-dates">
-		<div class="accreditation-dates__expiration-date">
-			<psb-datepicker
-				label="Дата окончания аккредитива"
-				formControlName="EndLocDate"
-				[minValidDate]="minEndLocDate"
-			></psb-datepicker>
+<form
+  class="accreditation-period"
+  [formGroup]="form"
+  (submit)="handleSubmit()"
+>
+  <div class="accreditation-dates">
+    <div class="accreditation-dates__expiration-date">
+      <psb-datepicker
+        label="Дата окончания аккредитива"
+        formControlName="endLocDate"
+        [minValidDate]="minEndLocDate"
+      ></psb-datepicker>
 
-			<psb-tooltip
-				class="tooltip"
-				tooltipType="white"
-				text="До этого срока ваш контрагент должен осуществить отгрузку или выполнить иные обязательства по договору и предоставить в Банк документы, необходимые по условиям аккредитива"
-			></psb-tooltip>
-		</div>
+      <psb-tooltip
+        class="tooltip"
+        tooltipType="white"
+        text="До этого срока ваш контрагент должен осуществить отгрузку или выполнить иные обязательства по договору и предоставить в Банк документы, необходимые по условиям аккредитива"
+      ></psb-tooltip>
+    </div>
 
-		<div class="accreditation-dates__validity">
-			<psb-text-input
-				label="Срок действия аккредитива в днях"
-				formControlName="LocDaysLength"
-				[maskSettings]="{ mask: '000' }"
-				description="Необязательно"
-			></psb-text-input>
-		</div>
-	</div>
+    <div class="accreditation-dates__validity">
+      <psb-text-input
+        label="Срок действия аккредитива в днях"
+        formControlName="locDaysNumber"
+        [maskSettings]="{ mask: '000' }"
+        description="Необязательно"
+      ></psb-text-input>
+    </div>
+  </div>
 
-	<h2 class="doc-title">
-		Закрывающие документы
-		<psb-tooltip
-			class="tooltip"
-			tooltipType="white"
-			text="Перечень документов должен быть составлен исходя из того, выполнение каких условий договора требуется проконтролировать с их помощью."
-		></psb-tooltip>
-	</h2>
+  <h2 class="doc-title">
+    Закрывающие документы
+    <psb-tooltip
+      class="tooltip"
+      tooltipType="white"
+      text="Перечень документов должен быть составлен исходя из того, выполнение каких условий договора требуется проконтролировать с их помощью."
+    ></psb-tooltip>
+  </h2>
 
-	<ng-container formArrayName="ClosingDoc">
-		<closing-doc
-			*ngFor="let doc of ClosingDocs.controls; let i = index"
+  <ng-container formArrayName="closingDocs">
+    <closing-doc
+      *ngFor="let doc of closingDocsControl.controls; let i = index"
       [formGroupName]="i"
-		></closing-doc>
-	</ng-container>
+    ></closing-doc>
+  </ng-container>
 
-	<button class="add-doc-btn" (click)="addClosingDoc()">
-		<div>
-			<svg
-				width="22"
-				height="22"
-				viewBox="0 0 22 22"
-				fill="none"
-				xmlns="http://www.w3.org/2000/svg"
-			>
-				<path
-					d="M18.0711 3.9291C14.1608 0.0187994 7.83923 0.0187994 3.92893 3.9291C0.0186298 7.8394 0.0186298 14.1609 3.92893 18.0712C7.83923 21.9815 14.1608 21.9815 18.0711 18.0712C21.9814 14.1609 21.9814 7.8394 18.0711 3.9291ZM11.997 17.0742H10.003V11.9972L4.92595 11.9972L4.92595 10.0031L10.003 10.0031L10.003 4.92612H11.997L11.997 10.0031L17.074 10.0031L17.074 11.9972L11.997 11.9972V17.0742Z"
-					fill="#383AD1"
-				/>
-			</svg>
+  <button
+    class="add-doc-btn"
+    (click)="addClosingDoc()"
+  >
+    <div>
+      <img
+        class="add-doc-btn__icon"
+        src="assets/icons/plus-round.svg"
+      >
+      <span class="add-doc-btn__label">Добавить закрывающий документ</span>
+    </div>
+  </button>
 
-			<span>Добавить закрывающий документ</span>
-		</div>
-	</button>
+  <div class="accreditation-period__closing-doc-checkbox">
+    <psb-checkbox
+      label="Возможно предоставление закрывающих документов в электронном виде"
+      formControlName="isDocumentDigital"
+      name="only-orig-doc"
+    >
+      <psb-tooltip
+        class="tooltip"
+        tooltipType="white"
+        text="Возможно только по согласованию с ПСБ и при условии, что контрагент обслуживается в Промсвязьбанке"
+      ></psb-tooltip>
+    </psb-checkbox>
+  </div>
 
-	<div class="accreditation-period__closing-doc-checkbox">
-		<psb-checkbox
-			label="Возможно предоставление закрывающих документов в электронном виде"
-			formControlName="PerhapsDigitalDoc"
-			name="only-orig-doc"
-			><psb-tooltip
-				class="tooltip"
-				tooltipType="white"
-				text="Возможно только по согласованию с ПСБ и при условии, что контрагент обслуживается в Промсвязьбанке"
-			></psb-tooltip
-		></psb-checkbox>
-	</div>
-
-	<div class="accreditation-period__allow-doc-checkbox">
-		<psb-checkbox
-			label="Разрешить контрагенту частичное использование аккредитива"
-			formControlName="AllowUsePartOfLoc"
-			name="only-orig-doc"
-			><psb-tooltip
-				class="tooltip"
-				tooltipType="white"
-				text="Если предполагается поэтапная оплата проставьте «галочку». Если оплата производится одной суммой, то оставьте поле не отмеченным."
-			></psb-tooltip
-		></psb-checkbox>
-	</div>
-</div>
+  <div class="accreditation-period__allow-doc-checkbox">
+    <psb-checkbox
+      label="Разрешить контрагенту частичное использование аккредитива"
+      formControlName="allowUsePartOfLoc"
+      name="only-orig-doc"
+    >
+      <psb-tooltip
+        class="tooltip"
+        tooltipType="white"
+        text="Если предполагается поэтапная оплата проставьте «галочку». Если оплата производится одной суммой, то оставьте поле не отмеченным."
+      ></psb-tooltip>
+    </psb-checkbox>
+  </div>
+	<psb-button
+		[isSubmit]="true"
+		[type]="ButtonType.Primary"
+	>
+		Далее
+	</psb-button>
+</form>

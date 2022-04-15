@@ -101,8 +101,7 @@ export class FileUploadService {
     this.errorMessage = message;
   }
 
-  private clearErrorMessage() {
-    console.log(413123);
+  private clearErrorMessage(): void {
     this.setErrorMessage('');
   }
 }

@@ -14,7 +14,7 @@ export class LetterOfCredit {
   public endLocDate: Date = null;
 
   public closingDocs: ClosingDoc[] = [];
-  public perhapsDigitalDoc = true;
+  public isDocumentDigital = true;
   public allowUsePartOfLoc = true;
 
   public contactPersone = '';

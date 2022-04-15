@@ -23,7 +23,7 @@ import { PsbDomHelper } from 'src/app/classes/psb-dom.helper';
 export class IssueComponent implements OnInit {
   public allowIssue = false;
   public ButtonType = ButtonType;
-  public currentStep = 3;
+  public currentStep = 4;
   public locInstance = {} as LetterOfCredit;
 
   @ViewChild(AccreditationAmountComponent) step1Component: AccreditationAmountComponent;
@@ -96,7 +96,8 @@ export class IssueComponent implements OnInit {
         // }
 
         // this.store.issueStep1Text =
-        //   FormatHelper.getSumFormatted(Number(this.step1Component.issueSum) + Number(this.step1Component.commission));
+        //   FormatHelper.getSumFormatted(Number(this.step1Component.issueSum)
+          // + Number(this.step1Component.commission));
 
         // this.store.paymentSum = this.step1Component.issueSum;
 
@@ -124,16 +125,16 @@ export class IssueComponent implements OnInit {
         // this.currentStep = 4;
         break;
       case 4:
-        if (!this.step4Component.isValid()) {
-          return;
-        }
+        // if (!this.step4Component.isValid()) {
+        //   return;
+        // }
 
-        this.store.issueStep4Text = `до ${this.locInstance?.endLocDate.toLocaleDateString(
-          'ru-RU',
-          { year: 'numeric', month: 'long', day: 'numeric' },
-        )}`;
+        // this.store.issueStep4Text = `до ${this.locInstance?.endLocDate.toLocaleDateString(
+        //   'ru-RU',
+        //   { year: 'numeric', month: 'long', day: 'numeric' },
+        // )}`;
 
-        this.currentStep = 5;
+        // this.currentStep = 5;
         break;
       case 5:
         if (!this.step5Component.isValid()) {
