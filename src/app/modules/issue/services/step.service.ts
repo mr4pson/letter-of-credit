@@ -3,6 +3,7 @@ import { NavigationStart, Router } from '@angular/router';
 import { filter, map } from 'rxjs/operators';
 
 import { getSteps } from '../helpers/issue-step.helper';
+import { Page, paths } from '../constants/routes';
 
 import { StoreService } from 'src/app/models/state.service';
 
@@ -12,7 +13,14 @@ export class StepService {
 
   public currentUrl$ = this.router.events.pipe(
     filter(event => event instanceof NavigationStart),
-    map(({ url }: NavigationStart) => (url.substring(1, url.length))),
+    map(({ url }: NavigationStart) => {
+      const noSlashUrl = url.substring(1, url.length);
+      if (!noSlashUrl) {
+        return paths[Page.ACCREDITATION_AMOUNT];
+      }
+
+      return noSlashUrl;
+    }),
   );
 
   constructor(
