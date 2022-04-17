@@ -2,7 +2,6 @@ import { Component } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 
 import { SafePaymentHelper } from './classes/safe-payment.helper';
-import { SafePaymentComponent } from './components/safepayment/safe-payment.component';
 import { AccountService } from './services/account.service';
 import { StoreService } from './models/state.service';
 

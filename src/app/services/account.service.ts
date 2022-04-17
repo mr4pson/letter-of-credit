@@ -1,12 +1,12 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable, of } from 'rxjs';
-import { catchError, filter, map } from 'rxjs/operators';
+import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 
 import { ApiAccountList } from '../classes/interfaces/api-account-list.interface';
 import { ApiAccount } from '../classes/interfaces/api-account.interface';
 import { BankSearch } from '../classes/interfaces/bank-search.interface';
-import { Client } from '../components/issue/interfaces/client.interface';
+import { Client } from '../modules/issue/interfaces/client.interface';
 import { ReciverStatus } from '../classes/reciver-status';
 import { StorageService } from './storage.service';
 import { ReliabilityResult } from '../models/reliability.interface';
@@ -38,11 +38,6 @@ export class AccountService {
         map((result: any) => {
           return !!result?.canShowOffer;
         }),
-        catchError((error) => {
-          this.lastError = error;
-
-          return of(false);
-        }),
       );
   }
 
@@ -63,11 +58,6 @@ export class AccountService {
           (!reliability.red && !reliability.yellow && !reliability.green)
         );
       }),
-      catchError((error) => {
-        this.lastError = error;
-
-        return of(false);
-      }),
     );
   }
 
@@ -87,8 +77,6 @@ export class AccountService {
   }
 
   public setDisableLoCOffers(reciverINN: string): Observable<boolean> {
-    this.lastError = null;
-
     return this.letterService
       .apiLcEnableLcOffersClientIdPost$Json({
         clientId: this.storage.getClientID(),
@@ -100,11 +88,6 @@ export class AccountService {
           if (!response && response.success) {
             return true;
           }
-        }),
-        catchError((error) => {
-          this.lastError = error;
-
-          return of(false);
         }),
       );
   }
@@ -128,46 +111,29 @@ export class AccountService {
   }
 
   public getCommision(total: number): Observable<number> {
-    this.lastError = null;
-
     const url =
       `${this.storage.apiDomain}api/LC/calculateCommission?total=${total}`;
 
     return this.http.get<{ commissionValue: number }>(url).pipe(
       map(response => response?.commissionValue),
-      catchError((error) => {
-        this.lastError = error;
-
-        return of(0);
-      }),
     );
   }
 
   public searchClientByInn(inn: string): Observable<Client[]> {
-    this.lastError = null;
-
-    const url =
-      `${this.storage.apiDomain}api/Document/clients/searchByInn/${inn}?v=${this.storage.apiVersion}`;
+    const url = `${this.storage.apiDomain}api/Document/clients/searchByInn/${inn}?v=${this.storage.apiVersion}`;
 
     return this.http.get<Client[]>(url);
   }
 
   public searchBankByBik(bik: string): Observable<BankSearch> {
-    this.lastError = null;
-
     const url =
       `${this.storage.apiDomain}api/Document/getReceiverBanks/${bik}?v=${this.storage.apiVersion}`;
 
-    return this.http.get<Client[]>(url).pipe(
+    return this.http.get<BankSearch[]>(url).pipe(
       map((response) => {
         if (response && response.length > 0) {
           return response[0];
         }
-      }),
-      catchError((error) => {
-        this.lastError = error;
-
-        return of(null);
       }),
     );
   }

@@ -1,6 +1,8 @@
 import { MatDialog } from '@angular/material/dialog';
+import { catchError } from 'rxjs/operators';
+import { of } from 'rxjs';
 
-import { SafePaymentComponent } from '../components/safepayment/safe-payment.component';
+import { SafePaymentComponent } from '../modules/safepayment/safe-payment.component';
 import { AccountService } from '../services/account.service';
 import { StoreService } from '../models/state.service';
 import { PaymentFields } from './payment-fields';
@@ -8,7 +10,6 @@ import { PaymentForm } from './payment-form';
 import { SafePaymentButton } from './safe-payment-button';
 
 import { BaseModalComponent } from '@psb/fe-ui-kit/src/components/base-modal';
-
 export class SafePaymentHelper {
   private paymentForm: PaymentForm;
 
@@ -158,7 +159,11 @@ export class SafePaymentHelper {
   public async isShowLoC(): Promise<boolean> {
     this.store.openWaitDialog();
 
-    const isLoCAllowed = await this.accountServiceInstance.getAllowLoC(this.store.reciverInn);
+    const isLoCAllowed = await this.accountServiceInstance.getAllowLoC(this.store.reciverInn).pipe(
+      catchError(() => {
+        return of(false);
+      }),
+    );
     if (!isLoCAllowed) {
       if (this.accountServiceInstance.lastError) {
         alert('Не удалось получить информацию о возможности запроса аккредитива.');
@@ -169,7 +174,11 @@ export class SafePaymentHelper {
       return false;
     }
 
-    const isBadReliability = await this.accountServiceInstance.getIsBadReliability(this.store.reciverInn);
+    const isBadReliability = await this.accountServiceInstance.getIsBadReliability(this.store.reciverInn).pipe(
+      catchError(() => {
+        return of(false);
+      }),
+    );
     if (!isBadReliability) {
       if (this.accountServiceInstance.lastError) {
         alert('Не удалось получить информацию о рейтинге контрагента.');

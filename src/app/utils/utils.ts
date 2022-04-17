@@ -7,7 +7,6 @@ export const getNow = (): Date => {
 };
 
 export const getSubstractDatesDays = (date: number, substactingDate: Date): number => {
-  console.log(date, substactingDate);
   return Math.ceil(
     (date - substactingDate.getTime()) /
     1000 /

@@ -12,6 +12,8 @@ import { catchError, retry } from 'rxjs/operators';
 import { StorageService } from './services/storage.service';
 import { ErrorHandlerService } from './services/error-handler.service';
 
+import { environment } from 'src/environments/environment';
+
 @Injectable()
 export class HttpErrorInterceptor implements HttpInterceptor {
   constructor(
@@ -22,6 +24,12 @@ export class HttpErrorInterceptor implements HttpInterceptor {
     req: HttpRequest<any>,
     next: HttpHandler,
   ): Observable<HttpEvent<any>> {
+    if (req.responseType === 'blob') {
+      return next.handle(
+        req.clone({ url: `${environment.domain}/${req.url}` }),
+      );
+    }
+
     const accessToken = this.storage.getAccessToken();
     if (!accessToken) {
       return next.handle(req);

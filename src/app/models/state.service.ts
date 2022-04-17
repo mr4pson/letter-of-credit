@@ -3,8 +3,8 @@ import { MatDialog, MatDialogConfig, MatDialogRef } from '@angular/material/dial
 
 import { ReciverStatus } from '../classes/reciver-status';
 import { SafePaymentButton } from '../classes/safe-payment-button';
-import { IssueComponent } from '../components/issue/issue.component';
-import { WaitSpinnerComponent } from '../components/wait-spinner/wait-spinner.component';
+import { IssueComponent } from '../modules/issue/issue.component';
+import { WaitSpinnerComponent } from '../modules/wait-spinner/wait-spinner.component';
 
 import { BaseModalComponent } from '@psb/fe-ui-kit/src/components/base-modal';
 import { SuccessModalComponent } from '@psb/fe-ui-kit/src/components/success-modal';
