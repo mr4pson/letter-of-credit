@@ -111,10 +111,9 @@ export class AccountService {
   }
 
   public getCommision(total: number): Observable<number> {
-    const url =
-      `${this.storage.apiDomain}api/LC/calculateCommission?total=${total}`;
+    this.letterService.apiLcCalculateCommissionGet$Json({ total });
 
-    return this.http.get<{ commissionValue: number }>(url).pipe(
+    return this.letterService.apiLcCalculateCommissionGet$Json({ total }).pipe(
       map(response => response?.commissionValue),
     );
   }

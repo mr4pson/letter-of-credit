@@ -1,6 +1,22 @@
 @import "../../../../../assets/_colors.scss";
 
+:host {
+	position: relative;
+
+	&::before {
+    content: "";
+    border-left: dotted 1px #ccc;
+    width: 1px;
+    height: 100%;
+    position: absolute;
+    left: -41px;
+	}
+}
+
 .issue-steps {
+	position: relative;
+	z-index: 1;
+
 	&__title {
 		font-size: 12px;
 		line-height: 36px;
