@@ -2,9 +2,6 @@ import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 
 import { Step } from '../../interfaces/step.interface';
 import { StepService } from '../../services/step.service';
-
-import { StoreService } from 'src/app/models/state.service';
-
 @Component({
   selector: 'loc-issue-steps',
   templateUrl: 'issue-steps.component.html',
@@ -16,7 +13,6 @@ export class IssueStepsComponent implements OnInit {
   public currentUrl$ = this.stepService.currentUrl$;
 
   constructor(
-    public store: StoreService,
     private stepService: StepService,
   ) {}
 

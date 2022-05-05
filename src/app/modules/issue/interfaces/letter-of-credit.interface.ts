@@ -15,5 +15,6 @@ export class LetterOfCredit {
   allowUsePartOfLoc: boolean;
   contactPerson: string;
   contactPhone: string;
+  paymentSum: number;
 }
 

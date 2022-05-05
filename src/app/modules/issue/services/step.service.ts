@@ -5,7 +5,7 @@ import { filter, map } from 'rxjs/operators';
 import { getSteps } from '../helpers/issue-step.helper';
 import { Page, paths } from '../constants/routes';
 
-import { StoreService } from 'src/app/models/state.service';
+import { StoreService } from 'src/app/services/store.service';
 
 @Injectable()
 export class StepService {

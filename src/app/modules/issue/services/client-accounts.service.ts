@@ -1,8 +1,9 @@
 import { Injectable } from '@angular/core';
 import { map } from 'rxjs/operators';
 
-import { AccountService } from '../../../services/account.service';
 import { ClientAccount } from '../interfaces/client-account.interface';
+
+import { AccountService } from 'src/app/services';
 
 @Injectable()
 export class ClientAccountService {

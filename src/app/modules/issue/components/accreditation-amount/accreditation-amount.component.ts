@@ -5,18 +5,16 @@ import { catchError, map, switchMap, tap } from 'rxjs/operators';
 import { Observable, of } from 'rxjs';
 import { Router } from '@angular/router';
 
-import { ClientAccountService } from '../../services/client-accounts.service';
 import { getFormattedBalance } from '../../helpers/client-account.helper';
 import { ClientAccount } from '../../interfaces/client-account.interface';
 import { Page, paths } from '../../constants/routes';
+import { ClientAccountService } from '../../services/client-accounts.service';
 
 import { SelectedItem } from '@psb/fe-ui-kit/src/components/input-select';
 import { getMinMaxFormControlValidator } from '@psb/validations/minMax';
 import { getRequiredFormControlValidator } from '@psb/validations/required/validation';
-import { AccountService } from 'src/app/services/account.service';
-import { StoreService } from 'src/app/models/state.service';
-import { ErrorHandlerService } from 'src/app/services/error-handler.service';
 import { ButtonType } from '@psb/fe-ui-kit';
+import { AccountService, ErrorHandlerService, StoreService } from 'src/app/services';
 
 @Component({
   selector: 'accreditation-amount',
@@ -96,8 +94,8 @@ export class AccreditationAmountComponent extends OnDestroyMixin implements OnIn
   }
 
   ngOnInit(): void {
-    if (this.store.paymentSum > 0) {
-      this.form.controls.IssueSum.setValue(this.store.paymentSum);
+    if (this.store.letterOfCredit.paymentSum > 0) {
+      this.form.controls.IssueSum.setValue(this.store.letterOfCredit.paymentSum);
     }
   }
 
@@ -129,9 +127,9 @@ export class AccreditationAmountComponent extends OnDestroyMixin implements OnIn
 
     if (this.isFormValid()) {
       this.store.issueStep1Text = (this.issueSum + this.commission).toString();
-      this.store.paymentSum = this.issueSum;
+      this.store.letterOfCredit.paymentSum = this.issueSum;
       console.log(this.form.value);
-      this.router.navigateByUrl(paths[Page.COUNTERPARTY_CONTRACT]);
+      this.router.navigateByUrl(paths[Page.COUNTERPARTY]);
     }
   }
 }

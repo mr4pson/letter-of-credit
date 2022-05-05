@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, Input, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { OnDestroyMixin, untilComponentDestroyed } from '@w11k/ngx-componentdestroyed';
 import { catchError, filter, map, switchMap, tap } from 'rxjs/operators';
@@ -9,14 +9,13 @@ import { getAccountValidator, getInnSizeValidator } from '../../validators';
 import { PartnersService } from '../../services/partners.service';
 import { Client } from '../../interfaces/client.interface';
 import { Partner } from '../../interfaces/partner.interface';
-import { LetterOfCredit } from '../../interfaces/letter-of-credit.interface';
 import { Page, paths } from '../../constants/routes';
 
 import { getRequiredFormControlValidator } from '@psb/validations/required';
 import { AccountService } from 'src/app/services/account.service';
-import { BankSearch } from 'src/app/classes/interfaces/bank-search.interface';
+import { BankSearch } from 'src/app/interfaces/api/bank-search.interface';
 import { ButtonType } from '@psb/fe-ui-kit';
-import { StoreService } from 'src/app/models/state.service';
+import { StoreService } from 'src/app/services/store.service';
 import { ErrorHandlerService } from 'src/app/services/error-handler.service';
 
 @Component({
@@ -26,9 +25,8 @@ import { ErrorHandlerService } from 'src/app/services/error-handler.service';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class СounterpartyComponent extends OnDestroyMixin implements OnInit {
-  @Input() locInstance = {} as LetterOfCredit;
-
-  public clientCompanyName = this.locInstance?.reciverName;
+  public clientCompanyName = this.store.letterOfCredit.reciverName;
+  public reciverBankName = this.store.letterOfCredit.reciverBankName;
   public ButtonType = ButtonType;
 
   public form = new FormGroup({
@@ -95,7 +93,12 @@ export class СounterpartyComponent extends OnDestroyMixin implements OnInit {
   }
 
   ngOnInit() {
-    this.form.patchValue(this.locInstance);
+    console.log(this.store.letterOfCredit);
+    this.form.patchValue({
+      inn: this.store.letterOfCredit.reciverInn,
+      bik: this.store.letterOfCredit.reciverBankBik,
+      account: this.store.letterOfCredit.reciverAccount,
+    });
 
     merge(
       this.bikControl.valueChanges.pipe(
@@ -106,19 +109,23 @@ export class СounterpartyComponent extends OnDestroyMixin implements OnInit {
             return this.accountServiceInstance.searchBankByBik(this.bikControl.value);
           }
 
-          this.locInstance.reciverBankName = '';
+          this.store.letterOfCredit.reciverBankName = '';
+          this.reciverBankName = '';
           return of<BankSearch>(null);
         }),
         tap((bank) => {
           if (!bank) {
             this.bikControl.setErrors({ incorrect: 'Банк не определен. Проверьте БИК' });
             this.bikControl.markAsTouched();
-            this.locInstance.reciverBankName = '';
+            this.store.letterOfCredit.reciverBankName = '';
+            this.reciverBankName = '';
 
             return;
           }
-          this.locInstance.reciverBankName = bank.fullName;
-          this.locInstance.reciverBankBik = this.bikControl.value;
+
+          this.store.letterOfCredit.reciverBankName = bank.fullName;
+          this.reciverBankName = bank.fullName;
+          this.store.letterOfCredit.reciverBankBik = this.bikControl.value;
         }),
         catchError(() => {
           this.errorHandlerService.showErrorMesssage('Невозможно получить информацию о банке');
@@ -128,7 +135,7 @@ export class СounterpartyComponent extends OnDestroyMixin implements OnInit {
       ),
       this.accountControl.valueChanges.pipe(
         tap(() => {
-          this.locInstance.reciverAccount = this.accountControl.valid ?
+          this.store.letterOfCredit.reciverAccount = this.accountControl.valid ?
             this.accountControl.value : '';
         }),
       ),
@@ -147,13 +154,13 @@ export class СounterpartyComponent extends OnDestroyMixin implements OnInit {
     if (client) {
       this.innControl.setValue(client.inn);
       this.clientCompanyName = client.shortName;
-      this.locInstance.reciverInn = client.inn;
-      this.locInstance.reciverName = client.shortName;
+      this.store.letterOfCredit.reciverInn = client.inn;
+      this.store.letterOfCredit.reciverName = client.shortName;
 
       this.partners$.pipe(
         filter(partners => !!partners?.length),
         tap((partners) => {
-          const curPartner: Partner = partners.find(partner => partner.inn === this.locInstance.reciverInn);
+          const curPartner: Partner = partners.find(partner => partner.inn === this.store.letterOfCredit.reciverInn);
           if (curPartner?.banks && curPartner?.banks.length > 0) {
             this.bikControl.setValue(curPartner.banks[0].bik);
             this.accountControl.setValue(curPartner.banks[0].acc);
@@ -172,7 +179,7 @@ export class СounterpartyComponent extends OnDestroyMixin implements OnInit {
 
     console.log(this.isFormValid());
     if (this.isFormValid()) {
-      this.store.issueStep2Text = this.locInstance.reciverName;
+      this.store.issueStep2Text = this.store.letterOfCredit.reciverName;
       console.log(this.form.value);
       this.router.navigateByUrl(paths[Page.COUNTERPARTY_CONTRACT]);
     }

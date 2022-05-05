@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, Input, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { tap } from 'rxjs/operators';
 import { merge } from 'rxjs';
@@ -9,14 +9,13 @@ import { Router } from '@angular/router';
 import { NDS_LIST } from '../../constants/constants';
 import { FileUploadService } from '../../services/file-upload.service';
 import { FileUploaded } from '../../interfaces/file-uploaded.interface';
-import { LetterOfCredit } from '../../interfaces/letter-of-credit.interface';
 import { Page, paths } from '../../constants/routes';
 
 import { ButtonType } from '@psb/fe-ui-kit/src/components/button';
 import { SelectedItem } from '@psb/fe-ui-kit/src/components/input-select';
 import { getRequiredFormControlValidator } from '@psb/validations/required';
 import { SimplebarAngularComponent } from 'simplebar-angular/lib/simplebar-angular.component';
-import { StoreService } from 'src/app/models/state.service';
+import { StoreService } from 'src/app/services/store.service';
 
 @Component({
   selector: 'counterparty-contract',
@@ -25,8 +24,6 @@ import { StoreService } from 'src/app/models/state.service';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CounterpartyContractComponent extends OnDestroyMixin implements OnInit {
-  @Input() locInstance: LetterOfCredit;
-
   public files$ = this.fileUploadService.files$;
   public errorMessage$ = this.fileUploadService.errorMessage$;
 
@@ -73,7 +70,7 @@ export class CounterpartyContractComponent extends OnDestroyMixin implements OnI
   }
 
   ngOnInit(): void {
-    this.form.patchValue(this.locInstance ?? {});
+    this.form.patchValue(this.store.letterOfCredit);
 
     merge(
       this.selectedNdsControl.valueChanges.pipe(
@@ -86,21 +83,21 @@ export class CounterpartyContractComponent extends OnDestroyMixin implements OnI
       ),
       this.contractDateControl.valueChanges.pipe(
         tap((contractDate: Date) => {
-          this.locInstance.contractDate = this.contractDateControl.valid
+          this.store.letterOfCredit.contractDate = this.contractDateControl.valid
             ? contractDate
             : null;
         }),
       ),
       this.contractControl.valueChanges.pipe(
         tap((contract: string) => {
-          this.locInstance.contract = this.contractControl.valid
+          this.store.letterOfCredit.contract = this.contractControl.valid
             ? contract
             : '';
         }),
       ),
       this.contractInfoControl.valueChanges.pipe<string>(
         tap((contractInfo) => {
-          this.locInstance.contractInfo = this.contractInfoControl.valid
+          this.store.letterOfCredit.contractInfo = this.contractInfoControl.valid
             ? contractInfo
             : '';
         }),

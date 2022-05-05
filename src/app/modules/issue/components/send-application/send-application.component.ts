@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, Input, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { OnDestroyMixin, untilComponentDestroyed } from '@w11k/ngx-componentdestroyed';
@@ -6,12 +6,11 @@ import { merge } from 'rxjs';
 import { tap } from 'rxjs/operators';
 
 import { IssueSuccessComponent } from '../issue-success/issue-success.component';
-import { LetterOfCredit } from '../../interfaces/letter-of-credit.interface';
 
 import { ButtonType, SuccessModalComponent, SuccessModalType } from '@psb/fe-ui-kit';
 import { getRequiredFormControlValidator } from '@psb/validations/required/validation';
-import { PsbDomHelper } from 'src/app/classes/psb-dom.helper';
-import { StoreService } from 'src/app/models/state.service';
+import { StoreService } from 'src/app/services/store.service';
+import { NgService } from 'src/app/services/ng.service';
 
 @Component({
   selector: 'send-application',
@@ -20,8 +19,6 @@ import { StoreService } from 'src/app/models/state.service';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SendApplicationComponent extends OnDestroyMixin implements OnInit {
-  @Input() locInstance: LetterOfCredit;
-
   public form = new FormGroup({
     agreeWithTerms: new FormControl(true),
     createLocTemplate: new FormControl(true),
@@ -33,7 +30,7 @@ export class SendApplicationComponent extends OnDestroyMixin implements OnInit {
     ]),
   });
 
-  ButtonType = ButtonType;
+  public ButtonType = ButtonType;
 
   get contactPerson() {
     return this.form.controls.contactPerson;
@@ -46,6 +43,7 @@ export class SendApplicationComponent extends OnDestroyMixin implements OnInit {
   constructor(
     private store: StoreService,
     private dialog: MatDialog,
+    private ngService: NgService,
   ) {
     super();
   }
@@ -54,14 +52,14 @@ export class SendApplicationComponent extends OnDestroyMixin implements OnInit {
     merge(
       this.contactPerson.valueChanges.pipe(
         tap((contactPerson) => {
-          this.locInstance.contactPerson = this.form.controls.contactPerson.valid
+          this.store.letterOfCredit.contactPerson = this.form.controls.contactPerson.valid
             ? contactPerson
             : '';
         }),
       ),
       this.contactPhone.valueChanges.pipe(
         tap((contactPhone) => {
-          this.locInstance.contactPhone = this.form.controls.contactPhone.valid
+          this.store.letterOfCredit.contactPhone = this.form.controls.contactPhone.valid
             ? contactPhone
             : '';
         }),
@@ -70,7 +68,7 @@ export class SendApplicationComponent extends OnDestroyMixin implements OnInit {
       untilComponentDestroyed(this),
     ).subscribe();
 
-    this.form.patchValue(this.locInstance ?? {});
+    this.form.patchValue(this.store.letterOfCredit);
   }
 
   public isFormValid(): boolean {
@@ -86,12 +84,12 @@ export class SendApplicationComponent extends OnDestroyMixin implements OnInit {
     if (this.isFormValid()) {
       this.openSuccessDialog();
 
-      console.log(this.form);
+      console.log(this.form.value);
     }
   }
 
   private openSuccessDialog(): void {
-    const exampleData = {
+    const dialogData = {
       title: 'Заявка отправлена',
       component: IssueSuccessComponent,
     };
@@ -100,7 +98,7 @@ export class SendApplicationComponent extends OnDestroyMixin implements OnInit {
 
     const dialog = this.dialog.open(SuccessModalComponent, {
       data: {
-        ...exampleData,
+        ...dialogData,
         type,
       },
       panelClass: ['loc-overlay', 'hide-scrollbar'],
@@ -108,13 +106,10 @@ export class SendApplicationComponent extends OnDestroyMixin implements OnInit {
 
     dialog.afterClosed().pipe(
       tap(() => {
-        // this.allowIssue = false;
-        // TODO navigate out
-        PsbDomHelper.showDocuments();
+        this.store.isIssueVissible = false;
+        this.ngService.showSmbDocuments();
       }),
       untilComponentDestroyed(this),
     ).subscribe();
-
-    this.store.setSuccessDialog(dialog);
   }
 }

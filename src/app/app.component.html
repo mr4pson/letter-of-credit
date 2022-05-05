@@ -1,3 +1,6 @@
-<loc-issue></loc-issue>
-
-<!-- <psb-notice [title]="'Test'" [visibilityState]="true"></psb-notice> -->
+<div
+  [class.main-layout--hidden]="!(isIssueVissible$ | async)"
+  class="main-layout"
+>
+  <loc-issue></loc-issue>
+</div>

@@ -3,21 +3,19 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
-import { ApiAccountList } from '../classes/interfaces/api-account-list.interface';
-import { ApiAccount } from '../classes/interfaces/api-account.interface';
-import { BankSearch } from '../classes/interfaces/bank-search.interface';
+import { ApiAccountList } from '../interfaces/api/api-account-list.interface';
+import { ApiAccount } from '../interfaces/api/api-account.interface';
+import { BankSearch } from '../interfaces/api/bank-search.interface';
 import { Client } from '../modules/issue/interfaces/client.interface';
-import { ReciverStatus } from '../classes/reciver-status';
+import { ReciverStatus } from '../enums/reciver-status.enum';
 import { StorageService } from './storage.service';
-import { ReliabilityResult } from '../models/reliability.interface';
-import { StoreService } from '../models/state.service';
+import { ReliabilityResult } from '../interfaces/api/reliability-result.interface';
+import { StoreService } from './store.service';
 
 import { LetterService } from 'src/api/services';
 
 @Injectable()
 export class AccountService {
-  public lastError: object = null;
-
   constructor(
     public store: StoreService,
     public storage: StorageService,
@@ -26,25 +24,19 @@ export class AccountService {
   ) {}
 
   public getAllowLoC(reciverINN: string): Observable<boolean> {
-    this.lastError = null;
-
-    return this.letterService
-      .apiLcIsLcOffersEnabledClientIdGet({
-        clientId: this.storage.getClientID(),
-        branchId: this.storage.getBranchID(),
-        contractor: reciverINN,
-      })
-      .pipe(
-        map((result: any) => {
-          return !!result?.canShowOffer;
-        }),
-      );
+    return this.letterService.apiLcIsLcOffersEnabledClientIdGet$Response({
+      clientId: this.storage.getClientID(),
+      branchId: this.storage.getBranchID(),
+      contractor: reciverINN,
+    }).pipe(
+      map((response: any) => JSON.parse(response.body)),
+      map((response: { canShowOffer }) => {
+        return response.canShowOffer;
+      }),
+    );
   }
 
   public getIsBadReliability(reciverINN: string): Observable<boolean> {
-    this.lastError = null;
-
-    // This request isn't from swagger
     const url =
       `${this.storage.apiDomain}api/Document/reliability/${reciverINN}?v=${this.storage.apiVersion}`;
 
@@ -65,7 +57,7 @@ export class AccountService {
     reciverINN: string,
     reliability: ReliabilityResult,
   ): void {
-    if (this.store.reciverInn === reciverINN) {
+    if (this.store.letterOfCredit.reciverInn === reciverINN) {
       if (reliability.red) {
         this.store.reciverStatus = ReciverStatus.Unreliable;
       } else if (reliability.yellow) {
@@ -77,19 +69,17 @@ export class AccountService {
   }
 
   public setDisableLoCOffers(reciverINN: string): Observable<boolean> {
-    return this.letterService
-      .apiLcEnableLcOffersClientIdPost$Json({
-        clientId: this.storage.getClientID(),
-        branchId: this.storage.getBranchID(),
-        contractor: reciverINN,
-      })
-      .pipe(
-        map((response) => {
-          if (!response && response.success) {
-            return true;
-          }
-        }),
-      );
+    return this.letterService .apiLcEnableLcOffersClientIdPost$Json({
+      clientId: this.storage.getClientID(),
+      branchId: this.storage.getBranchID(),
+      contractor: reciverINN,
+    }).pipe(
+      map((response) => {
+        if (!response && response.success) {
+          return true;
+        }
+      }),
+    );
   }
 
   public getAccountList(): Observable<ApiAccount[]> {
@@ -101,7 +91,7 @@ export class AccountService {
     return this.http.get<ApiAccountList>(url).pipe(
       map((response) => {
         // if (response?.accounts?.length === 0) {
-        if (!response || !response.accounts || 0 === response.accounts.length) {
+        if (!response || !response.accounts || !response.accounts.length) {
           return null;
         }
 
@@ -111,8 +101,6 @@ export class AccountService {
   }
 
   public getCommision(total: number): Observable<number> {
-    this.letterService.apiLcCalculateCommissionGet$Json({ total });
-
     return this.letterService.apiLcCalculateCommissionGet$Json({ total }).pipe(
       map(response => response?.commissionValue),
     );

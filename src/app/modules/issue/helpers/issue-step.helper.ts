@@ -1,7 +1,7 @@
 import { Page, paths } from '../constants/routes';
 import { Step } from '../interfaces/step.interface';
 
-import { StoreService } from 'src/app/models/state.service';
+import { StoreService } from 'src/app/services/store.service';
 
 export const getSteps = (store: StoreService): Step[] => {
   return [

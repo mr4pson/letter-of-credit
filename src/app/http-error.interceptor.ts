@@ -9,8 +9,7 @@ import {
 import { Observable, throwError } from 'rxjs';
 import { catchError, retry } from 'rxjs/operators';
 
-import { StorageService } from './services/storage.service';
-import { ErrorHandlerService } from './services/error-handler.service';
+import { ErrorHandlerService, StorageService } from './services';
 
 import { environment } from 'src/environments/environment';
 

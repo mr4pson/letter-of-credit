@@ -5,7 +5,6 @@ import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { NgxDropzoneModule } from 'ngx-dropzone';
 
-import { WaitSpinnerComponent } from '../wait-spinner/wait-spinner.component';
 import { AccreditationAmountComponent } from './components/accreditation-amount/accreditation-amount.component';
 import { AccreditationPeriodComponent } from './components/accreditation-period/accreditation-period.component';
 import { ClosingDocComponent } from './components/accreditation-period/closing-doc/closing-doc.component';
@@ -30,37 +29,36 @@ import { SecurePipe } from 'src/app/pipes/security.pipe';
   declarations: [
     // Components
     IssueComponent,
+    ClosingDocComponent,
     IssueStepsComponent,
     IssueSuccessComponent,
-    WaitSpinnerComponent,
-    AccreditationAmountComponent,
     СounterpartyComponent,
-    CounterpartyContractComponent,
-    AccreditationPeriodComponent,
     SendApplicationComponent,
-    ClosingDocComponent,
+    AccreditationPeriodComponent,
+    AccreditationAmountComponent,
+    CounterpartyContractComponent,
     // Pipes
-    FormatMoneyPipe,
     SecurePipe,
+    FormatMoneyPipe,
   ],
   imports: [
-    BrowserModule,
-    BrowserAnimationsModule,
     PsbModule,
+    BrowserModule,
     HttpClientModule,
-    ReactiveFormsModule,
     NgxDropzoneModule,
-    SimplebarAngularModule,
     IssueRoutingModule,
+    ReactiveFormsModule,
+    SimplebarAngularModule,
+    BrowserAnimationsModule,
   ],
   exports: [
     IssueComponent,
   ],
   providers: [
-    FileUploadService,
-    PartnersService,
-    ClientAccountService,
     StepService,
+    PartnersService,
+    FileUploadService,
+    ClientAccountService,
   ],
 })
 export class IssueModule {}

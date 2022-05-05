@@ -1,8 +1,14 @@
 @import "../../../assets/colors";
 
 .issue {
-	padding: 32px 56px 0 56px;
-	background-color: white;
+	background-color: #fff;
+	margin-left: 260px;
+	padding: 0 40px 0 60px;
+	box-sizing: border-box;
+	max-width: 1020px;
+	width: 100%;
+	position: absolute;
+	top: 110px;
 
 	&__content {
 		width: 100%;
@@ -12,12 +18,12 @@
 	}
 
 	&__left-col {
-		padding-right: 16px;
-		width: 576px;
+		padding-right: 50px;
+		width: 80%;
 	}
 
 	&__right-col {
-		width: 308px;
+		width: 20%;
 		display: flex;
 
 		.vertical-dots {
@@ -31,13 +37,6 @@
 			}
 		}
 	}
-
-	// p {
-	// 	font-size: 16px;
-	// 	line-height: 24px;
-	// 	color: #666;
-	// 	margin-bottom: 28px;
-	// }
 
 	&__footer {
 		padding-bottom: 12px;
@@ -82,4 +81,10 @@
 	&__tooltip {
 		margin-left: 10px;
 	}
+}
+
+@media (max-width: 1279px) {
+  .issue {
+		margin-left: 80px;
+  }
 }

@@ -6,13 +6,13 @@ import { tap } from 'rxjs/operators';
 import { Router } from '@angular/router';
 
 import { ClosingDoc } from '../../interfaces/closing-doc.interface';
-import { LetterOfCredit } from '../../interfaces/letter-of-credit.interface';
 import { Page, paths } from '../../constants/routes';
 
 import { ButtonType } from '@psb/fe-ui-kit';
 import { getRequiredFormControlValidator } from '@psb/validations/required';
-import { StoreService } from 'src/app/models/state.service';
+import { StoreService } from 'src/app/services/store.service';
 import { getSubstractDatesDays, getSummedDateDays, getTomorrowDate } from 'src/app/utils/utils';
+import moment from 'moment';
 
 @Component({
   selector: 'accreditation-period',
@@ -21,8 +21,6 @@ import { getSubstractDatesDays, getSummedDateDays, getTomorrowDate } from 'src/a
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AccreditationPeriodComponent extends OnDestroyMixin implements OnInit {
-  @Input() locInstance: LetterOfCredit;
-
   public form = new FormGroup({
     endLocDate: new FormControl(getTomorrowDate(), [
       getRequiredFormControlValidator(
@@ -67,9 +65,11 @@ export class AccreditationPeriodComponent extends OnDestroyMixin implements OnIn
   }
 
   ngOnInit(): void {
-    this.form.patchValue(
-      this.locInstance ?? {},
-    );
+    console.log(this.store.letterOfCredit);
+    this.form.patchValue({
+      ...this.store.letterOfCredit,
+      endLocDate: moment(this.store.letterOfCredit.endLocDate).format('DD.MM.YYYY'),
+    });
 
     merge(
       this.endLocDateControl.valueChanges.pipe(
@@ -79,7 +79,9 @@ export class AccreditationPeriodComponent extends OnDestroyMixin implements OnIn
             return;
           }
 
-          this.locInstance.endLocDate = this.endLocDateControl.valid
+          console.log(endLocDate);
+
+          this.store.letterOfCredit.endLocDate = this.endLocDateControl.valid
             ? endLocDate
             : '';
 
@@ -104,20 +106,20 @@ export class AccreditationPeriodComponent extends OnDestroyMixin implements OnIn
         }),
       ),
       this.isDocumentDigitalControl.valueChanges.pipe(
-        tap(() => this.locInstance.isDocumentDigital = this.isDocumentDigitalControl.value),
+        tap(() => this.store.letterOfCredit.isDocumentDigital = this.isDocumentDigitalControl.value),
       ),
       this.allowUsePartOfLocControl.valueChanges.pipe(
-        tap(() => this.locInstance.allowUsePartOfLoc = this.allowUsePartOfLocControl.value),
+        tap(() => this.store.letterOfCredit.allowUsePartOfLoc = this.allowUsePartOfLocControl.value),
       ),
       this.closingDocsControl.valueChanges.pipe(
         tap((closingDocs: ClosingDoc[]) => {
-          this.locInstance.closingDocs = [];
+          this.store.letterOfCredit.closingDocs = [];
           closingDocs.forEach((closingDoc: ClosingDoc) => {
             if (!closingDoc.document?.trim()) {
 
               return;
             }
-            this.locInstance.closingDocs.push({ ...closingDoc });
+            this.store.letterOfCredit.closingDocs.push({ ...closingDoc });
           });
         }),
       ),
@@ -125,8 +127,8 @@ export class AccreditationPeriodComponent extends OnDestroyMixin implements OnIn
       untilComponentDestroyed(this),
     ).subscribe();
 
-    if (this.locInstance.closingDocs) {
-      this.locInstance.closingDocs.forEach(closingDoc => this.addClosingDoc(closingDoc));
+    if (this.store.letterOfCredit.closingDocs) {
+      this.store.letterOfCredit.closingDocs.forEach(closingDoc => this.addClosingDoc(closingDoc));
     } else {
       this.addClosingDoc();
     }
@@ -165,7 +167,9 @@ export class AccreditationPeriodComponent extends OnDestroyMixin implements OnIn
     });
 
     if (this.isFormValid()) {
-      this.store.issueStep4Text = `до ${this.locInstance?.endLocDate.toLocaleDateString(
+      const endLocDate = new Date(this.store.letterOfCredit.endLocDate.toString());
+
+      this.store.issueStep4Text = `до ${endLocDate.toLocaleDateString(
         'ru-RU',
         { year: 'numeric', month: 'long', day: 'numeric' },
       )}`;

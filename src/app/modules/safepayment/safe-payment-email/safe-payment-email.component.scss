@@ -1,23 +1,15 @@
 @import "../../../../assets/_colors.scss";
 
 .email-form {
-	position: relative;
+	display: flex;
 	margin: 32px 0;
-
-	&__field {
-		width: 300px;
-		display: inline-block;
-	}
+	align-items: center;
 
 	&__button {
-		position: absolute;
-		top: 22px;
-		margin-left: 20px;
+		margin-left: 15px;
 	}
 
 	&__green-check {
-		position: absolute;
-		top: 27px;
-		left: 275px;
+		margin-left: 20px;
 	}
 }

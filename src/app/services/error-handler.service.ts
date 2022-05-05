@@ -1,5 +1,7 @@
 import { HttpErrorResponse } from '@angular/common/http';
-import { ErrorHandler, Inject, Injectable, Injector } from '@angular/core';
+import { ErrorHandler, Injectable } from '@angular/core';
+
+import { SmbAlertingService } from '../interfaces';
 
 export enum ErrorMessages {
   NETWORK_ISSUE = 'Проверьте ваше интернет соединение и попробуй ещё раз',
@@ -8,15 +10,25 @@ export enum ErrorMessages {
 
 @Injectable()
 export class ErrorHandlerService implements ErrorHandler {
+  public alertingService: SmbAlertingService;
   private errorMsg = '';
-  constructor(@Inject(Injector) private injector: Injector) {}
 
-  // TODO поменять на psb нотификатор
-  showErrorMesssage(message: string): void {
-    alert(message);
+  public injectHandler(alertingService: SmbAlertingService) {
+    this.alertingService = alertingService;
   }
 
-  handleError(error: HttpErrorResponse): void {
+  // TODO поменять на psb нотификатор
+  public showErrorMesssage(message: string): void {
+    if (!this.alertingService) {
+      alert(message);
+
+      return;
+    }
+
+    this.alertingService.addError({ info: message });
+  }
+
+  public handleError(error: HttpErrorResponse): void {
     console.log(
       `Error code ${error.status}, ` + `body was: ${error.error}`,
    );

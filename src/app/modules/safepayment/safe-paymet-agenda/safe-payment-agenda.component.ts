@@ -1,13 +1,12 @@
-import { Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 
-export interface Agenda {
-  title: string;
-}
+import { Agenda } from '../interfaces/agenda.interface';
 
 @Component({
   selector: 'safe-payment-agenda',
   templateUrl: 'safe-payment-agenda.component.html',
   styleUrls: ['safe-payment-agenda.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SafePaymentAgendaComponent {
   agendaItems: Agenda[] = [

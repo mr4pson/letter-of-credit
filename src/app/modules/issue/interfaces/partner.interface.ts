@@ -1,4 +1,4 @@
-import { PartnerBank } from '../../../classes/interfaces/api-partner-bank.interface';
+import { PartnerBank } from '../../../interfaces/api/api-partner-bank.interface';
 
 export interface Partner {
   shortName: string;

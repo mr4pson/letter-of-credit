@@ -1,15 +1,16 @@
-import { Component, EventEmitter, Output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, EventEmitter, Output } from '@angular/core';
 import { FormControl } from '@angular/forms';
 
 import { ButtonSize, ButtonType } from '@psb/fe-ui-kit/src/components/button';
 import { getRequiredFormControlValidator } from '@psb/validations/required';
 import { getEmailFormControlValidator } from '@psb/validations/email';
-import { StoreService } from 'src/app/models/state.service';
+import { StoreService } from 'src/app/services/store.service';
 
 @Component({
   selector: 'safe-payment-email',
   templateUrl: 'safe-payment-email.component.html',
   styleUrls: ['safe-payment-email.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SafePaymentEmailComponent {
   public ButtonType = ButtonType;

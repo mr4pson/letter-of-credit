@@ -25,4 +25,5 @@ export const DEFAULT_LOC_INSTANCE = {
   allowUsePartOfLoc: true,
   contactPerson: '',
   contactPhone: '',
+  paymentSum: 0,
 } as LetterOfCredit;

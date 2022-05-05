@@ -9,27 +9,22 @@ import { createInputTransfer, createNewHosts, removeNgStyles } from '@angularcla
 
 import { AppComponent } from './app.component';
 import { IssueModule } from './modules/issue/issue.module';
-import { SafePaymentEmailComponent } from './modules/safepayment/safe-payment-email/safe-payment-email.component';
-import { SafePaymentComponent } from './modules/safepayment/safe-payment.component';
-import { SafePaymentAgendaComponent } from './modules/safepayment/safe-paymet-agenda/safe-payment-agenda.component';
 import { HttpErrorInterceptor } from './http-error.interceptor';
 import { MaterialModule } from './modules/material/material-module';
 import { ErrorHandlerService } from './services/error-handler.service';
 import { StorageService } from './services/storage.service';
 import { PsbModule } from './modules/psb/psb.module';
-import { StoreService } from './models/state.service';
+import { StoreService } from './services/store.service';
 import { AccountService } from './services/account.service';
 import { ApiConfigurationParams } from '../api/api-configuration';
 import { ApiModule } from '../api/api.module';
+import { NgService } from './services/ng.service';
+import { SafePaymentModule } from './modules/safepayment/safe-payment.module';
 
 registerLocaleData(ru);
 @NgModule({
   declarations: [
-    // Components
     AppComponent,
-    SafePaymentComponent,
-    SafePaymentAgendaComponent,
-    SafePaymentEmailComponent,
   ],
   imports: [
     ApiModule.forRoot({ rootUrl: '' } as ApiConfigurationParams),
@@ -40,6 +35,7 @@ registerLocaleData(ru);
     MaterialModule,
     PsbModule,
     IssueModule,
+    SafePaymentModule,
   ],
   providers: [
     { provide: LOCALE_ID, useValue: 'ru' },
@@ -48,6 +44,7 @@ registerLocaleData(ru);
     StoreService,
     AccountService,
     ErrorHandlerService,
+    NgService,
   ],
   bootstrap: [AppComponent],
 })
