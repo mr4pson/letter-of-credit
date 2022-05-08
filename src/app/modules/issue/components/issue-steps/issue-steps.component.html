@@ -1,0 +1,38 @@
+<div
+  *ngIf="currentUrl$ | async; let currentUrl"
+  class="issue-steps"
+>
+  <div class="vertical-dots">
+    <div class="dots-holder"></div>
+  </div>
+  <div class="issue-steps__title">
+    ШАГ {{getCurrentStepNumber(currentUrl)}} из 5 
+  </div>
+  <div class="issue-steps__body">
+    <div
+      class="step-item"
+      *ngFor="let step of steps; let i = index"
+      [class.step-item--active]="isStepActive(step, currentUrl)"
+      [class.step-item--done]="isStepDone(i, currentUrl)"
+    >
+      <div class="step-item__circle">
+        <img
+          class="step-item__blue-dot"
+          [src]="'assets/icons/blue-dot.svg' | secure | async"
+        >
+        <img
+          class="step-item__blue-dot--done"
+          [src]="'assets/icons/blue-dot-active.svg' | secure | async"
+        >
+        <img
+          class="step-item__gray-dot"
+          [src]="'assets/icons/gray-dot.svg' | secure | async"
+        >
+      </div>
+      <div class="step-item__text">
+        <span class="step-item__title">{{ step.title }}</span>
+        <span class="step-item__description">{{ step.description }}</span>
+      </div>
+    </div>
+  </div>
+</div>

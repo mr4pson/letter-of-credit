@@ -1,0 +1,145 @@
+<form
+  class="counterparty-contract"
+  [formGroup]="form"
+  (submit)="handleSubmit()"
+>
+  <psb-datepicker
+    class="counterparty-contract__date-picker paint-disabled-as-normal"
+    label="Дата заключения договора"
+    formControlName="contractDate"
+    [maxValidDate]="maxContractDate"
+  ></psb-datepicker>
+
+  <div class="counterparty-contract__nds-actions">
+    <psb-button
+      [type]="selectedNds > 0 ? ButtonType.Primary : ButtonType.Text"
+      [class.nds-buttons--inactive]="selectedNds === 0"
+      (click)="setVat()"
+    >
+      НДС включён
+    </psb-button>
+    <psb-button
+      [type]="0 == selectedNds ? ButtonType.Primary : ButtonType.Text"
+      [class.nds-buttons--inactive]="selectedNds > 0"
+      (click)="unSetVat()"
+    >
+      Без НДС
+    </psb-button>
+  </div>
+
+  <psb-input-select
+    label="Сумма НДС"
+    [options]="ndsList"
+    class="counterparty-contract__nds-select"
+    placeholder="Выберите атрибут"
+    formControlName="selectedNds"
+  ></psb-input-select>
+
+  <psb-text-input
+    class="contract-info"
+    label="Название и номер договора"
+    formControlName="contract"
+    description="Например, договор купли-продажи"
+  ></psb-text-input>
+
+  <div class="contract-subject">
+    <psb-text-input
+      class="contract-subject__info"
+      label="Предмет договора (Наименование Товаров/Услуг/Работ)"
+      formControlName="contractInfo"
+      description="Например, поставка оборудования для деревообработки – токарный станок - 2 шт."
+    ></psb-text-input>
+
+    <psb-tooltip
+      class="tooltip"
+      tooltipType="white"
+      text="Рекомендуем указывать краткое, но четкое и понятное описание товара, самые существенные его характеристики. При необходимости указывается масса или число единиц товара, его цена. Информацию можно взять в договоре и в счете на оплату."
+    ></psb-tooltip>
+  </div>
+
+  <psb-heading
+    type="3"
+    class="counterparty-contract__scan-title"
+  >
+    Прикрепите скан договора (необязательно)
+  </psb-heading>
+
+  <psb-text [color]="'secondary'">
+    Если вы хотите, чтобы наши сотрудники проверили соответствие
+    <br>
+    заявления
+		на выпуск аккредитива условиям вашего договора.
+  </psb-text>
+
+  <div
+    class="file-uploader"
+    ngx-dropzone
+    (change)="handleSelectFiles($event)"
+  >
+    <div class="file-uploader__info">
+      <div>
+        <span class="main-color">Выберите файлы</span>
+        или перетяните их
+				в эту область.
+      </div>
+      <div class="file-uploader__tooltip-info">
+        Какие файлы подойдут?
+        <psb-tooltip
+          class="tooltip"
+          tooltipType="white"
+          text="Приложите документы, связанные с проведением операции: счёт, инвойс или спецификацию. Подойдут сканы в tiff, pdf и документы в xml, doc, docx, xls, xlsx."
+        ></psb-tooltip>
+      </div>
+    </div>
+
+    <ngx-simplebar
+      [options]="{ autoHide: true }"
+      #simpleBarRef
+      (wheel)="wheelScroll($event, simpleBarRef)"
+    >
+      <div class="file-uploader__uploaded-files">
+        <div class="file-uploader__upload-btn">
+          <!-- <psb-icon>menu</psb-icon> -->
+          <img [src]="'assets/icons/plus.svg' | secure | async">
+        </div>
+
+        <ng-container *ngFor="let file of files$ | async">
+          <ngx-dropzone-preview
+            [removable]="true"
+            (removed)="handleRemoveFile(file)"
+            class="dropzone-preview"
+          >
+            <ngx-dropzone-label>
+              <img [src]="'assets/icons/loading.svg' | secure | async">
+              <div class="dropzone-preview__file-size">{{ file.sizeFormatted }}</div>
+              <div
+                class="dropzone-preview__file-name"
+                title="{{ file.native.name }}"
+              >
+                <span>{{ file.native.name }}</span>
+              </div>
+            </ngx-dropzone-label>
+          </ngx-dropzone-preview>
+        </ng-container>
+      </div>
+    </ngx-simplebar>
+
+    <img
+      class="center-image"
+      [src]="'assets/icons/upload.svg' | secure | async"
+    >
+
+    <div
+      class="error-message"
+      *ngIf="errorMessage$ | async; let errorMessage"
+    >
+      {{ errorMessage }}
+    </div>
+  </div>
+  <psb-button
+    [isSubmit]="true"
+    [type]="ButtonType.Primary"
+  >
+    Далее
+  </psb-button>
+</form>

@@ -1,0 +1,52 @@
+{
+	"name": "loc",
+	"version": "1.0.0",
+	"scripts": {
+		"ng": "ng",
+		"hmr": "ng serve --configuration hmr",
+		"start": "ng serve --liveReload=true --open",
+		"build": "ng build --outputPath=../../server/www/inner --prod=true --optimization=true --commonChunk=true --aot=true --buildOptimizer=true --vendor-chunk=true --progress=true --sourceMap=false --base-href /",
+		"build-light": "ng build --outputPath=../../server/www/inner --prod=false --commonChunk=true --vendor-chunk=true --progress=true --sourceMap=false --base-href /",
+		"open-api-codegen": "ng-openapi-gen --input open-api.json --output src/api"
+	},
+	"private": true,
+	"dependencies": {
+		"@angular/animations": "~10.2.5",
+		"@angular/cdk": "^10.2.7",
+		"@angular/common": "~10.2.5",
+		"@angular/compiler": "~10.2.5",
+		"@angular/core": "~10.2.5",
+		"@angular/forms": "~10.2.5",
+		"@angular/material": "~10.2.7",
+		"@angular/platform-browser": "~10.2.5",
+		"@angular/platform-browser-dynamic": "~10.2.5",
+		"@angular/router": "^10.2.5",
+		"@psb/angular-tools": "file:modules/angular-tools-0.4.1.tgz",
+		"@psb/fe-ui-kit": "file:modules/fe-ui-kit-2.27.0.tgz",
+		"@psb/icons": "file:modules/icons-0.3.0.tgz",
+		"@psb/validations": "file:modules/validations-0.14.0.tgz",
+		"@w11k/ngx-componentdestroyed": "^5.0.2",
+		"angular-imask": "~6.2.2",
+		"codelyzer": "^6.0.2",
+		"moment": "^2.29.3",
+		"ngx-dropzone": "~3.0.0",
+		"ngx-mask": "^12.0.0",
+		"rxjs": "~6.6.7",
+		"simplebar-angular": "^2.3.6",
+		"tslib": "^2.0.0",
+		"tslint-config-airbnb": "^5.11.2",
+		"zone.js": "~0.10.3"
+	},
+	"devDependencies": {
+		"@angular-builders/custom-webpack": "^10.0.1",
+		"@angular-devkit/build-angular": "~0.1002.3",
+		"@angular/cli": "~10.2.3",
+		"@angular/compiler-cli": "~10.2.5",
+		"@angularclass/hmr": "^3.0.0",
+		"@types/node": "^12.20.33",
+		"remove-files-webpack-plugin": "^1.4.5",
+		"ts-node": "~8.3.0",
+		"tslint": "~6.1.0",
+		"typescript": "~4.0.8"
+	}
+}

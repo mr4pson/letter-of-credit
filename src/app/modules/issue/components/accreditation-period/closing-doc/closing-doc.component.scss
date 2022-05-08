@@ -1,0 +1,36 @@
+.docs-holder {
+	background: #f5f5f5;
+	padding: 32px 16px;
+	margin-bottom: 24px;
+
+	&__additional-field {
+		display: block;
+		margin-bottom: 24px;
+	}
+}
+
+.only-orig-checkbox {
+  display: inline-block;
+  margin-top: -10px;
+
+  &__tooltip {
+    display: inline-block;
+    margin-left: 10px;
+    vertical-align: middle;
+  }
+}
+
+.fields {
+  display: flex;
+
+  &__doc-field {
+    width: 300px;
+    display: inline-block;
+  }
+
+  &__count-field {
+    width: 216px;
+    display: inline-block;
+    margin-left: 20px;
+  }
+}

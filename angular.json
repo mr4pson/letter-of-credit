@@ -1,0 +1,173 @@
+{
+  "$schema": "./node_modules/@angular/cli/lib/config/schema.json",
+  "version": 1,
+  "newProjectRoot": "projects",
+  "projects": {
+    "LetterOfCredit": {
+      "projectType": "application",
+      "schematics": {
+        "@schematics/angular:component": {
+          "inlineTemplate": true,
+          "inlineStyle": true,
+          "style": "scss",
+          "skipTests": true
+        },
+        "@schematics/angular:class": {
+          "skipTests": true
+        },
+        "@schematics/angular:directive": {
+          "skipTests": true
+        },
+        "@schematics/angular:guard": {
+          "skipTests": true
+        },
+        "@schematics/angular:interceptor": {
+          "skipTests": true
+        },
+        "@schematics/angular:module": {
+          "skipTests": true
+        },
+        "@schematics/angular:pipe": {
+          "skipTests": true
+        },
+        "@schematics/angular:service": {
+          "skipTests": true
+        }
+      },
+      "root": "",
+      "sourceRoot": "src",
+      "prefix": "app",
+      "architect": {
+        "build": {
+          "builder": "@angular-builders/custom-webpack:browser",
+          "options": {
+            "allowedCommonJsDependencies": [
+              "core-js/modules/es.array.filter",
+              "core-js/modules/es.string.replace",
+              "core-js/modules/es.string.match",
+              "core-js/modules/es.regexp.exec",
+              "core-js/modules/es.function.name",
+              "core-js/modules/es.array.reduce",
+              "core-js/modules/web.dom-collections.iterator",
+              "core-js/modules/es.weak-map",
+              "core-js/modules/es.string.iterator",
+              "core-js/modules/es.parse-int",
+              "core-js/modules/es.object.to-string",
+              "core-js/modules/es.object.assign",
+              "core-js/modules/es.array.iterator",
+              "core-js/modules/es.array.for-each",
+              "rxjs/internal/operators",
+              "@psb/validations/case",
+              "@psb/validations/digit",
+              "@psb/validations/latin",
+              "@psb/validations/minMaxLength",
+              "@psb/validations/password-symbols",
+              "@psb/validations/email",
+              "@psb/validations/required",
+              "@psb/validations/required/validation",
+              "@psb/validations/minMax",
+              "@psb/validations/minMaxLength/validation"
+            ],
+            "customWebpackConfig": {
+              "path": "./extra-webpack.config.js",
+              "replaceDuplicatePlugins": true,
+              "mergeRules": {
+                "externals": "replace",
+                "module": {
+                  "rules": "prepend"
+                }
+              },
+              "mergeStrategies": {
+                "externals": "replace",
+                "module.rules": "prepend"
+              }
+            },
+            "outputPath": "dist/LetterOfCredit",
+            "index": "src/index.html",
+            "main": "src/main.ts",
+            "polyfills": "src/polyfills.ts",
+            "tsConfig": "tsconfig.app.json",
+            "aot": true,
+            "assets": [ "src/assets" ],
+            "styles": [
+              "src/styles.scss"
+            ],
+            "scripts": []
+          },
+          "configurations": {
+            "hmr": {
+                "fileReplacements": [ {
+                "replace": "src/environments/environment.ts",
+                "with": "src/environments/environment.hmr.ts"
+              } ]
+            },
+            "production": {
+              "fileReplacements": [
+                {
+                  "replace": "src/environments/environment.ts",
+                  "with": "src/environments/environment.prod.ts"
+                }
+              ],
+              "optimization": true,
+              "outputHashing": "all",
+              "sourceMap": false,
+              "extractCss": true,
+              "namedChunks": false,
+              "extractLicenses": true,
+              "vendorChunk": false,
+              "buildOptimizer": true,
+              "budgets": [
+                {
+                  "type": "initial",
+                  "maximumWarning": "2mb",
+                  "maximumError": "5mb"
+                },
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "36kb",
+                  "maximumError": "100kb"
+                }
+              ]
+            }
+          }
+        },
+        "serve": {
+          "builder": "@angular-devkit/build-angular:dev-server",
+          "options": {
+            "browserTarget": "LetterOfCredit:build"
+          },
+          "configurations": {
+            "hmr": {
+              "hmr": true,
+              "browserTarget": "LetterOfCredit:build:hmr"
+            },
+            "production": {
+              "browserTarget": "LetterOfCredit:build:production"
+            }
+          }
+        },
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "tsconfig.json"
+            ],
+            "exclude": [
+              "**/node_modules/**"
+            ]
+          }
+        },
+        "extract-i18n": {
+          "builder": "@angular-devkit/build-angular:extract-i18n",
+          "options": {
+            "browserTarget": "LetterOfCredit:build"
+          }
+        }
+      }
+    }
+  },
+  "defaultProject": "LetterOfCredit",
+  "cli": {
+    "analytics": "824f6b75-42e4-4c2d-8112-4737e5f9aba2"
+  }
+}

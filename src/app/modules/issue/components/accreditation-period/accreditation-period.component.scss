@@ -1,0 +1,88 @@
+@import "../../../../../assets/colors";
+
+.accreditation-period {
+	padding-bottom: 24px;
+	padding-right: 40px;
+
+	&__closing-doc-checkbox {
+		display: flex;
+		align-items: center;
+		padding-top: 40px;
+
+		psb-checkbox {
+			display: inline-block;
+			width: 530px;
+		}
+	}
+
+	&__allow-doc-checkbox {
+		display: flex;
+		align-items: center;
+		padding-top: 20px;
+
+		psb-checkbox {
+			display: inline-block;
+			width: 540px;
+		}
+	}
+}
+
+.accreditation-dates {
+	display: flex;
+	&__expiration-date {
+		display: flex;
+		width: 100%;
+
+		psb-tooltip {
+			margin-top: 31px;
+		}
+	}
+
+	&__validity {
+		margin-left: 48px;
+		width: 100%;
+		display: flex;
+		justify-content: flex-end;
+	}
+}
+
+.add-doc-btn {
+	background: #f5f5f5;
+	padding: 12px 16px;
+	display: flex;
+	justify-content: center;
+  width: 100%;
+  border: none;
+	cursor: pointer;
+
+	&__icon {
+		float: left;
+		margin-right: 10px;
+	}
+
+	&__label {
+		font-weight: bold;
+		font-size: 16px;
+		line-height: 24px;
+		color: $main-blue;
+	}
+}
+
+.doc-title {
+	display: flex;
+	align-items: center;
+	margin: 40px 0 24px 0;
+	font-size: 20px;
+	line-height: 24px;
+	letter-spacing: 0.15px;
+
+	psb-tooltip {
+		margin-left: 15px;
+	}
+}
+
+.tooltip {
+	margin-left: 8px;
+	display: inline-block;
+	vertical-align: middle;
+}
