@@ -1,8 +1,7 @@
 import { registerLocaleData } from '@angular/common';
-import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
+import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import ru from '@angular/common/locales/ru';
 import { ApplicationRef, LOCALE_ID, NgModule } from '@angular/core';
-import { ReactiveFormsModule } from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { createInputTransfer, createNewHosts, removeNgStyles } from '@angularclass/hmr';
@@ -10,7 +9,6 @@ import { createInputTransfer, createNewHosts, removeNgStyles } from '@angularcla
 import { AppComponent } from './app.component';
 import { IssueModule } from './modules/issue/issue.module';
 import { HttpErrorInterceptor } from './http-error.interceptor';
-import { MaterialModule } from './modules/material/material-module';
 import { ErrorHandlerService } from './services/error-handler.service';
 import { StorageService } from './services/storage.service';
 import { PsbModule } from './modules/psb/psb.module';
@@ -20,6 +18,7 @@ import { ApiConfigurationParams } from '../api/api-configuration';
 import { ApiModule } from '../api/api.module';
 import { NgService } from './services/ng.service';
 import { SafePaymentModule } from './modules/safepayment/safe-payment.module';
+import { UiKitModule } from './modules/ui-kit/ui-kit.module';
 
 registerLocaleData(ru);
 @NgModule({
@@ -30,10 +29,8 @@ registerLocaleData(ru);
     ApiModule.forRoot({ rootUrl: '' } as ApiConfigurationParams),
     BrowserModule,
     BrowserAnimationsModule,
-    HttpClientModule,
-    ReactiveFormsModule,
-    MaterialModule,
     PsbModule,
+    UiKitModule,
     IssueModule,
     SafePaymentModule,
   ],

@@ -39,12 +39,14 @@
 
   <ng-container formArrayName="closingDocs">
     <closing-doc
-      *ngFor="let doc of closingDocsControl.controls; let i = index"
-      [formGroupName]="i"
+      *ngFor="let docForm of closingDocsControl.controls; let i = index"
+      [formGroupControl]="docForm"
+      (delete)="handleDelete(i)"
     ></closing-doc>
   </ng-container>
 
   <button
+    type="button"
     class="add-doc-btn"
     (click)="addClosingDoc()"
   >
@@ -85,6 +87,7 @@
     </psb-checkbox>
   </div>
 	<psb-button
+    class="accreditation-period__submit"
 		[isSubmit]="true"
 		[type]="ButtonType.Primary"
 	>

@@ -2,19 +2,18 @@ import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { OnDestroyMixin } from '@w11k/ngx-componentdestroyed';
 import { catchError, map, switchMap, tap } from 'rxjs/operators';
-import { Observable, of } from 'rxjs';
+import { of } from 'rxjs';
 import { Router } from '@angular/router';
 
-import { getFormattedBalance } from '../../helpers/client-account.helper';
-import { ClientAccount } from '../../interfaces/client-account.interface';
 import { Page, paths } from '../../constants/routes';
 import { ClientAccountService } from '../../services/client-accounts.service';
+import { StepService } from '../../services/step.service';
 
-import { SelectedItem } from '@psb/fe-ui-kit/src/components/input-select';
 import { getMinMaxFormControlValidator } from '@psb/validations/minMax';
 import { getRequiredFormControlValidator } from '@psb/validations/required/validation';
 import { ButtonType } from '@psb/fe-ui-kit';
 import { AccountService, ErrorHandlerService, StoreService } from 'src/app/services';
+import { isFormValid } from 'src/app/utils';
 
 @Component({
   selector: 'accreditation-amount',
@@ -49,7 +48,7 @@ export class AccreditationAmountComponent extends OnDestroyMixin implements OnIn
       this.accountService.getCommision(Number(issueSum))
     )),
     map((commission) => {
-      this.commission = commission;
+      this.commission = Number(commission);
 
       return this.commission;
     }),
@@ -61,18 +60,11 @@ export class AccreditationAmountComponent extends OnDestroyMixin implements OnIn
     }),
   );
 
-  public accounts$: Observable<SelectedItem[]> = this.clientAccountService.getClientAccounts().pipe(
-    map(clientAccounts => (
-      clientAccounts.map(clientAccount => ({
-        id: clientAccount.accountCode,
-        label: clientAccount.title,
-        value: clientAccount,
-      }))
-    )),
+  public accounts$ = this.clientAccountService.getClientAccounts().pipe(
     tap((accounts) => {
       if (accounts.length > 0) {
         this.form.controls.SelectedAccount.setValue(
-          accounts[0].label,
+          accounts[0],
         );
       }
     }),
@@ -88,6 +80,7 @@ export class AccreditationAmountComponent extends OnDestroyMixin implements OnIn
     private accountService: AccountService,
     private clientAccountService: ClientAccountService,
     private errorHandlerService: ErrorHandlerService,
+    private stepService: StepService,
     private router: Router,
   ) {
     super();
@@ -99,36 +92,18 @@ export class AccreditationAmountComponent extends OnDestroyMixin implements OnIn
     }
   }
 
-  public getAccountSum(accounts: Array<SelectedItem<ClientAccount>>): string {
-    const selectedAccount = accounts.find(
-      account => account.label === this.form.controls.SelectedAccount.value,
-    );
-
-    if (!selectedAccount) {
-      return;
-    }
-
-    return getFormattedBalance(selectedAccount.value);
-  }
-
   public get issueSum(): number {
-    return this.form.controls.IssueSum.value;
-  }
-
-  private isFormValid(): boolean {
-    return this.form.valid;
+    return Number(this.form.controls.IssueSum.value);
   }
 
   public handleSubmit(): void {
-    Object.values(this.form.controls).forEach((control) => {
-      control.markAllAsTouched();
-      control.updateValueAndValidity();
-    });
-
-    if (this.isFormValid()) {
-      this.store.issueStep1Text = (this.issueSum + this.commission).toString();
+    if (isFormValid(this.form)) {
       this.store.letterOfCredit.paymentSum = this.issueSum;
-      console.log(this.form.value);
+
+      this.stepService.setStepDescription(
+        paths[Page.ACCREDITATION_AMOUNT],
+        (Number(this.issueSum) + this.commission).toString(),
+      );
       this.router.navigateByUrl(paths[Page.COUNTERPARTY]);
     }
   }

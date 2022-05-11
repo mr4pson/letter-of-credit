@@ -1,6 +1,6 @@
-export * from './api/api-account-list.interface';
-export * from './api/api-account.interface';
-export * from './api/api-partner-bank.interface';
+export * from './api/account-response.interface';
+export * from './api/account.interface';
+export * from './api/partner-bank.interface';
 export * from './api/bank-search.interface';
 export * from './api/reliability-result.interface';
 

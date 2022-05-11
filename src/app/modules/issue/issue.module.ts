@@ -20,14 +20,13 @@ import { PartnersService } from './services/partners.service';
 import { ClientAccountService } from './services/client-accounts.service';
 import { IssueRoutingModule } from './issue-routing.module';
 import { StepService } from './services/step.service';
+import { UiKitModule } from '../ui-kit/ui-kit.module';
 
-import { FormatMoneyPipe } from 'src/app/pipes/format-money.pipe';
+import { FormatMoneyPipe } from 'src/app/modules/psb/pipes/format-money.pipe';
 import { SimplebarAngularModule } from 'simplebar-angular';
-import { SecurePipe } from 'src/app/pipes/security.pipe';
 
 @NgModule({
   declarations: [
-    // Components
     IssueComponent,
     ClosingDocComponent,
     IssueStepsComponent,
@@ -37,12 +36,10 @@ import { SecurePipe } from 'src/app/pipes/security.pipe';
     AccreditationPeriodComponent,
     AccreditationAmountComponent,
     CounterpartyContractComponent,
-    // Pipes
-    SecurePipe,
-    FormatMoneyPipe,
   ],
   imports: [
     PsbModule,
+    UiKitModule,
     BrowserModule,
     HttpClientModule,
     NgxDropzoneModule,
@@ -53,6 +50,7 @@ import { SecurePipe } from 'src/app/pipes/security.pipe';
   ],
   exports: [
     IssueComponent,
+    FormatMoneyPipe,
   ],
   providers: [
     StepService,

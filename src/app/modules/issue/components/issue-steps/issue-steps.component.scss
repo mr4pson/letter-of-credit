@@ -36,15 +36,17 @@
 	&__circle {
 		height: 36px;
 		width: 47px;
-	}
-
-	&__blue-dot {
-		display: none;
-		margin-left: 1px;
-		color: #fff;
-
-		&--done {
-			display: none;
+		position: relative;
+		
+		&::before {
+			content: "";
+			position: absolute;
+			top: 2px;
+			width: 11px;
+			height: 11px;
+			background: #F5F5F5;
+			border: 1px solid #E2E2E2;
+			border-radius: 50%;
 		}
 	}
 
@@ -74,12 +76,12 @@
 
 
 	&--active {
-		#{ $self }__gray-dot {
-			display: none;
-		}
-
-		#{ $self }__blue-dot {
-			display: inline-block;
+		#{ $self }__circle {
+			&::before {
+				width: 9px;
+				height: 9px;
+				border: 2px solid #383ad1;
+			}
 		}
 
 		#{ $self }__title {
@@ -88,18 +90,12 @@
 	}
 
 	&--done {
-		#{ $self }__gray-dot {
-			display: none;
-		}
-
-		#{ $self }__blue-dot {
-			display: none;
-			margin-top: 14px;
-
-			color: #383ad1;
-
-			&--done {
-				display: inline-block;
+		#{ $self }__circle {
+			&::before {
+				width: 9px;
+				height: 9px;
+				background: #383ad1;
+				border: 2px solid #383ad1;
 			}
 		}
 

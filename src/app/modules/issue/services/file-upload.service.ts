@@ -62,7 +62,6 @@ export class FileUploadService {
         ),
       } as FileUploaded;
 
-
       this.addFile(fileUploaded);
     });
 

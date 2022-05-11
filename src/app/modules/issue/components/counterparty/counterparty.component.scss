@@ -3,6 +3,10 @@
 .counterparty {
 	display: flex;
 	flex-direction: column;
+
+	&__submit {
+		margin-top: 20px;
+	}
 }
 
 .counterparty-autocomplete {

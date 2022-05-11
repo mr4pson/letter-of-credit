@@ -11,6 +11,7 @@ import { ButtonType, SuccessModalComponent, SuccessModalType } from '@psb/fe-ui-
 import { getRequiredFormControlValidator } from '@psb/validations/required/validation';
 import { StoreService } from 'src/app/services/store.service';
 import { NgService } from 'src/app/services/ng.service';
+import { isFormValid } from 'src/app/utils';
 
 @Component({
   selector: 'send-application',
@@ -71,20 +72,9 @@ export class SendApplicationComponent extends OnDestroyMixin implements OnInit {
     this.form.patchValue(this.store.letterOfCredit);
   }
 
-  public isFormValid(): boolean {
-    return this.form.valid;
-  }
-
   public handleSubmit(): void {
-    Object.values(this.form.controls).forEach((control) => {
-      control.markAllAsTouched();
-      control.updateValueAndValidity();
-    });
-
-    if (this.isFormValid()) {
+    if (isFormValid(this.form)) {
       this.openSuccessDialog();
-
-      console.log(this.form.value);
     }
   }
 

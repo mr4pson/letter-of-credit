@@ -1,39 +1,47 @@
 <div class="docs-holder">
-	<ng-container [formGroup]="formGroup">
-		<div class="fields">
-			<psb-text-input
-				class="fields__doc-field"
-				label="Документ"
-				formControlName="Document"
-			></psb-text-input>
+  <button
+		(click)="handleDelete()"
+    type="button"
+    class="docs-holder__remove-btn"
+  >
+    <psb-icon [path]="'CloseFilled_24.svg'"></psb-icon>
+  </button>
 
-			<psb-number-input
-				class="fields__count-field"
-				label="Количество"
-				formControlName="Amount"
-				[thousandsSeparator]="''"
-			></psb-number-input>
-		</div>
+  <ng-container [formGroup]="fromGroup">
+    <div class="fields">
+      <psb-text-input
+        class="fields__doc-field"
+        label="Документ"
+        formControlName="document"
+      ></psb-text-input>
 
-		<div class="only-orig-checkbox">
-			<psb-checkbox
-				label="Только оригинал документа"
-				formControlName="OnlyOriginalDocument"
-				name="only-orig-doc"
-			>
-				<psb-tooltip
-					class="only-orig-checkbox__tooltip"
-					tooltipType="white"
-					text="Заполняется только в случае необходимости"
-				></psb-tooltip
-			></psb-checkbox>
-		</div>
+      <psb-number-input
+        class="fields__count-field"
+        label="Количество"
+        formControlName="amount"
+        [thousandsSeparator]="''"
+      ></psb-number-input>
+    </div>
 
-		<psb-text-input
-			class="docs-holder__additional-field"
-			label="Дополнительные требования к документу"
-			formControlName="AdditionalRequirements"
-			description="Кем должен быть выпущен, подписан или форма заверения, необходимые отметки, язык на котором предоставляется документ. ИНН и наименование грузоотправителя, грузополучателя, место назначения груза."
-		></psb-text-input>
-	</ng-container>
+    <div class="only-orig-checkbox">
+      <psb-checkbox
+        label="Только оригинал документа"
+        formControlName="onlyOriginalDocument"
+        name="only-orig-doc"
+      >
+        <psb-tooltip
+          class="only-orig-checkbox__tooltip"
+          tooltipType="white"
+          text="Заполняется только в случае необходимости"
+        ></psb-tooltip>
+      </psb-checkbox>
+    </div>
+
+    <psb-text-input
+      class="docs-holder__additional-field"
+      label="Дополнительные требования к документу"
+      formControlName="additionalRequirements"
+      description="Кем должен быть выпущен, подписан или форма заверения, необходимые отметки, язык на котором предоставляется документ. ИНН и наименование грузоотправителя, грузополучателя, место назначения груза."
+    ></psb-text-input>
+  </ng-container>
 </div>

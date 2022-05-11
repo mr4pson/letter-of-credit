@@ -12,13 +12,14 @@ import { SafePaymentComponent } from './modules/safepayment/safe-payment.compone
 import { Page, paths } from './modules/issue/constants/routes';
 import { AccountService, ErrorHandlerService, NgService, StoreService } from './services';
 import { SmbPaymentFormComponent } from './interfaces';
+import { NotificationService } from './modules/ui-kit/components/notification/notification.service';
 
 import { BaseModalComponent } from '@psb/fe-ui-kit';
 
 @Component({
   selector: 'loc-inner',
   templateUrl: 'app.component.html',
-  styleUrls: [],
+  styleUrls: ['app.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AppComponent extends OnDestroyMixin {
@@ -32,6 +33,7 @@ export class AppComponent extends OnDestroyMixin {
     private accountService: AccountService,
     private router: Router,
     private errorHandler: ErrorHandlerService,
+    private notificationService: NotificationService,
   ) {
     super();
 
@@ -73,8 +75,6 @@ export class AppComponent extends OnDestroyMixin {
             return;
           }
 
-          console.log(smbPaymentForm.payment);
-
           this.store.payment = smbPaymentForm.payment;
           smbPaymentForm.popupService.dialogService.closeAll();
           this.openSafePaymentDialog(smbPaymentForm);
@@ -106,22 +106,13 @@ export class AppComponent extends OnDestroyMixin {
 
       return smbAccountSeciton.accountAuxService.accountStoreService.observable.pipe(
         delay(100),
-        tap((acc) => {
-          console.log('ACCS', acc);
-        }),
         filter(accounts => accounts),
         switchMap(() => {
           const mainNewPaymentButton = this.ngService.getMainNewPaymentButtonElement();
 
           return fromEvent(mainNewPaymentButton, 'click');
         }),
-        tap(() => {
-          console.log('BEFORE POPUP OPEN');
-        }),
         switchMap(() => smbAccountSeciton.popupService.dialogService.afterOpened),
-        tap(() => {
-          console.log('ON POPUP OPEN');
-        }),
       );
     }
 
@@ -169,7 +160,6 @@ export class AppComponent extends OnDestroyMixin {
         && receiverAutocomplete.receiverFormGroup.valid
       )),
       tap(() => {
-        console.log('ON SPINNER START');
         smbPaymentForm.spinnerService.start(smbPaymentForm.paymentFormContext);
       }),
       switchMap(() => forkJoin([
@@ -211,33 +201,34 @@ export class AppComponent extends OnDestroyMixin {
     });
 
     safePaymentDialog.afterClosed().pipe(
+      tap((result) => {
+        switch (result) {
+          case SafePaymentButton.RefusePay:
+            this.store.isOrdinalPayment = false;
+            smbPaymentForm.popupService.dialogService.closeAll();
+
+            break;
+          case false:
+          case SafePaymentButton.OrdinalPay:
+            // this.doOrdinalPay();
+            this.store.isOrdinalPayment = true;
+            if (smbPaymentForm.router.url.includes(smbPaths[SmbPage.MAIN])) {
+              const mainNewPaymentButton = this.ngService.getMainNewPaymentButtonElement();
+
+              mainNewPaymentButton.click();
+            }
+
+            if (smbPaymentForm.router.url.includes(smbPaths[SmbPage.DOCUMENTS])) {
+              const mainNewPaymentButton = this.ngService.getDocumentsNewPaymentButtonElement();
+
+              mainNewPaymentButton.click();
+            }
+
+            break;
+        }
+      }),
       untilComponentDestroyed(this),
-    ).subscribe((result) => {
-      switch (result) {
-        case SafePaymentButton.RefusePay:
-          this.store.isOrdinalPayment = false;
-          smbPaymentForm.popupService.dialogService.closeAll();
-
-          break;
-        case false:
-        case SafePaymentButton.OrdinalPay:
-          // this.doOrdinalPay();
-          this.store.isOrdinalPayment = true;
-          if (smbPaymentForm.router.url.includes(smbPaths[SmbPage.MAIN])) {
-            const mainNewPaymentButton = this.ngService.getMainNewPaymentButtonElement();
-
-            mainNewPaymentButton.click();
-          }
-
-          if (smbPaymentForm.router.url.includes(smbPaths[SmbPage.DOCUMENTS])) {
-            const mainNewPaymentButton = this.ngService.getDocumentsNewPaymentButtonElement();
-
-            mainNewPaymentButton.click();
-          }
-
-          break;
-      }
-    });
+    ).subscribe();
   }
 
   private createNewLocButton(newPaymentButton: Element): void {

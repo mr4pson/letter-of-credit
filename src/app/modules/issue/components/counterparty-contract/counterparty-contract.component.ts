@@ -10,12 +10,14 @@ import { NDS_LIST } from '../../constants/constants';
 import { FileUploadService } from '../../services/file-upload.service';
 import { FileUploaded } from '../../interfaces/file-uploaded.interface';
 import { Page, paths } from '../../constants/routes';
+import { StepService } from '../../services/step.service';
 
 import { ButtonType } from '@psb/fe-ui-kit/src/components/button';
 import { SelectedItem } from '@psb/fe-ui-kit/src/components/input-select';
 import { getRequiredFormControlValidator } from '@psb/validations/required';
 import { SimplebarAngularComponent } from 'simplebar-angular/lib/simplebar-angular.component';
 import { StoreService } from 'src/app/services/store.service';
+import { isFormValid } from 'src/app/utils';
 
 @Component({
   selector: 'counterparty-contract',
@@ -26,7 +28,6 @@ import { StoreService } from 'src/app/services/store.service';
 export class CounterpartyContractComponent extends OnDestroyMixin implements OnInit {
   public files$ = this.fileUploadService.files$;
   public errorMessage$ = this.fileUploadService.errorMessage$;
-
   public form = new FormGroup({
     contractDate: new FormControl('', [
       getRequiredFormControlValidator('Укажите дату заключения договора'),
@@ -39,7 +40,6 @@ export class CounterpartyContractComponent extends OnDestroyMixin implements OnI
       getRequiredFormControlValidator('Укажите предмет договора'),
     ]),
   });
-
   public ndsList = NDS_LIST;
   public ButtonType = ButtonType;
   public maxContractDate = new Date();
@@ -65,6 +65,7 @@ export class CounterpartyContractComponent extends OnDestroyMixin implements OnI
     private store: StoreService,
     private fileUploadService: FileUploadService,
     private router: Router,
+    private stepService: StepService,
   ) {
     super();
   }
@@ -107,10 +108,6 @@ export class CounterpartyContractComponent extends OnDestroyMixin implements OnI
     ).subscribe();
   }
 
-  public isFormValid(): boolean {
-    return this.form.valid;
-  }
-
   public setVat(): void {
     if (this.selectedNds === 0) {
       this.selectedNdsControl.setValue(
@@ -141,17 +138,16 @@ export class CounterpartyContractComponent extends OnDestroyMixin implements OnI
   }
 
   public handleSubmit(): void {
-    Object.values(this.form.controls).forEach((control) => {
-      control.markAllAsTouched();
-      control.updateValueAndValidity();
-    });
-
-    if (this.isFormValid()) {
-      this.store.issueStep3Text = this.contractDateControl.value.toLocaleDateString(
+    if (isFormValid(this.form)) {
+      const stepDescription = this.contractDateControl.value.toLocaleDateString(
         'ru-RU',
         { year: 'numeric', month: 'long', day: 'numeric' },
       );
-      console.log(this.form.value);
+
+      this.stepService.setStepDescription(
+        paths[Page.COUNTERPARTY_CONTRACT],
+        stepDescription,
+      );
       this.router.navigateByUrl(paths[Page.ACCREDITATION_PERIOD]);
     }
   }

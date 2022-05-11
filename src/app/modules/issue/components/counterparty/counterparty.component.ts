@@ -10,6 +10,7 @@ import { PartnersService } from '../../services/partners.service';
 import { Client } from '../../interfaces/client.interface';
 import { Partner } from '../../interfaces/partner.interface';
 import { Page, paths } from '../../constants/routes';
+import { StepService } from '../../services/step.service';
 
 import { getRequiredFormControlValidator } from '@psb/validations/required';
 import { AccountService } from 'src/app/services/account.service';
@@ -17,6 +18,7 @@ import { BankSearch } from 'src/app/interfaces/api/bank-search.interface';
 import { ButtonType } from '@psb/fe-ui-kit';
 import { StoreService } from 'src/app/services/store.service';
 import { ErrorHandlerService } from 'src/app/services/error-handler.service';
+import { isFormValid } from 'src/app/utils';
 
 @Component({
   selector: 'counterparty',
@@ -87,13 +89,13 @@ export class СounterpartyComponent extends OnDestroyMixin implements OnInit {
     private accountServiceInstance: AccountService,
     private partners: PartnersService,
     private errorHandlerService: ErrorHandlerService,
+    private stepService: StepService,
     private router: Router,
   ) {
     super();
   }
 
   ngOnInit() {
-    console.log(this.store.letterOfCredit);
     this.form.patchValue({
       inn: this.store.letterOfCredit.reciverInn,
       bik: this.store.letterOfCredit.reciverBankBik,
@@ -144,10 +146,6 @@ export class СounterpartyComponent extends OnDestroyMixin implements OnInit {
     ).subscribe();
   }
 
-  public isFormValid(): boolean {
-    return this.form.valid;
-  }
-
   public selectClient(client: Client) {
     this.clientCompanyName = '';
 
@@ -172,15 +170,11 @@ export class СounterpartyComponent extends OnDestroyMixin implements OnInit {
   }
 
   public handleSubmit(): void {
-    Object.values(this.form.controls).forEach((control) => {
-      control.markAllAsTouched();
-      control.updateValueAndValidity();
-    });
-
-    console.log(this.isFormValid());
-    if (this.isFormValid()) {
-      this.store.issueStep2Text = this.store.letterOfCredit.reciverName;
-      console.log(this.form.value);
+    if (isFormValid(this.form)) {
+      this.stepService.setStepDescription(
+        paths[Page.COUNTERPARTY],
+        this.store.letterOfCredit.reciverName,
+      );
       this.router.navigateByUrl(paths[Page.COUNTERPARTY_CONTRACT]);
     }
   }
