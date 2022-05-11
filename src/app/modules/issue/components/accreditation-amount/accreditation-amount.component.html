@@ -25,12 +25,12 @@
     </div>
   </psb-text>
   <div
-    *ngIf="accounts$ | async as accounts"
+    *ngIf="{ value: (accounts$ | async)} as accountsObject"
     class="debit-account"
   >
     <loc-account-select
       formControlName="SelectedAccount"
-      [accounts]="accounts"
+      [accounts]="accountsObject.value"
     ></loc-account-select>
     <psb-tooltip
       class="debit-account__tooltip"

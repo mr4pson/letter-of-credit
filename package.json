@@ -7,7 +7,7 @@
 		"start": "ng serve --liveReload=true --open",
 		"build": "ng build --outputPath=../../server/www/inner --prod=true --optimization=true --commonChunk=true --aot=true --buildOptimizer=true --vendor-chunk=true --progress=true --sourceMap=false --base-href /",
 		"build-light": "ng build --outputPath=../../server/www/inner --prod=false --commonChunk=true --vendor-chunk=true --progress=true --sourceMap=false --base-href /",
-		"open-api-codegen": "ng-openapi-gen --input open-api.json --output src/api"
+		"openapi-codegen:lc": "ng-openapi-gen --input ./swagger/lc.openapi.json --output src/api"
 	},
 	"private": true,
 	"dependencies": {

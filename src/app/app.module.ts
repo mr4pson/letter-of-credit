@@ -18,6 +18,7 @@ import { ApiConfigurationParams } from '../api/api-configuration';
 import { ApiModule } from '../api/api.module';
 import { NgService } from './services/ng.service';
 import { SafePaymentModule } from './modules/safepayment/safe-payment.module';
+import { UiKitModule } from './modules/ui-kit/ui-kit.module';
 
 registerLocaleData(ru);
 @NgModule({
@@ -29,6 +30,7 @@ registerLocaleData(ru);
     BrowserModule,
     BrowserAnimationsModule,
     PsbModule,
+    UiKitModule,
     IssueModule,
     SafePaymentModule,
   ],

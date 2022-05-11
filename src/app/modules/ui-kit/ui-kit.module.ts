@@ -5,6 +5,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 import { PsbModule } from '../psb/psb.module';
 import { AccountSelectComponent } from './components/account-select/account-select.component';
+import { NotificationModule } from './components/notification/notification.module';
 
 import { ClickOutsideModule } from '@psb/angular-tools';
 
@@ -17,10 +18,12 @@ import { ClickOutsideModule } from '@psb/angular-tools';
     BrowserModule,
     ClickOutsideModule,
     CommonModule,
+    NotificationModule,
     PsbModule,
   ],
   exports: [
     AccountSelectComponent,
+    NotificationModule,
   ],
 })
 export class UiKitModule { }

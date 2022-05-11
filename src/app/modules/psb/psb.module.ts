@@ -13,6 +13,7 @@ import {
   IconModule,
   InputAutocompleteModule,
   InputSelectModule,
+  NotificationModule,
   NumberInputModule,
   PhoneInputModule,
   SpinnerIconModule,
@@ -45,6 +46,7 @@ import {
     DatepickerModule,
     BaseModalModule,
     PhoneInputModule,
+    NotificationModule,
   ],
   exports: [
     TooltipModule,
@@ -64,6 +66,7 @@ import {
     DatepickerModule,
     BaseModalModule,
     PhoneInputModule,
+    NotificationModule,
     FormatMoneyPipe,
     SecurePipe,
   ],

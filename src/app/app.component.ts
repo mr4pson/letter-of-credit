@@ -11,14 +11,15 @@ import { smbPaths } from './constants/smp-paths.constant';
 import { SafePaymentComponent } from './modules/safepayment/safe-payment.component';
 import { Page, paths } from './modules/issue/constants/routes';
 import { AccountService, ErrorHandlerService, NgService, StoreService } from './services';
-import { Account, SmbPaymentFormComponent } from './interfaces';
+import { SmbPaymentFormComponent } from './interfaces';
+import { NotificationService } from './modules/ui-kit/components/notification/notification.service';
 
 import { BaseModalComponent } from '@psb/fe-ui-kit';
 
 @Component({
   selector: 'loc-inner',
   templateUrl: 'app.component.html',
-  styleUrls: [],
+  styleUrls: ['app.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AppComponent extends OnDestroyMixin {
@@ -32,6 +33,7 @@ export class AppComponent extends OnDestroyMixin {
     private accountService: AccountService,
     private router: Router,
     private errorHandler: ErrorHandlerService,
+    private notificationService: NotificationService,
   ) {
     super();
 
