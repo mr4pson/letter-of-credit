@@ -63,12 +63,16 @@ export class NgService {
     return this.getComponent<SmbReceiverAutocompleteComponent>(SmbSelector.ReceiverAutocomplete);
   }
 
-  getMainNewPaymentButtonElement(): Element {
+  getMainNewPaymentButtonElement(): HTMLElement {
     return this.renderer.selectRootElement(SmbSelector.MainNewPaymentButton, true);
   }
 
-  getDocumentsNewPaymentButtonElement(): Element {
+  getDocumentsNewPaymentButtonElement(): HTMLElement {
     return this.renderer.selectRootElement(SmbSelector.DocumentsNewPaymentButton, true);
+  }
+
+  getPaymentFormCloseElement(): HTMLElement {
+    return this.renderer.selectRootElement(SmbSelector.PaymentFormCloseButton, true);
   }
 
   hideSmbDocuments() {

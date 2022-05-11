@@ -37,4 +37,12 @@ export class StepService {
     const currentStepIndex = this.steps.findIndex(step => step.url === currentUrl);
     return currentStepIndex + 1;
   }
+
+  public setStepDescription(url: string, description: string): void {
+    const curStep = this.steps.find(step => step.url === url);
+
+    if (curStep) {
+      curStep.description = description;
+    }
+  }
 }

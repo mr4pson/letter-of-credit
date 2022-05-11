@@ -1,5 +1,5 @@
-import { ChangeDetectionStrategy, Component, forwardRef, Input } from '@angular/core';
-import { ControlValueAccessor, FormControl, FormGroup, NG_VALUE_ACCESSOR } from '@angular/forms';
+import { ChangeDetectionStrategy, Component, EventEmitter, forwardRef, Input, Output } from '@angular/core';
+import { AbstractControl, ControlValueAccessor, FormGroup, NG_VALUE_ACCESSOR } from '@angular/forms';
 
 @Component({
   selector: 'closing-doc',
@@ -15,15 +15,16 @@ import { ControlValueAccessor, FormControl, FormGroup, NG_VALUE_ACCESSOR } from 
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ClosingDocComponent implements ControlValueAccessor {
-  @Input() index: number;
+  @Input() formGroupControl: AbstractControl;
+  @Output() delete = new EventEmitter();
 
-  value: any;
-  formGroup = new FormGroup({
-    Document: new FormControl(),
-    Amount: new FormControl(),
-    OnlyOriginalDocument: new FormControl(),
-    AdditionalRequirements: new FormControl(),
-  });
+  get fromGroup() {
+    return this.formGroupControl as FormGroup;
+  }
+
+  public handleDelete(): void {
+    this.delete.emit();
+  }
 
   onChange = (index: number) => {};
 

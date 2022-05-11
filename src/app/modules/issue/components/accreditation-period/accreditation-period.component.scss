@@ -2,7 +2,7 @@
 
 .accreditation-period {
 	padding-bottom: 24px;
-	padding-right: 40px;
+	padding-right: 15px;
 
 	&__closing-doc-checkbox {
 		display: flex;
@@ -24,6 +24,10 @@
 			display: inline-block;
 			width: 540px;
 		}
+	}
+
+	&__submit {
+		margin-top: 20px;
 	}
 }
 

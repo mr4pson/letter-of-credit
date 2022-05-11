@@ -30,7 +30,7 @@ export class ErrorHandlerService implements ErrorHandler {
 
   public handleError(error: HttpErrorResponse): void {
     console.log(
-      `Error code ${error.status}, ` + `body was: ${error.error}`,
+      `Код ошибки ${error.status}, ` + `с телом: ${error.error}`,
    );
     if (!navigator.onLine) {
       this.errorMsg = ErrorMessages.NETWORK_ISSUE;

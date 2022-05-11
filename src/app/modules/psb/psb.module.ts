@@ -1,5 +1,7 @@
 import { NgModule } from '@angular/core';
 
+import { FormatMoneyPipe, SecurePipe } from './pipes';
+
 import {
   BaseModalModule,
   ButtonModule,
@@ -21,6 +23,10 @@ import {
 } from '@psb/fe-ui-kit';
 
 @NgModule({
+  declarations: [
+    FormatMoneyPipe,
+    SecurePipe,
+  ],
   imports: [
     TooltipModule,
     CheckboxModule,
@@ -58,6 +64,8 @@ import {
     DatepickerModule,
     BaseModalModule,
     PhoneInputModule,
+    FormatMoneyPipe,
+    SecurePipe,
   ],
 })
 export class PsbModule {}

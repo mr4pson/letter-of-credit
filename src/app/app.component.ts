@@ -11,7 +11,7 @@ import { smbPaths } from './constants/smp-paths.constant';
 import { SafePaymentComponent } from './modules/safepayment/safe-payment.component';
 import { Page, paths } from './modules/issue/constants/routes';
 import { AccountService, ErrorHandlerService, NgService, StoreService } from './services';
-import { SmbPaymentFormComponent } from './interfaces';
+import { Account, SmbPaymentFormComponent } from './interfaces';
 
 import { BaseModalComponent } from '@psb/fe-ui-kit';
 
@@ -73,8 +73,6 @@ export class AppComponent extends OnDestroyMixin {
             return;
           }
 
-          console.log(smbPaymentForm.payment);
-
           this.store.payment = smbPaymentForm.payment;
           smbPaymentForm.popupService.dialogService.closeAll();
           this.openSafePaymentDialog(smbPaymentForm);
@@ -98,7 +96,7 @@ export class AppComponent extends OnDestroyMixin {
 
   private navigationChangeObservable = (event: NavigationEnd | Router): Observable<any> => {
     this.store.isIssueVissible = false;
-
+    this.store.isOrdinalPayment = false;
     if (event.url?.includes(smbPaths[SmbPage.MAIN])) {
       console.log('MAIN PAGE');
 
@@ -145,6 +143,12 @@ export class AppComponent extends OnDestroyMixin {
   private getIsLoCVisible(): Observable<boolean> {
     const smbPaymentForm = this.ngService.getSmbPaymentFormComponent();
     const receiverAutocomplete = this.ngService.getSmbReceiverAutocompleteComponent();
+
+    if (this.store.isOrdinalPayment) {
+      this.store.isOrdinalPayment = false;
+
+      return of(false);
+    }
 
     return receiverAutocomplete.receiverFormGroup.valueChanges.pipe(
       map(() => receiverAutocomplete.receiverFormGroup.valid),
@@ -195,31 +199,34 @@ export class AppComponent extends OnDestroyMixin {
     });
 
     safePaymentDialog.afterClosed().pipe(
+      tap((result) => {
+        switch (result) {
+          case SafePaymentButton.RefusePay:
+            this.store.isOrdinalPayment = false;
+            smbPaymentForm.popupService.dialogService.closeAll();
+
+            break;
+          case false:
+          case SafePaymentButton.OrdinalPay:
+            // this.doOrdinalPay();
+            this.store.isOrdinalPayment = true;
+            if (smbPaymentForm.router.url.includes(smbPaths[SmbPage.MAIN])) {
+              const mainNewPaymentButton = this.ngService.getMainNewPaymentButtonElement();
+
+              mainNewPaymentButton.click();
+            }
+
+            if (smbPaymentForm.router.url.includes(smbPaths[SmbPage.DOCUMENTS])) {
+              const mainNewPaymentButton = this.ngService.getDocumentsNewPaymentButtonElement();
+
+              mainNewPaymentButton.click();
+            }
+
+            break;
+        }
+      }),
       untilComponentDestroyed(this),
-    ).subscribe((result) => {
-      switch (result) {
-        case SafePaymentButton.RefusePay:
-          smbPaymentForm.popupService.dialogService.closeAll();
-
-          break;
-        case false:
-        case SafePaymentButton.OrdinalPay:
-          // this.doOrdinalPay();
-          if (smbPaymentForm.router.url.includes(smbPaths[SmbPage.MAIN])) {
-            const smbAccountSeciton = this.ngService.getSmbAccountSectionComponent();
-
-            smbAccountSeciton.newPayment();
-          }
-
-          if (smbPaymentForm.router.url.includes(smbPaths[SmbPage.DOCUMENTS])) {
-            const documentFilter = this.ngService.getSmbDocumentsFilterComponent();
-
-            documentFilter.newPayment();
-          }
-
-          break;
-      }
-    });
+    ).subscribe();
   }
 
   private createNewLocButton(newPaymentButton: Element): void {

@@ -3,8 +3,8 @@
 @import "assets/_colors.scss";
 
 body, * {
-	font-family: 'Roboto', sans-serif;
-	font-family: 'Inter', sans-serif;
+	// font-family: 'Roboto', sans-serif;
+	font-family: 'Inter', sans-serif !important;
 }
 
 .loc-backdrop {
@@ -106,6 +106,13 @@ loc-inner {
 
 .main-layout--hidden {
 	display: none;
+}
+
+.docs-holder__remove-btn {
+	svg {
+		width: 30px;
+		height: 30px;
+	}
 }
 
 @media (min-width: 768px) {
