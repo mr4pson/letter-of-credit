@@ -31,10 +31,6 @@ export class StoreService {
   public payment: SmbPayment;
   public reciverStatus: ReciverStatus = ReciverStatus.Unknown;
   public clientEmail = '';
-  public issueStep1Text = '';
-  public issueStep2Text = '';
-  public issueStep3Text = '';
-  public issueStep4Text = '';
   public letterOfCredit: LetterOfCredit = DEFAULT_LOC_INSTANCE;
 
   public restoreDefaultState() {

@@ -7,12 +7,14 @@ import { Router } from '@angular/router';
 
 import { ClosingDoc } from '../../interfaces/closing-doc.interface';
 import { Page, paths } from '../../constants/routes';
+import { StepService } from '../../services/step.service';
 
 import { ButtonType } from '@psb/fe-ui-kit';
 import { getRequiredFormControlValidator } from '@psb/validations/required';
 import { StoreService } from 'src/app/services/store.service';
 import { getSubstractDatesDays, getSummedDateDays, getTomorrowDate } from 'src/app/utils/utils';
 import moment from 'moment';
+import { isFormValid } from 'src/app/utils';
 
 @Component({
   selector: 'accreditation-period',
@@ -60,15 +62,17 @@ export class AccreditationPeriodComponent extends OnDestroyMixin implements OnIn
   constructor(
     private store: StoreService,
     private router: Router,
+    private stepService: StepService,
   ) {
     super();
   }
 
   ngOnInit(): void {
-    console.log(this.store.letterOfCredit);
+    const initialEndLocDate = this.store.letterOfCredit.endLocDate;
+
     this.form.patchValue({
       ...this.store.letterOfCredit,
-      endLocDate: moment(this.store.letterOfCredit.endLocDate).format('DD.MM.YYYY'),
+      endLocDate: initialEndLocDate ? moment(initialEndLocDate) : null,
     });
 
     merge(
@@ -78,8 +82,6 @@ export class AccreditationPeriodComponent extends OnDestroyMixin implements OnIn
 
             return;
           }
-
-          console.log(endLocDate);
 
           this.store.letterOfCredit.endLocDate = this.endLocDateControl.valid
             ? endLocDate
@@ -134,46 +136,44 @@ export class AccreditationPeriodComponent extends OnDestroyMixin implements OnIn
     }
   }
 
-  public isFormValid(): boolean {
-    return this.form.valid;
-  }
-
   public addClosingDoc({
     document,
     amount,
     onlyOriginalDocument,
     additionalRequirements,
   } = {} as ClosingDoc): void {
-    const closingDocument = {
-      Document: new FormControl(document),
-      Amount: new FormControl(amount ?? 1),
-      OnlyOriginalDocument: new FormControl(
+    const docFormGroup = {
+      document: new FormControl(document),
+      amount: new FormControl(amount ?? 1),
+      onlyOriginalDocument: new FormControl(
         onlyOriginalDocument !== undefined ? onlyOriginalDocument : true,
       ),
-      AdditionalRequirements: new FormControl(
+      additionalRequirements: new FormControl(
         additionalRequirements,
       ),
     };
 
     this.closingDocsControl.push(
-      new FormGroup(closingDocument),
+      new FormGroup(docFormGroup),
     );
   }
 
+  public handleDelete(index: number): void {
+    this.closingDocsControl.controls.splice(index, 1);
+  }
+
   public handleSubmit(): void {
-    Object.values(this.form.controls).forEach((control) => {
-      control.markAllAsTouched();
-      control.updateValueAndValidity();
-    });
-
-    if (this.isFormValid()) {
+    if (isFormValid(this.form)) {
       const endLocDate = new Date(this.store.letterOfCredit.endLocDate.toString());
-
-      this.store.issueStep4Text = `до ${endLocDate.toLocaleDateString(
+      const stepDescription = `до ${endLocDate.toLocaleDateString(
         'ru-RU',
         { year: 'numeric', month: 'long', day: 'numeric' },
       )}`;
-      console.log(this.form.value);
+
+      this.stepService.setStepDescription(
+        paths[Page.ACCREDITATION_PERIOD],
+        stepDescription,
+      );
       this.router.navigateByUrl(paths[Page.SEND_APPLICATION]);
     }
   }

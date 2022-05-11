@@ -2,6 +2,7 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { ErrorHandler, Injectable } from '@angular/core';
 
 import { SmbAlertingService } from '../interfaces';
+import { NotificationService } from '../modules/ui-kit/components/notification/notification.service';
 
 export enum ErrorMessages {
   NETWORK_ISSUE = 'Проверьте ваше интернет соединение и попробуй ещё раз',
@@ -13,6 +14,10 @@ export class ErrorHandlerService implements ErrorHandler {
   public alertingService: SmbAlertingService;
   private errorMsg = '';
 
+  constructor(
+    private notificationService: NotificationService,
+  ) {}
+
   public injectHandler(alertingService: SmbAlertingService) {
     this.alertingService = alertingService;
   }
@@ -20,7 +25,7 @@ export class ErrorHandlerService implements ErrorHandler {
   // TODO поменять на psb нотификатор
   public showErrorMesssage(message: string): void {
     if (!this.alertingService) {
-      alert(message);
+      this.notificationService.addNotification(message);
 
       return;
     }
@@ -30,7 +35,7 @@ export class ErrorHandlerService implements ErrorHandler {
 
   public handleError(error: HttpErrorResponse): void {
     console.log(
-      `Error code ${error.status}, ` + `body was: ${error.error}`,
+      `Код ошибки ${error.status}, ` + `с телом: ${error.error}`,
    );
     if (!navigator.onLine) {
       this.errorMsg = ErrorMessages.NETWORK_ISSUE;

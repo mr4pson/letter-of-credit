@@ -13,17 +13,16 @@ import { StoreService } from 'src/app/services/store.service';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SafePaymentEmailComponent {
+  @Output() takeValidEmail = new EventEmitter<string>();
+
   public ButtonType = ButtonType;
   public ButtonSize = ButtonSize;
-
   public emailFormControl = new FormControl(this.store.clientEmail, [
     getRequiredFormControlValidator('Вы забыли написать email.'),
     getEmailFormControlValidator('Вы написали некорректный email.'),
   ]);
 
   constructor(public store: StoreService) { }
-
-  @Output() takeValidEmail = new EventEmitter<string>();
 
   public takeEmail(): void {
     this.emailFormControl.markAllAsTouched();

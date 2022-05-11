@@ -1,6 +1,10 @@
 @import "../../../../../assets/colors";
 
 .accredit-amount {
+	&__submit {
+		margin-top: 10px;
+	}
+
 	&__info {
 		font-size: 16px;
 		line-height: 24px;
@@ -39,7 +43,7 @@
 	justify-content: space-between;
 	width: 330px;
 	padding-right: 30px;
-	margin-bottom: 10px;
+	margin-top: 36px;
 
 	&__sum {
 		color: $black-alpha-38;
@@ -49,7 +53,7 @@
 	}
 
 	&__tooltip {
-		margin: 0 0 5px 10px;
+		margin: 9px 0 5px 20px;
 	}
 
 	&__attribute {

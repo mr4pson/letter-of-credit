@@ -3,8 +3,8 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
-import { ApiAccountList } from '../interfaces/api/api-account-list.interface';
-import { ApiAccount } from '../interfaces/api/api-account.interface';
+import { AccountResponse } from '../interfaces/api/account-response.interface';
+import { Account } from '../interfaces/api/account.interface';
 import { BankSearch } from '../interfaces/api/bank-search.interface';
 import { Client } from '../modules/issue/interfaces/client.interface';
 import { ReciverStatus } from '../enums/reciver-status.enum';
@@ -82,13 +82,13 @@ export class AccountService {
     );
   }
 
-  public getAccountList(): Observable<ApiAccount[]> {
+  public getAccountList(): Observable<Account[]> {
     const url =
       `${this.storage.apiDomain}api/Account/clients/${this.storage.getClientID()}?branchId=${this.storage.getBranchID()}&account=${this.storage.getAccountID()}&v=${
         this.storage.apiVersion
       }`;
 
-    return this.http.get<ApiAccountList>(url).pipe(
+    return this.http.get<AccountResponse>(url).pipe(
       map((response) => {
         // if (response?.accounts?.length === 0) {
         if (!response || !response.accounts || !response.accounts.length) {
