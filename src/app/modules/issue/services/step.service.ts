@@ -2,14 +2,12 @@ import { Injectable } from '@angular/core';
 import { NavigationStart, Router } from '@angular/router';
 import { filter, map } from 'rxjs/operators';
 
-import { getSteps } from '../helpers/issue-step.helper';
 import { Page, paths } from '../constants/routes';
-
-import { StoreService } from 'src/app/services/store.service';
+import { STEPS } from '../constants/constants';
 
 @Injectable()
 export class StepService {
-  public steps = getSteps(this.store);
+  public steps = STEPS;
 
   public currentUrl$ = this.router.events.pipe(
     filter(event => event instanceof NavigationStart),
@@ -24,13 +22,12 @@ export class StepService {
   );
 
   constructor(
-    private store: StoreService,
     private router: Router,
   ) {}
 
   public getPrevUrl(currentUrl: string): string {
     const currentStepIndex = this.steps.findIndex(step => step.url === currentUrl);
-    return this.steps[currentStepIndex - 1].url;
+    return this.steps[currentStepIndex - 1]?.url;
   }
 
   public getCurrentStepNumber(currentUrl: string): number {

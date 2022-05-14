@@ -1,23 +1,19 @@
 import { ChangeDetectionStrategy, Component, ViewChild } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
-import { of } from 'rxjs';
-import { catchError, tap } from 'rxjs/operators';
 import { MatDialogRef } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 
-import { SafePaymentEmailComponent } from './safe-payment-email/safe-payment-email.component';
-import { SafePayStates } from './enums/safe-payment.enum';
-import { SafePaymentStateManagerService } from './services/safe-payment-state-manager.service';
 import { Page, paths } from '../issue/constants/routes';
+import { SafePayStates } from './enums/safe-payment.enum';
+import { SafePaymentEmailComponent } from './safe-payment-email/safe-payment-email.component';
+import { SafePaymentStateManagerService } from './services/safe-payment-state-manager.service';
 
-import { ButtonSize, ButtonType } from '@psb/fe-ui-kit/src/components/button';
-import { ReciverStatus } from 'src/app/enums/reciver-status.enum';
-import { ReliableSign } from 'src/app/modules/safepayment/enums/reliable-sign.enum';
-import { SafePaymentButton } from 'src/app/enums/safe-payment-button.enum';
-import { AccountService } from 'src/app/services/account.service';
-import { StoreService } from 'src/app/services/store.service';
 import { BaseModalComponent } from '@psb/fe-ui-kit';
-import { ErrorHandlerService } from 'src/app/services';
+import { ButtonSize, ButtonType } from '@psb/fe-ui-kit/src/components/button';
+import { SafePaymentButton } from 'src/app/enums/safe-payment-button.enum';
+import { ReliableSign } from 'src/app/modules/safepayment/enums/reliable-sign.enum';
+import { StoreService } from 'src/app/services/store.service';
+import { RELIABLE_MAP } from './constants/reliable-map.constant';
 
 @Component({
   selector: 'safe-payment',
@@ -43,41 +39,19 @@ export class SafePaymentComponent {
   });
   public letterOfCredit = this.store.letterOfCredit;
 
-  private isDisableOffersCalled = false;
-
   constructor(
     private store: StoreService,
-    private accountServiceInstance: AccountService,
     private stateManager: SafePaymentStateManagerService,
     private dialogRef: MatDialogRef<BaseModalComponent>,
     private router: Router,
-    private errorHandler: ErrorHandlerService,
   ) { }
 
   public getReliableColor(): string {
-    switch (this.store.reciverStatus) {
-      case ReciverStatus.Unreliable:
-        return ReliableSign.reliableRed;
-
-      case ReciverStatus.PartlyReliable:
-        return ReliableSign.reliableYellow;
-
-      default:
-        return ReliableSign.reliableGray;
-    }
+    return RELIABLE_MAP.color[this.store.reciverStatus] ?? ReliableSign.reliableGray;
   }
 
   public getReliableText(): string {
-    switch (this.store.reciverStatus) {
-      case ReciverStatus.Unreliable:
-        return ReliableSign.reliableRedText;
-
-      case ReciverStatus.PartlyReliable:
-        return ReliableSign.reliableYellowText;
-
-      default:
-        return ReliableSign.reliableGrayText;
-    }
+    return RELIABLE_MAP.text[this.store.reciverStatus] ?? ReliableSign.reliableGrayText;
   }
 
   public doSafePay() {
@@ -101,25 +75,5 @@ export class SafePaymentComponent {
 
   public showEmail() {
     this.stateManager.state = SafePayStates.ShowEmail;
-  }
-
-  public setDisableOffers() {
-    if (this.isDisableOffersCalled) {
-      return;
-    }
-
-    this.isDisableOffersCalled = true;
-
-    this.accountServiceInstance.setDisableLoCOffers(this.store.letterOfCredit.reciverInn).pipe(
-      tap((response) => {
-        this.isDisableOffersCalled = false;
-        this.sPayGroup.controls.dontWantSafePayment.setValue(response);
-      }),
-      catchError(() => {
-        this.errorHandler.showErrorMesssage('Не удалось изменить режим предложения покрытого аккредитива.');
-
-        return of(false);
-      }),
-    );
   }
 }

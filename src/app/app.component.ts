@@ -12,7 +12,6 @@ import { SafePaymentComponent } from './modules/safepayment/safe-payment.compone
 import { Page, paths } from './modules/issue/constants/routes';
 import { AccountService, ErrorHandlerService, NgService, StoreService } from './services';
 import { SmbPaymentFormComponent } from './interfaces';
-import { NotificationService } from './modules/ui-kit/components/notification/notification.service';
 
 import { BaseModalComponent } from '@psb/fe-ui-kit';
 
@@ -33,7 +32,6 @@ export class AppComponent extends OnDestroyMixin {
     private accountService: AccountService,
     private router: Router,
     private errorHandler: ErrorHandlerService,
-    private notificationService: NotificationService,
   ) {
     super();
 
@@ -165,14 +163,14 @@ export class AppComponent extends OnDestroyMixin {
       switchMap(() => forkJoin([
         this.accountService.getAllowLoC(receiverAutocomplete.receiverFormGroup.value.inn).pipe(
           catchError(() => {
-            this.errorHandler.showErrorMesssage('Не удалось получить информацию о возможности запроса аккредитива.');
+            this.errorHandler.showErrorMessage('Не удалось получить информацию о возможности запроса аккредитива.');
 
             return of(false);
           }),
         ),
         this.accountService.getIsBadReliability(receiverAutocomplete.receiverFormGroup.value.inn).pipe(
           catchError(() => {
-            this.errorHandler.showErrorMesssage('Не удалось получить информацию о рейтинге контрагента.');
+            this.errorHandler.showErrorMessage('Не удалось получить информацию о рейтинге контрагента.');
 
             return of(false);
           }),

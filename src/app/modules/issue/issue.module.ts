@@ -22,8 +22,8 @@ import { IssueRoutingModule } from './issue-routing.module';
 import { StepService } from './services/step.service';
 import { UiKitModule } from '../ui-kit/ui-kit.module';
 
-import { FormatMoneyPipe } from 'src/app/modules/psb/pipes/format-money.pipe';
 import { SimplebarAngularModule } from 'simplebar-angular';
+import { AccountService } from 'src/app/services';
 
 @NgModule({
   declarations: [
@@ -50,10 +50,10 @@ import { SimplebarAngularModule } from 'simplebar-angular';
   ],
   exports: [
     IssueComponent,
-    FormatMoneyPipe,
   ],
   providers: [
     StepService,
+    AccountService,
     PartnersService,
     FileUploadService,
     ClientAccountService,
