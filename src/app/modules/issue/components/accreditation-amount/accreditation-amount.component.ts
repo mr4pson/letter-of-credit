@@ -25,7 +25,7 @@ export class AccreditationAmountComponent extends OnDestroyMixin implements OnIn
   public commission = 0;
   public ButtonType = ButtonType;
   public form = new FormGroup({
-    IssueSum: new FormControl(null, {
+    issueSum: new FormControl(null, {
       validators: [
         Validators.required,
         getRequiredFormControlValidator('Укажите сумму аккредитива'),
@@ -37,13 +37,13 @@ export class AccreditationAmountComponent extends OnDestroyMixin implements OnIn
       ],
       updateOn: 'blur',
     }),
-    SelectedAccount: new FormControl(null,  [
+    selectedAccount: new FormControl(null,  [
       Validators.required,
       getRequiredFormControlValidator('Выберите счет из списка'),
     ]),
   });
 
-  public comission$ = this.form.get('IssueSum').valueChanges.pipe(
+  public commission$ = this.form.get('issueSum').valueChanges.pipe(
     switchMap(issueSum => (
       this.accountService.getCommision(Number(issueSum))
     )),
@@ -53,7 +53,7 @@ export class AccreditationAmountComponent extends OnDestroyMixin implements OnIn
       return this.commission;
     }),
     catchError(() => {
-      this.errorHandlerService.showErrorMesssage('Ошибка при получении размера коммисии.');
+      this.errorHandlerService.showErrorMessage('Ошибка при получении размера коммисии.');
       this.commission = 0;
 
       return of(this.commission);
@@ -63,17 +63,21 @@ export class AccreditationAmountComponent extends OnDestroyMixin implements OnIn
   public accounts$ = this.clientAccountService.getClientAccounts().pipe(
     tap((accounts) => {
       if (accounts.length > 0) {
-        this.form.controls.SelectedAccount.setValue(
+        this.form.controls.selectedAccount.setValue(
           accounts[0],
         );
       }
     }),
     catchError(() => {
-      this.errorHandlerService.showErrorMesssage('Ошибка при получении списка счетов.');
+      this.errorHandlerService.showErrorMessage('Ошибка при получении списка счетов.');
 
       return of([]);
     }),
   );
+
+  public get issueSum(): number {
+    return Number(this.form.controls.issueSum.value);
+  }
 
   constructor(
     private store: StoreService,
@@ -88,12 +92,8 @@ export class AccreditationAmountComponent extends OnDestroyMixin implements OnIn
 
   ngOnInit(): void {
     if (this.store.letterOfCredit.paymentSum > 0) {
-      this.form.controls.IssueSum.setValue(this.store.letterOfCredit.paymentSum);
+      this.form.controls.issueSum.setValue(this.store.letterOfCredit.paymentSum);
     }
-  }
-
-  public get issueSum(): number {
-    return Number(this.form.controls.IssueSum.value);
   }
 
   public handleSubmit(): void {

@@ -8,7 +8,7 @@ import { СounterpartyComponent } from './components/counterparty/counterparty.c
 import { SendApplicationComponent } from './components/send-application/send-application.component';
 import { Page, paths } from './constants/routes';
 
-const routes: Routes = [
+export const routes: Routes = [
   { path: '', redirectTo: paths[Page.ACCREDITATION_AMOUNT], pathMatch: 'full' },
   { path: paths[Page.ACCREDITATION_AMOUNT], component: AccreditationAmountComponent },
   { path: paths[Page.COUNTERPARTY], component: СounterpartyComponent },

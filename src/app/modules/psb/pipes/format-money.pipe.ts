@@ -6,7 +6,7 @@ import { Pipe, PipeTransform } from '@angular/core';
 })
 export class FormatMoneyPipe implements PipeTransform {
   transform(number: number): string {
-    if (number === null || number === undefined) {
+    if (!number && number !== 0) {
       return `0,00 ₽`;
     }
 

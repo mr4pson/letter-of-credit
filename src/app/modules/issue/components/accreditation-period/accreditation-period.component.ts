@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component, Input, OnInit } from '@angular/core
 import { FormArray, FormControl, FormGroup } from '@angular/forms';
 import { OnDestroyMixin, untilComponentDestroyed } from '@w11k/ngx-componentdestroyed';
 import { merge } from 'rxjs';
-import { tap } from 'rxjs/operators';
+import { filter, tap } from 'rxjs/operators';
 import { Router } from '@angular/router';
 
 import { ClosingDoc } from '../../interfaces/closing-doc.interface';
@@ -72,31 +72,50 @@ export class AccreditationPeriodComponent extends OnDestroyMixin implements OnIn
 
     this.form.patchValue({
       ...this.store.letterOfCredit,
-      endLocDate: initialEndLocDate ? moment(initialEndLocDate) : null,
+      endLocDate: initialEndLocDate ? moment(initialEndLocDate) :  moment(getTomorrowDate()),
     });
+
+    const initialFormValue = {
+      endLocDate: new Date('06/05/2022'),
+      locDaysNumber: '23',
+      closingDocs: [
+        {
+          additionalRequirements: 'test req',
+          amount: 1,
+          document: 'test doc',
+          onlyOriginalDocument: true,
+        },
+      ],
+      isDocumentDigital: true,
+      allowUsePartOfLoc: false,
+    };
+
+    this.form.patchValue(initialFormValue);
 
     merge(
       this.endLocDateControl.valueChanges.pipe(
-        tap((endLocDate) => {
-          if (!endLocDate) {
+        filter(endLocDate => endLocDate && endLocDate.getTime() > 0),
+        tap((endLocDate: Date) => {
+          const newLocDaysNumber = getSubstractDatesDays(endLocDate, this.currentDate);
 
-            return;
+          if (newLocDaysNumber > 0 && newLocDaysNumber !== this.locDaysNumberControl.value) {
+            this.store.letterOfCredit.endLocDate = this.endLocDateControl.valid
+              ? endLocDate
+            : getTomorrowDate();
+
+            this.setLocDays();
           }
-
-          this.store.letterOfCredit.endLocDate = this.endLocDateControl.valid
-            ? endLocDate
-            : '';
-
-          this.setLocDays();
         }),
       ),
       this.locDaysNumberControl.valueChanges.pipe(
         tap((locDaysNumber) => {
-          if (!locDaysNumber) {
-            this.endLocDateControl.setValue('');
+          const newEndLocDate = getSummedDateDays(this.currentDate, Number(locDaysNumber));
+
+          if (newEndLocDate === this.endLocDateControl.value) {
 
             return;
           }
+
           const days: number = Number(locDaysNumber);
           if (days < 1 || days > 365) {
             this.locDaysNumberControl.setValue('');
@@ -131,9 +150,11 @@ export class AccreditationPeriodComponent extends OnDestroyMixin implements OnIn
 
     if (this.store.letterOfCredit.closingDocs) {
       this.store.letterOfCredit.closingDocs.forEach(closingDoc => this.addClosingDoc(closingDoc));
-    } else {
-      this.addClosingDoc();
+
+      return;
     }
+
+    this.addClosingDoc();
   }
 
   public addClosingDoc({
@@ -179,7 +200,7 @@ export class AccreditationPeriodComponent extends OnDestroyMixin implements OnIn
   }
 
   private setLocDate(days: number): void {
-    const summedDate = getSummedDateDays(this.currentDate, days);
+    const summedDate = getSummedDateDays(this.currentDate, Number(days));
 
     this.endLocDateControl.setValue(summedDate);
   }
@@ -189,7 +210,7 @@ export class AccreditationPeriodComponent extends OnDestroyMixin implements OnIn
       ? getSubstractDatesDays(this.endLocDateControl.value, this.currentDate)
       : '';
 
-    if (this.locDaysNumberControl.value !== locDays && locDays !== 0) {
+    if (Number(this.locDaysNumberControl.value) !== locDays && locDays > 0) {
       this.locDaysNumberControl.setValue(
         locDays.toString(),
       );

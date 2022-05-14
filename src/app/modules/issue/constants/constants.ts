@@ -1,4 +1,6 @@
 import { LetterOfCredit } from '../interfaces/letter-of-credit.interface';
+import { Page, paths } from './routes';
+import { Step } from '../interfaces/step.interface';
 
 import { SelectedItem } from '@psb/fe-ui-kit';
 
@@ -9,6 +11,10 @@ export const NDS_LIST: Array<SelectedItem<number>> = [
 ];
 
 export const FILE_EXTENSIONS: string[] = ['tiff', 'pdf', 'xml', 'doc', 'docx', 'xls', 'xlsx'];
+
+export enum FileError {
+  NotSuitableTypes = 'Не все загруженные файлы подходящего типа.',
+}
 
 export const DEFAULT_LOC_INSTANCE = {
   reciverInn: '',
@@ -27,3 +33,26 @@ export const DEFAULT_LOC_INSTANCE = {
   contactPhone: '',
   paymentSum: 0,
 } as LetterOfCredit;
+
+export const STEPS: Step[] = [
+  {
+    title: 'Сумма аккредитива с комиссией',
+    url: paths[Page.ACCREDITATION_AMOUNT],
+  },
+  {
+    title: 'Контрагент',
+    url: paths[Page.COUNTERPARTY],
+  },
+  {
+    title: 'Договор с контрагентом',
+    url: paths[Page.COUNTERPARTY_CONTRACT],
+  },
+  {
+    title: 'Срок действия аккредитива',
+    url: paths[Page.ACCREDITATION_PERIOD],
+  },
+  {
+    title: 'Отправить заявку',
+    url: paths[Page.SEND_APPLICATION],
+  },
+];

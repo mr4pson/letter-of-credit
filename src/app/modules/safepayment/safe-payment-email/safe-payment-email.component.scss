@@ -5,11 +5,16 @@
 	margin: 32px 0;
 	align-items: center;
 
+	&__field {
+		width: 300px;
+	}
+
 	&__button {
 		margin-left: 15px;
 	}
 
 	&__green-check {
+		color: #41b665;
 		margin-left: 20px;
 	}
 }

@@ -37,13 +37,13 @@
     ></psb-tooltip>
   </h2>
 
-  <ng-container formArrayName="closingDocs">
+  <div class="closing-docs" formArrayName="closingDocs">
     <closing-doc
       *ngFor="let docForm of closingDocsControl.controls; let i = index"
       [formGroupControl]="docForm"
       (delete)="handleDelete(i)"
     ></closing-doc>
-  </ng-container>
+  </div>
 
   <button
     type="button"
@@ -51,10 +51,10 @@
     (click)="addClosingDoc()"
   >
     <div>
-      <img
+      <psb-icon
         class="add-doc-btn__icon"
-        [src]="'assets/icons/plus-round.svg' | secure | async"
-      >
+        [path]="'TabbarAdd_24.svg'"
+      ></psb-icon>
       <span class="add-doc-btn__label">Добавить закрывающий документ</span>
     </div>
   </button>
@@ -86,11 +86,11 @@
       ></psb-tooltip>
     </psb-checkbox>
   </div>
-	<psb-button
+  <psb-button
     class="accreditation-period__submit"
-		[isSubmit]="true"
-		[type]="ButtonType.Primary"
-	>
-		Далее
-	</psb-button>
+    [isSubmit]="true"
+    [type]="ButtonType.Primary"
+  >
+    Далее
+  </psb-button>
 </form>

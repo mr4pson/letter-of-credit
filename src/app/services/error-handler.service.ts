@@ -1,35 +1,26 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { ErrorHandler, Injectable } from '@angular/core';
 
+import { ErrorMessage } from '../enums/error-messages.enum';
 import { SmbAlertingService } from '../interfaces';
 import { NotificationService } from '../modules/ui-kit/components/notification/notification.service';
 
-export enum ErrorMessages {
-  NETWORK_ISSUE = 'Проверьте ваше интернет соединение и попробуй ещё раз',
-  SERVER_ISSUE = 'Извините. Сервер сейчас не доступен',
-}
-
 @Injectable()
 export class ErrorHandlerService implements ErrorHandler {
-  public alertingService: SmbAlertingService;
+  public alertingService: SmbAlertingService | NotificationService = this.notificationService;
   private errorMsg = '';
 
   constructor(
     private notificationService: NotificationService,
-  ) {}
+  ) {
+    this.injectHandler(this.notificationService);
+  }
 
-  public injectHandler(alertingService: SmbAlertingService) {
+  public injectHandler(alertingService: SmbAlertingService | NotificationService) {
     this.alertingService = alertingService;
   }
 
-  // TODO поменять на psb нотификатор
-  public showErrorMesssage(message: string): void {
-    if (!this.alertingService) {
-      this.notificationService.addNotification(message);
-
-      return;
-    }
-
+  public showErrorMessage(message: string): void {
     this.alertingService.addError({ info: message });
   }
 
@@ -38,11 +29,11 @@ export class ErrorHandlerService implements ErrorHandler {
       `Код ошибки ${error.status}, ` + `с телом: ${error.error}`,
    );
     if (!navigator.onLine) {
-      this.errorMsg = ErrorMessages.NETWORK_ISSUE;
+      this.errorMsg = ErrorMessage.NETWORK_ISSUE;
     } else if (error.status === 401) {
       document.location.href = '/';
     } else {
-      this.errorMsg = ErrorMessages.SERVER_ISSUE;
+      this.errorMsg = ErrorMessage.SERVER_ISSUE;
     }
     alert(this.errorMsg);
   }

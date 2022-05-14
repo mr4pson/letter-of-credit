@@ -3,7 +3,7 @@ import { NgxDropzoneChangeEvent } from 'ngx-dropzone';
 import { BehaviorSubject } from 'rxjs';
 import { tap } from 'rxjs/operators';
 
-import { FILE_EXTENSIONS } from '../constants/constants';
+import { FileError, FILE_EXTENSIONS } from '../constants/constants';
 import { getFileSizeFormatted } from '../helpers/file-format.helper';
 import { FileUploaded } from '../interfaces/file-uploaded.interface';
 
@@ -18,11 +18,11 @@ export class FileUploadService {
     }),
   );
 
-  private get errorMessage() {
+  public get errorMessage() {
     return this.errorMessage$$.getValue();
   }
 
-  private set errorMessage(message: string) {
+  public set errorMessage(message: string) {
     this.errorMessage$$.next(message);
   }
 
@@ -66,26 +66,16 @@ export class FileUploadService {
     });
 
     if (rejectedFiles > 0) {
-      this.setErrorMessage('Не все загруженные файлы подходящего типа.');
+      this.setErrorMessage(FileError.NotSuitableTypes);
     }
   }
 
-  public handleFileRemoval(file: FileUploaded): void {
-    if (
-      confirm(
-        `Удалить документ "${file.native.name}" из списка загруженных?`,
-      )
-    ) {
-      this.removeFile(file);
-    }
+  public removeFile(file: FileUploaded): void {
+    this.files.splice(this.files.indexOf(file), 1);
   }
 
   private addFile(file: FileUploaded): void {
     this.files = this.files.concat(file);
-  }
-
-  private removeFile(file: FileUploaded): void {
-    this.files.splice(this.files.indexOf(file), 1);
   }
 
   private isFileAdded(addedFile: File): boolean {

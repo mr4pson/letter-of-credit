@@ -47,28 +47,27 @@ export class СounterpartyComponent extends OnDestroyMixin implements OnInit {
 
   public clients$: Observable<Client[]> = this.innControl.valueChanges.pipe(
     filter((inn: string) => inn?.length === 10 || inn?.length === 12),
-    switchMap((inn: string) => forkJoin([
-      of(inn),
-      this.accountServiceInstance.searchClientByInn(inn).pipe(
+    switchMap((inn: string) => (
+      this.accountService.searchClientByInn(inn).pipe(
         catchError(() => {
-          this.errorHandlerService.showErrorMesssage('Невозможно получить список Клиентов');
+          this.errorHandlerService.showErrorMessage('Невозможно получить список Клиентов');
 
           return EMPTY;
         }),
-      ),
-    ])),
-    map(([inn, clients]) => (
+      )
+    )),
+    map(clients => (
       clients.map(client => ({
         ...client,
-        innFound: client.inn.substring(0, inn.length),
-        innTail: client.inn.substring(inn.length),
+        innFound: client.inn.substring(0, this.innControl.value.length),
+        innTail: client.inn.substring(this.innControl.value.length),
       }))
     )),
   );
 
-  private partners$: Observable<Partner[]> = this.partners.getPartners().pipe(
+  private partners$: Observable<Partner[]> = this.partnersService.getPartners().pipe(
     catchError(() => {
-      this.errorHandlerService.showErrorMesssage('Невозможно получить список партнеров');
+      this.errorHandlerService.showErrorMessage('Невозможно получить список партнеров');
 
       return of<Partner[]>([]);
     }),
@@ -86,8 +85,8 @@ export class СounterpartyComponent extends OnDestroyMixin implements OnInit {
 
   constructor(
     private store: StoreService,
-    private accountServiceInstance: AccountService,
-    private partners: PartnersService,
+    private accountService: AccountService,
+    private partnersService: PartnersService,
     private errorHandlerService: ErrorHandlerService,
     private stepService: StepService,
     private router: Router,
@@ -108,7 +107,7 @@ export class СounterpartyComponent extends OnDestroyMixin implements OnInit {
           if (this.bikControl.value?.length === 9) {
             this.bikControl.setErrors(null);
 
-            return this.accountServiceInstance.searchBankByBik(this.bikControl.value);
+            return this.accountService.searchBankByBik(this.bikControl.value);
           }
 
           this.store.letterOfCredit.reciverBankName = '';
@@ -130,7 +129,7 @@ export class СounterpartyComponent extends OnDestroyMixin implements OnInit {
           this.store.letterOfCredit.reciverBankBik = this.bikControl.value;
         }),
         catchError(() => {
-          this.errorHandlerService.showErrorMesssage('Невозможно получить информацию о банке');
+          this.errorHandlerService.showErrorMessage('Невозможно получить информацию о банке');
 
           return EMPTY;
         }),
