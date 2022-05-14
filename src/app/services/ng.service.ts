@@ -93,7 +93,7 @@ export class NgService {
     try {
       element = this.renderer.selectRootElement(selector, true);
     } catch (error) {
-      this.errorHandler.showErrorMesssage(`Невозможно найти селектор ${selector} в DOM дереве`);
+      this.errorHandler.showErrorMessage(`Невозможно найти селектор ${selector} в DOM дереве`);
     }
 
     if (!element) {

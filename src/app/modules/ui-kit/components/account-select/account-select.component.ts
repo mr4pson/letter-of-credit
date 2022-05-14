@@ -12,7 +12,7 @@ import { ClientAccount } from 'src/app/modules/issue/interfaces/client-account.i
   styleUrls: ['account-select.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class AccountSelectComponent extends CustomControlAccessorDirective implements ControlValueAccessor {
+export class AccountSelectComponent extends CustomControlAccessorDirective {
   @Input() public accounts: ClientAccount[] = [];
   @Input() public isAccountCodeVisible = false;
   @Input() public placeholderHidden = false;

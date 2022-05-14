@@ -6,15 +6,16 @@ export const getNow = (): Date => {
   return new Date();
 };
 
-export const getSubstractDatesDays = (date: number, substactingDate: Date): number => {
-  return Math.ceil(
-    (date - substactingDate.getTime()) /
+export const getSubstractDatesDays = (dateTime: Date, substactingDate: Date): number => {
+  return Number(Math.ceil(
+    (dateTime.getTime() - substactingDate.getTime()) /
     1000 /
     3600 /
     24,
-  );
+  ));
 };
 
 export const getSummedDateDays = (date: Date, days: number): Date => {
-  return new Date(date.setDate(date.getDate() + days));
+  const newDate = new Date(date);
+  return new Date(newDate.setDate(newDate.getDate() + days));
 };

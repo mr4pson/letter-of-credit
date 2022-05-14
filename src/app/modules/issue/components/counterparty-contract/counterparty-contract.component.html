@@ -21,7 +21,7 @@
     <psb-button
       [type]="0 == selectedNds ? ButtonType.Primary : ButtonType.Text"
       [class.nds-buttons--inactive]="selectedNds > 0"
-      (click)="unSetVat()"
+      (click)="unsetVat()"
     >
       Без НДС
     </psb-button>
@@ -98,9 +98,7 @@
       (wheel)="wheelScroll($event, simpleBarRef)"
     >
       <div class="file-uploader__uploaded-files">
-        <div class="file-uploader__upload-btn">
-          <img [src]="'assets/icons/plus.svg' | secure | async">
-        </div>
+        <div class="file-uploader__upload-btn"></div>
 
         <ng-container *ngFor="let file of files$ | async">
           <ngx-dropzone-preview
@@ -136,6 +134,7 @@
     </div>
   </div>
   <psb-button
+    class="counterparty-contract__submit"
     [isSubmit]="true"
     [type]="ButtonType.Primary"
   >

@@ -2,13 +2,10 @@ import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import { tap } from 'rxjs/operators';
 
+import { Notification } from './notification.interface';
+
 import { NotificationType } from '@psb/fe-ui-kit';
 
-export interface Notification {
-  id: number;
-  message: string;
-  type: NotificationType;
-}
 
 @Injectable()
 export class NotificationService {
@@ -29,9 +26,9 @@ export class NotificationService {
 
   private lastNotificationId = 0;
 
-  public addNotification(message: string): void {
+  public addError(config: { info: string }): void {
     const notification: Notification = {
-      message,
+      message: config.info,
       id: this.lastNotificationId,
       type: NotificationType.Error,
     };

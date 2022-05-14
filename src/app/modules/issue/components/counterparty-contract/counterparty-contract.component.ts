@@ -97,7 +97,7 @@ export class CounterpartyContractComponent extends OnDestroyMixin implements OnI
         }),
       ),
       this.contractInfoControl.valueChanges.pipe<string>(
-        tap((contractInfo) => {
+        tap((contractInfo: string) => {
           this.store.letterOfCredit.contractInfo = this.contractInfoControl.valid
             ? contractInfo
             : '';
@@ -116,7 +116,7 @@ export class CounterpartyContractComponent extends OnDestroyMixin implements OnI
     }
   }
 
-  public unSetVat(): void {
+  public unsetVat(): void {
     if (this.selectedNds > 0) {
       this.selectedNdsControl.setValue(
         this.ndsList[0].label,
@@ -134,7 +134,7 @@ export class CounterpartyContractComponent extends OnDestroyMixin implements OnI
   }
 
   public handleRemoveFile(file: FileUploaded): void {
-    this.fileUploadService.handleFileRemoval(file);
+    this.fileUploadService.removeFile(file);
   }
 
   public handleSubmit(): void {

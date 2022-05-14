@@ -86,6 +86,7 @@ div.file-uploader {
 	}
 
 	&__upload-btn {
+		position: relative;
 		width: 96px;
 		height: 114px;
 		margin-top: 20px;
@@ -96,6 +97,22 @@ div.file-uploader {
 		justify-content: center;
 		margin: 10px 6px 10px 0;
 		min-width: 96px;
+
+		&::before {
+			content: "";
+			position: absolute;
+			width: 20px;
+			height: 2px;
+			background: #fff;
+		}
+
+		&::after {
+			content: "";
+			position: absolute;
+			width: 2px;
+			height: 20px;
+			background: #fff;
+		}
 	}
 
 	.center-image {
