@@ -7,7 +7,7 @@ import { NotificationService } from '../modules/ui-kit/components/notification/n
 
 @Injectable()
 export class ErrorHandlerService implements ErrorHandler {
-  public alertingService: SmbAlertingService | NotificationService = this.notificationService;
+  alertingService: SmbAlertingService | NotificationService = this.notificationService;
   private errorMsg = '';
 
   constructor(
@@ -16,15 +16,15 @@ export class ErrorHandlerService implements ErrorHandler {
     this.injectHandler(this.notificationService);
   }
 
-  public injectHandler(alertingService: SmbAlertingService | NotificationService) {
+  injectHandler(alertingService: SmbAlertingService | NotificationService) {
     this.alertingService = alertingService;
   }
 
-  public showErrorMessage(message: string): void {
+  showErrorMessage(message: string): void {
     this.alertingService.addError({ info: message });
   }
 
-  public handleError(error: HttpErrorResponse): void {
+  handleError(error: HttpErrorResponse): void {
     console.log(
       `Код ошибки ${error.status}, ` + `с телом: ${error.error}`,
    );

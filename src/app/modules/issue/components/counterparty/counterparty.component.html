@@ -7,69 +7,67 @@
     <p>Найдено в ЕГРЮЛ</p>
   </ng-template>
 
-	<ng-container *ngIf="{ clients: clients$ | async }; let clientsObj">
-		<psb-input-autocomplete
-			class="counterparty-autocomplete"
-			label="ИНН контрагента"
-			formControlName="inn"
-			maxHeight="320px"
-			optionId="inn"
-			optionLabel="shortName"
-			[minSearchLength]="5"
-			[delay]="500"
-			[maskSettings]="{ mask: '000000000000' }"
-			[description]="clientCompanyName"
-			[options]="clientsObj.clients ? clientsObj.clients : []"
-			(selectItem)="selectClient($event)"
-		>
-			<ng-template
-				psbTemplateType="heading"
-				*ngIf="clientsObj.clients?.length > 0"
-			>
-				<div class="counterparty-autocomplete__header">Найдено в ЕГРЮЛ</div>
-			</ng-template>
+  <ng-container *ngIf="{ clients: clients$ | async }; let clientsObj">
+    <psb-input-autocomplete
+      class="counterparty-autocomplete"
+      label="ИНН контрагента"
+      [formControlName]="CounterpartyFormField.Inn"
+      maxHeight="320px"
+      optionId="inn"
+      optionLabel="shortName"
+      [minSearchLength]="5"
+      [delay]="500"
+      [maskSettings]="{ mask: '000000000000' }"
+      [description]="clientCompanyName"
+      [options]="clientsObj.clients ? clientsObj.clients : []"
+      (selectItem)="selectClient($event)"
+    >
+      <ng-template
+        psbTemplateType="heading"
+        *ngIf="clientsObj.clients?.length > 0"
+      >
+        <div class="header">Найдено в ЕГРЮЛ</div>
+      </ng-template>
 
-			<ng-template
-				let-option="option"
-				psbTemplateType="option"
-			>
-				{{ option.shortName }}
-				<div class="counterparty-autocomplete__inn">
-					ИНН
-					<span class="counterparty-autocomplete__inn-info">{{
-						option.innFound
-					}}</span>
-					{{ option.innTail }} - КПП {{ option.kpp }}
-				</div>
-			</ng-template>
-		</psb-input-autocomplete>
-	</ng-container>
+      <ng-template
+        let-option="option"
+        psbTemplateType="option"
+      >
+        {{ option.shortName }}
+        <div class="inn">
+          ИНН
+          <span class="inn-info">{{ option.innFound }}</span>
+          {{ option.innTail }} - КПП {{ option.kpp }}
+        </div>
+      </ng-template>
+    </psb-input-autocomplete>
+  </ng-container>
 
   <div class="counterparty-bank-holder">
     <psb-text-input
-      class="counterparty-bank-holder__bik"
+      class="bik"
       label="БИК"
-      formControlName="bik"
+      [formControlName]="CounterpartyFormField.Bik"
       [maskSettings]="{ mask: '000000000' }"
       [description]="reciverBankName"
     ></psb-text-input>
 
     <psb-text-input
-      class="counterparty-bank-holder__acc"
+      class="acc"
       label="Расчётный счёт"
-      formControlName="account"
+      [formControlName]="CounterpartyFormField.Account"
       [maskSettings]="{ mask: '000 00 000 0 0000 0000000' }"
       description="Счёт юр.лица"
     ></psb-text-input>
   </div>
 
-  <p class="counterparty__info">
+  <p class="info">
     Свяжитесь с вашим контрагентом и согласуйте оплату
     <br>
     по аккредитиву. Договор изменять не обязательно.
   </p>
   <psb-button
-		class="counterparty__submit"
+    class="submit"
     [isSubmit]="true"
     [type]="ButtonType.Primary"
   >

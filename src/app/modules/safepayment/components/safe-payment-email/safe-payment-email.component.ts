@@ -1,6 +1,8 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, Output } from '@angular/core';
 import { FormControl } from '@angular/forms';
 
+import { SET_EMAIL_CONTROL_MESSAGE, SET_VALID_EMAIL_CONTROL_MESSAGE } from './constants';
+
 import { ButtonSize, ButtonType } from '@psb/fe-ui-kit/src/components/button';
 import { getRequiredFormControlValidator } from '@psb/validations/required';
 import { getEmailFormControlValidator } from '@psb/validations/email';
@@ -15,16 +17,16 @@ import { StoreService } from 'src/app/services/store.service';
 export class SafePaymentEmailComponent {
   @Output() takeValidEmail = new EventEmitter<string>();
 
-  public ButtonType = ButtonType;
-  public ButtonSize = ButtonSize;
-  public emailFormControl = new FormControl(this.store.clientEmail, [
-    getRequiredFormControlValidator('Вы забыли написать email.'),
-    getEmailFormControlValidator('Вы написали некорректный email.'),
+  ButtonType = ButtonType;
+  ButtonSize = ButtonSize;
+  emailFormControl = new FormControl(this.store.clientEmail, [
+    getRequiredFormControlValidator(SET_EMAIL_CONTROL_MESSAGE),
+    getEmailFormControlValidator(SET_VALID_EMAIL_CONTROL_MESSAGE),
   ]);
 
-  constructor(public store: StoreService) { }
+  constructor(private store: StoreService) { }
 
-  public takeEmail(): void {
+  takeEmail(): void {
     this.emailFormControl.markAllAsTouched();
 
     if (!this.emailFormControl.valid) {

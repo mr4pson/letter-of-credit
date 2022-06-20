@@ -1,6 +1,5 @@
 export enum SmbSelector {
-  MainNewPaymentButton = '.account-section-top-action-panel psb-button:nth-child(2) button',
-  PaymentFormCloseButton = '.smb-close[smb-auto-test="payments-form-close"]',
+  MainNewPaymentButton = 'smb-account-section-top-action-panel .-primary',
   DocumentsNewPaymentButton = '.col-new-payment button',
   ReceiverAutocomplete = 'smb-receiver-autocomplete',
   RublePaymentForm = 'smb-ruble-payment-form',

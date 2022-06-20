@@ -9,8 +9,8 @@ import { StepService } from '../../services/step.service';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class IssueStepsComponent implements OnInit {
-  public steps = this.stepService.steps;
-  public currentUrl$ = this.stepService.currentUrl$;
+  steps = this.stepService.steps;
+  currentUrl$ = this.stepService.currentUrl$;
 
   constructor(
     private stepService: StepService,
@@ -18,16 +18,16 @@ export class IssueStepsComponent implements OnInit {
 
   ngOnInit(): void {}
 
-  public isStepActive(step: Step, currentUrl: string): boolean {
+  isStepActive(step: Step, currentUrl: string): boolean {
     return step.url === currentUrl;
   }
 
-  public isStepDone(stepIndex: number, currentUrl: string): boolean {
+  isStepDone(stepIndex: number, currentUrl: string): boolean {
     const currentStepIndex = this.steps.findIndex(step => step.url === currentUrl);
     return stepIndex < currentStepIndex;
   }
 
-  public getCurrentStepNumber(currentUrl: string): number {
+  getCurrentStepNumber(currentUrl: string): number {
     return this.stepService.getCurrentStepNumber(currentUrl);
   }
 }

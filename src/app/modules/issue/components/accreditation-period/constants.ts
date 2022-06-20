@@ -1,0 +1,1 @@
+export const END_LOC_DATE_CONTROL_MESSAGE = 'Укажите дату окончания аккредитива';

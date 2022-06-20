@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
-import { FormControl, FormGroup } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import { OnDestroyMixin, untilComponentDestroyed } from '@w11k/ngx-componentdestroyed';
 import { catchError, filter, map, switchMap, tap } from 'rxjs/operators';
 import { EMPTY, forkJoin, merge, Observable, of } from 'rxjs';
@@ -11,6 +11,7 @@ import { Client } from '../../interfaces/client.interface';
 import { Partner } from '../../interfaces/partner.interface';
 import { Page, paths } from '../../constants/routes';
 import { StepService } from '../../services/step.service';
+import { CounterpartyFormField } from '../../enums/counterparty-form-field.enum';
 
 import { getRequiredFormControlValidator } from '@psb/validations/required';
 import { AccountService } from 'src/app/services/account.service';
@@ -19,6 +20,7 @@ import { ButtonType } from '@psb/fe-ui-kit';
 import { StoreService } from 'src/app/services/store.service';
 import { ErrorHandlerService } from 'src/app/services/error-handler.service';
 import { isFormValid } from 'src/app/utils';
+import { BANK_NOT_DEFINED_CONTROL_MESSAGE, GET_BANK_INFO_ERROR_MESSAGE, GET_CLIENT_LIST_ERROR_MESSAGE, GET_PARTER_LIST_ERROR_MESSAGE, INVALID_RECIVER_ACCOUNT_CONTROL_MESSAGE, SET_INN_CONTROL_MESSAGE, SET_INN_VALID_LENGTH_CONTROL_MESSAGE, SET_RECEIVER_ACCOUNT_CONTROL_MESSAGE, SET_RECEIVER_BIK_CONTROL_MESSAGE } from './constants';
 
 @Component({
   selector: 'counterparty',
@@ -27,59 +29,29 @@ import { isFormValid } from 'src/app/utils';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class СounterpartyComponent extends OnDestroyMixin implements OnInit {
-  public clientCompanyName = this.store.letterOfCredit.reciverName;
-  public reciverBankName = this.store.letterOfCredit.reciverBankName;
-  public ButtonType = ButtonType;
+  clientCompanyName = this.store.letterOfCredit.reciverName;
+  reciverBankName = this.store.letterOfCredit.reciverBankName;
+  ButtonType = ButtonType;
+  form: FormGroup;
+  CounterpartyFormField = CounterpartyFormField;
 
-  public form = new FormGroup({
-    inn: new FormControl('', [
-      getRequiredFormControlValidator('Укажите ИНН контрагента'),
-      getInnSizeValidator('Укажите ИНН 10 или 12 цифр'),
-    ]),
-    bik: new FormControl('', [
-      getRequiredFormControlValidator('Укажите БИК банка получателя'),
-    ]),
-    account: new FormControl('', [
-      getRequiredFormControlValidator('Укажите счет получателя'),
-      getAccountValidator('Некорректный счёт получателя'),
-    ]),
-  });
-
-  public clients$: Observable<Client[]> = this.innControl.valueChanges.pipe(
-    filter((inn: string) => inn?.length === 10 || inn?.length === 12),
-    switchMap((inn: string) => (
-      this.accountService.searchClientByInn(inn).pipe(
-        catchError(() => {
-          this.errorHandlerService.showErrorMessage('Невозможно получить список Клиентов');
-
-          return EMPTY;
-        }),
-      )
-    )),
-    map(clients => (
-      clients.map(client => ({
-        ...client,
-        innFound: client.inn.substring(0, this.innControl.value.length),
-        innTail: client.inn.substring(this.innControl.value.length),
-      }))
-    )),
-  );
+  clients$: Observable<Client[]>;
 
   private partners$: Observable<Partner[]> = this.partnersService.getPartners().pipe(
     catchError(() => {
-      this.errorHandlerService.showErrorMessage('Невозможно получить список партнеров');
+      this.errorHandlerService.showErrorMessage(GET_PARTER_LIST_ERROR_MESSAGE);
 
       return of<Partner[]>([]);
     }),
   );
 
-  get innControl() {
+  private get innControl() {
     return this.form.controls.inn;
   }
-  get bikControl() {
+  private get bikControl() {
     return this.form.controls.bik;
   }
-  get accountControl() {
+  private get accountControl() {
     return this.form.controls.account;
   }
 
@@ -90,8 +62,29 @@ export class СounterpartyComponent extends OnDestroyMixin implements OnInit {
     private errorHandlerService: ErrorHandlerService,
     private stepService: StepService,
     private router: Router,
+    private formBuilder: FormBuilder,
   ) {
     super();
+    this.createForm();
+    this.clients$ = this.innControl.valueChanges.pipe(
+      filter((inn: string) => inn?.length === 10 || inn?.length === 12),
+      switchMap((inn: string) => (
+        this.accountService.searchClientByInn(inn).pipe(
+          catchError(() => {
+            this.errorHandlerService.showErrorMessage(GET_CLIENT_LIST_ERROR_MESSAGE);
+  
+            return EMPTY;
+          }),
+        )
+      )),
+      map(clients => (
+        clients.map(client => ({
+          ...client,
+          innFound: client.inn.substring(0, this.innControl.value.length),
+          innTail: client.inn.substring(this.innControl.value.length),
+        }))
+      )),
+    );
   }
 
   ngOnInit() {
@@ -116,7 +109,7 @@ export class СounterpartyComponent extends OnDestroyMixin implements OnInit {
         }),
         tap((bank) => {
           if (!bank) {
-            this.bikControl.setErrors({ incorrect: 'Банк не определен. Проверьте БИК' });
+            this.bikControl.setErrors({ incorrect: BANK_NOT_DEFINED_CONTROL_MESSAGE });
             this.bikControl.markAsTouched();
             this.store.letterOfCredit.reciverBankName = '';
             this.reciverBankName = '';
@@ -129,7 +122,7 @@ export class СounterpartyComponent extends OnDestroyMixin implements OnInit {
           this.store.letterOfCredit.reciverBankBik = this.bikControl.value;
         }),
         catchError(() => {
-          this.errorHandlerService.showErrorMessage('Невозможно получить информацию о банке');
+          this.errorHandlerService.showErrorMessage(GET_BANK_INFO_ERROR_MESSAGE);
 
           return EMPTY;
         }),
@@ -145,7 +138,7 @@ export class СounterpartyComponent extends OnDestroyMixin implements OnInit {
     ).subscribe();
   }
 
-  public selectClient(client: Client) {
+  selectClient(client: Client)  {
     this.clientCompanyName = '';
 
     if (client) {
@@ -168,7 +161,7 @@ export class СounterpartyComponent extends OnDestroyMixin implements OnInit {
     }
   }
 
-  public handleSubmit(): void {
+  handleSubmit(): void {
     if (isFormValid(this.form)) {
       this.stepService.setStepDescription(
         paths[Page.COUNTERPARTY],
@@ -176,5 +169,24 @@ export class СounterpartyComponent extends OnDestroyMixin implements OnInit {
       );
       this.router.navigateByUrl(paths[Page.COUNTERPARTY_CONTRACT]);
     }
+  }
+
+  private createForm(): void {
+    this.form = this.formBuilder.group({
+      inn: ['', [
+          getRequiredFormControlValidator(SET_INN_CONTROL_MESSAGE),
+          getInnSizeValidator(SET_INN_VALID_LENGTH_CONTROL_MESSAGE),
+        ]
+      ],
+      bik: ['', [
+          getRequiredFormControlValidator(SET_RECEIVER_BIK_CONTROL_MESSAGE),
+        ]
+      ],
+      account: ['', [
+          getRequiredFormControlValidator(SET_RECEIVER_ACCOUNT_CONTROL_MESSAGE),
+          getAccountValidator(INVALID_RECIVER_ACCOUNT_CONTROL_MESSAGE),
+        ]
+      ],
+    });
   }
 }

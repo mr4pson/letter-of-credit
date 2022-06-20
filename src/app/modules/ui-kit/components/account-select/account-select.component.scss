@@ -15,11 +15,11 @@
   position: relative;
   border-bottom: 1px solid #e0e0e0;
 
-  &__dropdown-header {
+  .dropdown-header {
     cursor: pointer;
   }
 
-  &__chevron-icon {
+  .chevron-icon {
     display: flex;
     align-items: center;
     height: 100%;
@@ -51,19 +51,19 @@
   padding-top: 12px;
   min-height: 33px;
 
-  &__small-label {
+  .small-label {
     position: absolute;
     font-size: 12px;
     top: -10px;
     color: rgba(0,0,0,.54);
   }
 
-  &__content-row {
+  .content-row {
     align-items: center;
     display: flex;
   }
 
-  &__content-col {
+  .content-col {
     white-space: nowrap;
     flex-shrink: 1;
     padding-right: 21px;
@@ -88,19 +88,19 @@
   top: 46px;
   z-index: 100;
 
-  &__items-wrapper {
+  .items-wrapper {
     max-height: 320px !important;
     padding: 8px 0;
     letter-spacing: -0.5px;
   }
 
-  &__items {
+  .items {
     padding: 0;
     list-style: none;
     margin: 0;
   }
 
-  &__item {
+  .item {
     padding: 12px 24px;
     box-sizing: border-box;
     line-height: initial;
@@ -111,7 +111,7 @@
     }
   }
 
-  .dropdown-label__content-col {
+  .dropdown-label .content-col {
     &:last-child {
       padding-right: 0;
     }

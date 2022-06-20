@@ -1,6 +1,6 @@
 export interface ClosingDoc {
   additionalRequirements: string;
-  amount: number;
+  amount: string;
   document: string;
   onlyOriginalDocument: boolean;
 }

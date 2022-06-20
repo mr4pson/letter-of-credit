@@ -17,7 +17,7 @@ describe('StoreService', () => {
     service = TestBed.inject(StoreService);
   });
 
-  it('should restore default state', () => {
+  it('Восстанавливет дефолтный состояние стора', () => {
     service.clientEmail = 'test';
     service.reciverStatus = ReciverStatus.Reliable;
     service.letterOfCredit.allowUsePartOfLoc = false;

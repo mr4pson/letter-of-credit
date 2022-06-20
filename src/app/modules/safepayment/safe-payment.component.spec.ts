@@ -4,14 +4,13 @@ import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { MatDialogRef } from '@angular/material/dialog';
 import { RouterTestingModule } from '@angular/router/testing';
 import { ReactiveFormsModule } from '@angular/forms';
-import { By } from '@angular/platform-browser';
 import { Router } from '@angular/router';
 
 import { SafePaymentComponent } from './safe-payment.component';
 import { SafePaymentStateManagerService } from './services/safe-payment-state-manager.service';
 import { PsbModule } from '../psb/psb.module';
-import { SafePaymentAgendaComponent } from './safe-paymet-agenda/safe-payment-agenda.component';
-import { SafePaymentEmailComponent } from './safe-payment-email/safe-payment-email.component';
+import { SafePaymentAgendaComponent } from './components/safe-paymet-agenda/safe-payment-agenda.component';
+import { SafePaymentEmailComponent } from './components/safe-payment-email/safe-payment-email.component';
 import { SafePayStates } from './enums/safe-payment.enum';
 import { Page, paths } from '../issue/constants/routes';
 import { ReliableSign } from './enums/reliable-sign.enum';
@@ -19,6 +18,7 @@ import { ReliableSign } from './enums/reliable-sign.enum';
 import { StoreService } from 'src/app/services';
 import { SafePaymentButton } from 'src/app/enums/safe-payment-button.enum';
 import { ReciverStatus } from 'src/app/enums/reciver-status.enum';
+import { clickEmailLink, clickNthPaymentBtn, setPartlyReliableReciverStatus, setReliableReciverStatus, setUnreliableReciverStatus } from './testing';
 
 describe('SafePaymentComponent', () => {
   let component: SafePaymentComponent;
@@ -66,11 +66,7 @@ describe('SafePaymentComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create', () => {
-    expect(component).toBeTruthy();
-  });
-
-  it('should set email in store and change state to ShowAgenda on takeEmail call', () => {
+  it('При вызове takeEmail задает email в store и меняет статус на ShowAgenda', () => {
     const email = 'test@gmail.com';
     component.takeEmail(email);
 
@@ -78,76 +74,68 @@ describe('SafePaymentComponent', () => {
     expect(safePaymentStateManager.state).toEqual(SafePayStates.ShowAgenda);
   });
 
-  it('should call showEmail on showEmail button click', () => {
+  it('При клике на кнопку "Показать email" вызывает showEmail', () => {
     spyOn(component, 'showEmail');
-    const emailLink = fixture.debugElement.query(By.css('.email-link'));
-    emailLink.nativeElement.click();
-    fixture.detectChanges();
+    clickEmailLink(fixture);
 
     expect(component.showEmail).toHaveBeenCalled();
   });
 
-  it('should call dialogRef close on do safe payment button click and navigate to accredit amount', () => {
+  it('Закрывает диалоговое окно при клике на кнопку "Совершить безопасный платёж" c параметром DoPay и редиректит к accredit amount', () => {
     spyOn(dialogRef, 'close');
     spyOn(router, 'navigateByUrl');
-    const paymentBtn = fixture.debugElement.query(By.css('.actions__payment-btn:nth-child(1)'));
-    paymentBtn.nativeElement.click();
-    fixture.detectChanges();
+    clickNthPaymentBtn(fixture, 1);
 
     expect(dialogRef.close).toHaveBeenCalledWith(SafePaymentButton.DoPay);
     expect(router.navigateByUrl).toHaveBeenCalledWith(paths[Page.ACCREDITATION_AMOUNT]);
   });
 
-  it('should call dialogRef close with RefusePay on refuse payment button click', () => {
+  it('Закрывает диалоговое окно при клике на кнопку "Отказаться от платежа" c параметром RefusePay', () => {
     spyOn(dialogRef, 'close');
-    const paymentBtn = fixture.debugElement.query(By.css('.actions__payment-btn:nth-child(2)'));
-    paymentBtn.nativeElement.click();
-    fixture.detectChanges();
+    clickNthPaymentBtn(fixture, 2);
 
     expect(dialogRef.close).toHaveBeenCalledWith(SafePaymentButton.RefusePay);
   });
 
-  it('should call dialogRef close with OrdinalPay on ordinal payment button click', () => {
+  it('Закрывает диалоговое окно при клике на кнопку "Отправить обычный платёж" c параметром OrdinalPay', () => {
     spyOn(dialogRef, 'close');
-    const paymentBtn = fixture.debugElement.query(By.css('.actions__payment-btn:nth-child(3)'));
-    paymentBtn.nativeElement.click();
-    fixture.detectChanges();
+    clickNthPaymentBtn(fixture, 3);
 
     expect(dialogRef.close).toHaveBeenCalledWith(SafePaymentButton.OrdinalPay);
   });
 
-  it('should return reliableRedText on unreliable reciver status', () => {
-    store.reciverStatus = ReciverStatus.Unreliable;
+  it('Возвращает reliableRedText при unreliable статусе отправителя', () => {
+    setUnreliableReciverStatus(store);
 
     expect(component.getReliableText()).toEqual(ReliableSign.reliableRedText);
   });
 
-  it('should return reliableYellowText on PartlyReliable reciver status', () => {
-    store.reciverStatus = ReciverStatus.PartlyReliable;
+  it('Возвращает reliableYellowText при PartlyReliable статусе отправителя', () => {
+    setPartlyReliableReciverStatus(store);
 
     expect(component.getReliableText()).toEqual(ReliableSign.reliableYellowText);
   });
 
-  it('should return reliableGrayText on Reliable reciver status', () => {
-    store.reciverStatus = ReciverStatus.Reliable;
+  it('Возвращает reliableGrayText при Reliable статусе отправителя', () => {
+    setReliableReciverStatus(store);
 
     expect(component.getReliableText()).toEqual(ReliableSign.reliableGrayText);
   });
 
-  it('should return reliableRed color on unreliable reciver status', () => {
-    store.reciverStatus = ReciverStatus.Unreliable;
+  it('Возвращает reliableRed color при unreliable статусе отправителя', () => {
+    setUnreliableReciverStatus(store);
 
     expect(component.getReliableColor()).toEqual(ReliableSign.reliableRed);
   });
 
-  it('should return reliableYellow color on PartlyReliable reciver status', () => {
-    store.reciverStatus = ReciverStatus.PartlyReliable;
+  it('Возвращает reliableYellow color при PartlyReliable статусе отправителя', () => {
+    setPartlyReliableReciverStatus(store);
 
     expect(component.getReliableColor()).toEqual(ReliableSign.reliableYellow);
   });
 
-  it('should return reliableGray color on Reliable reciver status', () => {
-    store.reciverStatus = ReciverStatus.Reliable;
+  it('Возвращает reliableGray color при Reliable статусе отправителя', () => {
+    setReliableReciverStatus(store);
 
     expect(component.getReliableColor()).toEqual(ReliableSign.reliableGray);
   });

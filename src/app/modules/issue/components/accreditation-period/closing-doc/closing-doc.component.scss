@@ -4,7 +4,7 @@
 	margin-bottom: 24px;
   position: relative;
 
-  &__remove-btn {
+  .remove-btn {
     position: absolute;
     top: 10px;
     right: 10px;
@@ -19,7 +19,7 @@
     }
   }
 
-	&__additional-field {
+	.additional-field {
 		display: block;
 		margin-bottom: 24px;
 	}
@@ -29,7 +29,7 @@
   display: inline-block;
   margin-top: -10px;
 
-  &__tooltip {
+  .tooltip {
     display: inline-block;
     margin-left: 10px;
     vertical-align: middle;
@@ -39,12 +39,12 @@
 .fields {
   display: flex;
 
-  &__doc-field {
+  .doc-field {
     width: 300px;
     display: inline-block;
   }
 
-  &__count-field {
+  .count-field {
     width: 216px;
     display: inline-block;
     margin-left: 20px;

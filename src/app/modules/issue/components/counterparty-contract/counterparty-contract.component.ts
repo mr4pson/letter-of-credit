@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
-import { FormControl, FormGroup } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import { tap } from 'rxjs/operators';
 import { merge } from 'rxjs';
 import { OnDestroyMixin, untilComponentDestroyed } from '@w11k/ngx-componentdestroyed';
@@ -11,6 +11,8 @@ import { FileUploadService } from '../../services/file-upload.service';
 import { FileUploaded } from '../../interfaces/file-uploaded.interface';
 import { Page, paths } from '../../constants/routes';
 import { StepService } from '../../services/step.service';
+import { CounterpartyContractFormField } from '../../enums/counterparty-contract-form-field.enum';
+import { SET_AGREEMENT_NUMBER_CONTROL_MESSAGE, SET_AGREEMEN_SUBJECT_CONTROL_MESSAGE, SET_DATE_CONTROL_MESSAGE } from './constants';
 
 import { ButtonType } from '@psb/fe-ui-kit/src/components/button';
 import { SelectedItem } from '@psb/fe-ui-kit/src/components/input-select';
@@ -26,38 +28,28 @@ import { isFormValid } from 'src/app/utils';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CounterpartyContractComponent extends OnDestroyMixin implements OnInit {
-  public files$ = this.fileUploadService.files$;
-  public errorMessage$ = this.fileUploadService.errorMessage$;
-  public form = new FormGroup({
-    contractDate: new FormControl('', [
-      getRequiredFormControlValidator('Укажите дату заключения договора'),
-    ]),
-    selectedNds: new FormControl(NDS_LIST[2].label),
-    contract: new FormControl('', [
-      getRequiredFormControlValidator('Укажите название и номер договора'),
-    ]),
-    contractInfo: new FormControl('', [
-      getRequiredFormControlValidator('Укажите предмет договора'),
-    ]),
-  });
-  public ndsList = NDS_LIST;
-  public ButtonType = ButtonType;
-  public maxContractDate = new Date();
-  public selectedNds = 20;
+  files$ = this.fileUploadService.files$;
+  errorMessage$ = this.fileUploadService.errorMessage$;
+  form: FormGroup;
+  ndsList = NDS_LIST;
+  ButtonType = ButtonType;
+  maxContractDate = new Date();
+  selectedNds = 20;
+  CounterpartyContractFormField = CounterpartyContractFormField;
 
-  get contractDateControl() {
+  private get contractDateControl() {
     return this.form.controls.contractDate;
   }
 
-  get selectedNdsControl() {
+  private get selectedNdsControl() {
     return this.form.controls.selectedNds;
   }
 
-  get contractControl() {
+  private get contractControl() {
     return this.form.controls.contract;
   }
 
-  get contractInfoControl() {
+  private get contractInfoControl() {
     return this.form.controls.contractInfo;
   }
 
@@ -66,8 +58,10 @@ export class CounterpartyContractComponent extends OnDestroyMixin implements OnI
     private fileUploadService: FileUploadService,
     private router: Router,
     private stepService: StepService,
+    private formBuilder: FormBuilder,
   ) {
     super();
+    this.createForm();
   }
 
   ngOnInit(): void {
@@ -108,7 +102,7 @@ export class CounterpartyContractComponent extends OnDestroyMixin implements OnI
     ).subscribe();
   }
 
-  public setVat(): void {
+  setVat(): void {
     if (this.selectedNds === 0) {
       this.selectedNdsControl.setValue(
         this.ndsList[this.ndsList.length - 1].label,
@@ -116,7 +110,7 @@ export class CounterpartyContractComponent extends OnDestroyMixin implements OnI
     }
   }
 
-  public unsetVat(): void {
+  unsetVat(): void {
     if (this.selectedNds > 0) {
       this.selectedNdsControl.setValue(
         this.ndsList[0].label,
@@ -124,20 +118,20 @@ export class CounterpartyContractComponent extends OnDestroyMixin implements OnI
     }
   }
 
-  public wheelScroll(event: any, el: SimplebarAngularComponent): void {
+  wheelScroll(event: any, el: SimplebarAngularComponent): void {
     event.preventDefault();
     el.SimpleBar.getScrollElement().scrollLeft += event.deltaY;
   }
 
-  public handleSelectFiles(event: NgxDropzoneChangeEvent): void {
+  handleSelectFiles(event: NgxDropzoneChangeEvent): void {
     this.fileUploadService.selectFiles(event);
   }
 
-  public handleRemoveFile(file: FileUploaded): void {
+  handleRemoveFile(file: FileUploaded): void {
     this.fileUploadService.removeFile(file);
   }
 
-  public handleSubmit(): void {
+  handleSubmit(): void {
     if (isFormValid(this.form)) {
       const stepDescription = this.contractDateControl.value.toLocaleDateString(
         'ru-RU',
@@ -150,5 +144,23 @@ export class CounterpartyContractComponent extends OnDestroyMixin implements OnI
       );
       this.router.navigateByUrl(paths[Page.ACCREDITATION_PERIOD]);
     }
+  }
+    
+  private createForm(): void {
+    this.form = this.formBuilder.group({
+      contractDate: ['', [
+          getRequiredFormControlValidator(SET_DATE_CONTROL_MESSAGE),
+        ]
+      ],
+      selectedNds: [NDS_LIST[2].label],
+      contract: ['', [
+          getRequiredFormControlValidator(SET_AGREEMENT_NUMBER_CONTROL_MESSAGE),
+        ]
+      ],
+      contractInfo: ['', [
+          getRequiredFormControlValidator(SET_AGREEMEN_SUBJECT_CONTROL_MESSAGE),
+        ]
+      ],
+    });
   }
 }

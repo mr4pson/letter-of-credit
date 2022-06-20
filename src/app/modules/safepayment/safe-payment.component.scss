@@ -5,18 +5,18 @@
 	height: 24px;
 	padding-bottom: 28px;
 
-	&__title {
+	.title {
 		display: inline-block;
 		margin: 0 10px;
 		max-width: 670px;
 	}
 
-	&__info-icon {
+	.info-icon {
 		float: right;
 		padding-top: 4px;
 	}
 
-	&__raiting-icon {
+	.raiting-icon {
 		float: left;
 		margin-top: -2px;
 		margin-left: -4px;
@@ -28,7 +28,7 @@
 	justify-content: space-between;
 	margin: 40px 0 30px 0;
 
-	&__payment-btn {
+	.payment-btn {
 		padding: 16px 20px !important;
 	}
 }

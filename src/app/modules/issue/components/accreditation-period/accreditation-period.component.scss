@@ -4,7 +4,7 @@
 	padding-bottom: 24px;
 	padding-right: 15px;
 
-	&__closing-doc-checkbox {
+	.closing-doc-checkbox {
 		display: flex;
 		align-items: center;
 		padding-top: 40px;
@@ -15,7 +15,7 @@
 		}
 	}
 
-	&__allow-doc-checkbox {
+	.allow-doc-checkbox {
 		display: flex;
 		align-items: center;
 		padding-top: 20px;
@@ -26,14 +26,15 @@
 		}
 	}
 
-	&__submit {
+	.submit {
 		margin-top: 20px;
 	}
 }
 
 .accreditation-dates {
 	display: flex;
-	&__expiration-date {
+
+	.expiration-date {
 		display: flex;
 		width: 100%;
 
@@ -42,7 +43,7 @@
 		}
 	}
 
-	&__validity {
+	.validity {
 		margin-left: 48px;
 		width: 100%;
 		display: flex;
@@ -59,7 +60,7 @@
   border: none;
 	cursor: pointer;
 
-	&__icon {
+	.icon {
 		float: left;
 		margin-top: -3px;
     margin-bottom: -3px;
@@ -67,7 +68,7 @@
 		color: #383AD1;
 	}
 
-	&__label {
+	.label {
 		font-weight: bold;
 		font-size: 16px;
 		line-height: 24px;

@@ -12,10 +12,10 @@ export class SafePaymentStateManagerService {
       nextState: SafePayStates.ShowEmail,
     },
   ];
-  public get state() {
+  get state() {
     return this.currentState;
   }
-  public set state(state: SafePayStates) {
+  set state(state: SafePayStates) {
     const transition = this.routes.filter(t => t.state === this.currentState && t.nextState === state);
     if (!transition || transition.length === 0) {
       return;

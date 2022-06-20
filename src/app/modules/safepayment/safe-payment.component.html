@@ -1,7 +1,7 @@
-<div [formGroup]="sPayGroup">
+<form [formGroup]="form">
   <div class="company-info">
     <svg
-      class="company-info__raiting-icon"
+      class="raiting-icon"
       width="24"
       height="24"
       viewBox="0 0 24 24"
@@ -26,11 +26,11 @@
       ></path>
     </svg>
 
-    <span class="company-info__title">
+    <span class="title">
       {{ letterOfCredit.reciverName }} имеет {{ getReliableText() }} рейтинг
     </span>
 
-    <div class="company-info__info-icon">
+    <div class="info-icon">
       <psb-tooltip
         class="svg-holder"
         tooltipType="white"
@@ -43,7 +43,7 @@
     Для снижения риска сделки используйте инструмент «Покрытый аккредитив». Деньги надёжно хранятся в банке до момента поставки или оказания услуг и будут перечислены поставщику после выполнения условий аккредитива.
   </p>
 
-  <ng-container *ngIf="isShowAgenda">
+  <ng-container *ngIf="this.stateManager.state === SafePayStates.ShowAgenda">
     <safe-payment-agenda></safe-payment-agenda>
 
     <p>
@@ -65,7 +65,7 @@
     </p>
   </ng-container>
 
-  <ng-container *ngIf="isShowEmail">
+  <ng-container *ngIf="this.stateManager.state === SafePayStates.ShowEmail">
     <safe-payment-email
       #safePaymentEmail
       (takeValidEmail)="takeEmail($event)"
@@ -78,7 +78,7 @@
 
   <div class="actions">
     <psb-button
-			class="actions__payment-btn"
+			class="payment-btn"
       [type]="ButtonType.Primary"
       [size]="ButtonSize.Medium"
       (click)="doSafePay()"
@@ -86,7 +86,7 @@
       Совершить безопасный платёж
     </psb-button>
     <psb-button
-			class="actions__payment-btn"
+			class="payment-btn"
       [type]="ButtonType.Text"
       [size]="ButtonSize.Medium"
       (click)="closeDialog(SafePaymentButton.RefusePay)"
@@ -94,7 +94,7 @@
       Отказаться от платежа
     </psb-button>
     <psb-button
-			class="actions__payment-btn"
+			class="payment-btn"
       [type]="ButtonType.Text"
       [size]="ButtonSize.Medium"
       (click)="closeDialog(SafePaymentButton.OrdinalPay)"
@@ -106,8 +106,8 @@
   <div>
     <psb-checkbox
       label="Больше не предлагать безопасный платёж с этим контрагентом"
-      formControlName="dontWantSafePayment"
+      [formControlName]="SafePaymentFormField.DontWantSafePayment"
       name="dont-want-safe-payment"
     ></psb-checkbox>
   </div>
-</div>
+</form>

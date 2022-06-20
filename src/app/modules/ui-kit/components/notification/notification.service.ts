@@ -10,7 +10,7 @@ import { NotificationType } from '@psb/fe-ui-kit';
 @Injectable()
 export class NotificationService {
   private notifications$$ = new BehaviorSubject<Notification[]>([]);
-  public notifications$ = this.notifications$$.asObservable().pipe(
+  notifications$ = this.notifications$$.asObservable().pipe(
     tap((notifications) => {
       if (notifications.length > 0) {
         setTimeout(this.removeNotification.bind(this), 3000);
@@ -26,7 +26,7 @@ export class NotificationService {
 
   private lastNotificationId = 0;
 
-  public addError(config: { info: string }): void {
+  addError(config: { info: string }): void {
     const notification: Notification = {
       message: config.info,
       id: this.lastNotificationId,

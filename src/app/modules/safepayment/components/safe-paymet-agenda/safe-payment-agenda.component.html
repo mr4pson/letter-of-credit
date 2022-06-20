@@ -1,0 +1,15 @@
+<div class="agenda">
+  <div
+    *ngFor="let agendaItem of agendaItems; let i = index;"
+    class="agenda-item"
+  >
+    <div class="header">
+      <div class="number">{{ getAgendaItemNumber(i) }}</div>
+      <div
+        *ngIf="checkItemHasDelimiter(i)"
+        class="delimiter"
+      ></div>
+    </div>
+    <div class="text">{{ agendaItem.title }}</div>
+  </div>
+</div>

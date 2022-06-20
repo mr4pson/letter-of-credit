@@ -1,5 +1,5 @@
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
-import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { RouterTestingModule } from '@angular/router/testing';
 import { Component } from '@angular/core';
 import { By } from '@angular/platform-browser';
@@ -9,12 +9,17 @@ import { AccountSelectComponent } from './account-select.component';
 import { PsbModule } from 'src/app/modules/psb/psb.module';
 import { ClientAccount } from 'src/app/modules/issue/interfaces/client-account.interface';
 import { ClickOutsideModule } from '@psb/angular-tools';
+import { clickHeader, clickOutside, getItemsWrapper } from './testing';
+
+enum AccountSelectFormField {
+  Account = "account"
+}
 
 @Component({
   template: `
     <form [formGroup]="formGroup">
       <loc-account-select
-        formControlName="account"
+        [formControlName]="AccountSelectFormField.Account"
         [accounts]="accounts"
       ></loc-account-select>
     </form>
@@ -23,9 +28,20 @@ import { ClickOutsideModule } from '@psb/angular-tools';
 })
 class WrapperComponent {
   accounts: ClientAccount[];
-  formGroup = new FormGroup({
-    account: new FormControl(),
-  });
+  AccountSelectFormField = AccountSelectFormField;
+  formGroup: FormGroup;
+  
+  constructor(
+    private formBuilder: FormBuilder,
+  ) {
+    this.createForm();
+  }
+
+  createForm(): void {
+    this.formGroup = this.formBuilder.group({
+      account: [],
+    });
+  }
 }
 
 describe('AccountSelectComponent', () => {
@@ -63,26 +79,20 @@ describe('AccountSelectComponent', () => {
     wrapperFixture.detectChanges();
   });
 
-  it('should create', () => {
-    expect(component).toBeTruthy();
-  });
-
-  it('should set accounts from wrapper component', () => {
+  it('При инициализации аккаунтов в родительском компоненте также задает их в элементе формы', () => {
     wrapperComponent.accounts = accounts;
     wrapperFixture.detectChanges();
 
     expect(component.accounts.length).toEqual(accounts.length);
   });
 
-  it('should render same accounts number as in data provided after accountSelect click', () => {
+  it('Отображает то же число аккаунтов при клике на заголовок компонента, что и в предоставленных данных', () => {
     wrapperComponent.accounts = accounts;
     wrapperFixture.detectChanges();
 
-    const header = wrapperFixture.debugElement.query(By.css('.account-select__dropdown-header'));
-    header.nativeElement.click();
-    wrapperFixture.detectChanges();
+    clickHeader(wrapperFixture);
 
-    const itemsWrapper = wrapperFixture.debugElement.query(By.css('.dropdown-panel__items'));
+    const itemsWrapper = getItemsWrapper(wrapperFixture);
 
     expect(itemsWrapper).toBeTruthy();
 
@@ -90,41 +100,34 @@ describe('AccountSelectComponent', () => {
   });
 
 
-  it('should remove dropdown panel after click outside', () => {
-    const header = wrapperFixture.debugElement.query(By.css('.account-select__dropdown-header'));
-    header.nativeElement.click();
-    wrapperFixture.detectChanges();
+  it('Убирает выпадающую панель при клике вне компонента', () => {
+    clickHeader(wrapperFixture);
 
-    const outside = wrapperFixture.debugElement.query(By.css('#outside'));
+    clickOutside(wrapperFixture);
 
-    outside.nativeElement.click();
-    wrapperFixture.detectChanges();
-
-    const itemsWrapper = wrapperFixture.debugElement.query(By.css('.dropdown-panel__items'));
+    const itemsWrapper = getItemsWrapper(wrapperFixture);
 
     expect(itemsWrapper).toBeFalsy();
   });
 
-  it('should select first account and close dropdown panel on first option click', () => {
+  it('Выбирает первый аккауунт и закрывает выпадающую панель при клике на первый option', () => {
     wrapperComponent.accounts = accounts;
     wrapperFixture.detectChanges();
 
-    const header = wrapperFixture.debugElement.query(By.css('.account-select__dropdown-header'));
-    header.nativeElement.click();
-    wrapperFixture.detectChanges();
+    clickHeader(wrapperFixture);
 
-    let itemsWrapper = wrapperFixture.debugElement.query(By.css('.dropdown-panel__items'));
+    let itemsWrapper = getItemsWrapper(wrapperFixture);
     itemsWrapper.children[0].nativeElement.click();
     wrapperFixture.detectChanges();
 
     expect(wrapperComponent.formGroup.value.account).toEqual(wrapperComponent.accounts[0]);
 
-    itemsWrapper = wrapperFixture.debugElement.query(By.css('.dropdown-panel__items'));
+    itemsWrapper = getItemsWrapper(wrapperFixture);
 
     expect(itemsWrapper).toBeFalsy();
   });
 
-  it('should set form value', () => {
+  it('Во инициализации свойства аккаунтов задает значение форме компонента', () => {
     wrapperComponent.accounts = accounts;
     wrapperFixture.detectChanges();
 

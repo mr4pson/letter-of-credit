@@ -16,9 +16,9 @@ import { StoreService } from 'src/app/services/store.service';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class IssueComponent extends OnDestroyMixin implements OnInit {
-  public ButtonType = ButtonType;
-  public steps = this.stepService.steps;
-  public currentUrl: string;
+  ButtonType = ButtonType;
+  steps = this.stepService.steps;
+  currentUrl: string;
 
   constructor(
     private router: Router,
@@ -38,7 +38,7 @@ export class IssueComponent extends OnDestroyMixin implements OnInit {
     ).subscribe();
   }
 
-  public navigateBack(): void {
+  navigateBack(): void {
     if (this.currentUrl === this.steps[0].url) {
       this.store.isIssueVissible = false;
       this.ngService.showSmbDocuments();

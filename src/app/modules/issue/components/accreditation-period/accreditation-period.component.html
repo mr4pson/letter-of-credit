@@ -1,13 +1,14 @@
 <form
+  *ngIf="form"
   class="accreditation-period"
   [formGroup]="form"
   (submit)="handleSubmit()"
 >
   <div class="accreditation-dates">
-    <div class="accreditation-dates__expiration-date">
+    <div class="expiration-date">
       <psb-datepicker
         label="Дата окончания аккредитива"
-        formControlName="endLocDate"
+        [formControlName]="AccreditationPeriodFormField.EndLocDate"
         [minValidDate]="minEndLocDate"
       ></psb-datepicker>
 
@@ -18,10 +19,10 @@
       ></psb-tooltip>
     </div>
 
-    <div class="accreditation-dates__validity">
+    <div class="validity">
       <psb-text-input
         label="Срок действия аккредитива в днях"
-        formControlName="locDaysNumber"
+        [formControlName]="AccreditationPeriodFormField.LocDaysNumber"
         [maskSettings]="{ mask: '000' }"
         description="Необязательно"
       ></psb-text-input>
@@ -37,7 +38,7 @@
     ></psb-tooltip>
   </h2>
 
-  <div class="closing-docs" formArrayName="closingDocs">
+  <div class="closing-docs" [formArrayName]="AccreditationPeriodFormField.ClosingDocs">
     <closing-doc
       *ngFor="let docForm of closingDocsControl.controls; let i = index"
       [formGroupControl]="docForm"
@@ -52,17 +53,17 @@
   >
     <div>
       <psb-icon
-        class="add-doc-btn__icon"
+        class="icon"
         [path]="'TabbarAdd_24.svg'"
       ></psb-icon>
-      <span class="add-doc-btn__label">Добавить закрывающий документ</span>
+      <span class="label">Добавить закрывающий документ</span>
     </div>
   </button>
 
-  <div class="accreditation-period__closing-doc-checkbox">
+  <div class="closing-doc-checkbox">
     <psb-checkbox
       label="Возможно предоставление закрывающих документов в электронном виде"
-      formControlName="isDocumentDigital"
+      [formControlName]="AccreditationPeriodFormField.IsDocumentDigital"
       name="only-orig-doc"
     >
       <psb-tooltip
@@ -73,10 +74,10 @@
     </psb-checkbox>
   </div>
 
-  <div class="accreditation-period__allow-doc-checkbox">
+  <div class="allow-doc-checkbox">
     <psb-checkbox
       label="Разрешить контрагенту частичное использование аккредитива"
-      formControlName="allowUsePartOfLoc"
+      [formControlName]="AccreditationPeriodFormField.AllowUsePartOfLoc"
       name="only-orig-doc"
     >
       <psb-tooltip
@@ -87,7 +88,7 @@
     </psb-checkbox>
   </div>
   <psb-button
-    class="accreditation-period__submit"
+    class="submit"
     [isSubmit]="true"
     [type]="ButtonType.Primary"
   >

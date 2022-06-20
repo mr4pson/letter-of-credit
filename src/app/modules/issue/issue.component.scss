@@ -10,7 +10,7 @@
 	position: absolute;
 	top: 110px;
 
-	&__content {
+	.content {
 		width: 100%;
 		display: flex;
 		flex-direction: row;
@@ -18,28 +18,29 @@
 		padding-bottom: 30px;
 	}
 
-	&__left-col {
+	.left-col {
 		padding-right: 50px;
 		width: 73%;
 	}
 
-	&__right-col {
+	.right-col {
 		width: 27%;
 		display: flex;
 
-		.vertical-dots {
-			width: 47px;
+	}
 
-			.dots-holder {
-				border-left: dotted 1px #ccc;
-				width: 1px;
-				height: 100%;
-				margin-left: 6px;
-			}
+	.vertical-dots {
+		width: 47px;
+
+		.dots-holder {
+			border-left: dotted 1px #ccc;
+			width: 1px;
+			height: 100%;
+			margin-left: 6px;
 		}
 	}
 
-	&__footer {
+	.footer {
 		padding-bottom: 12px;
 	}
 }
@@ -55,12 +56,12 @@
 	cursor: pointer;
 	padding: 0;
 
-	&__arrow {
+	.arrow {
 		width: 24px;
 	}
 
-	&__arrow,
-	&__label {
+	.arrow,
+	.label {
 		color: #0009;
 		cursor: pointer;
 		font-size: 14px;
@@ -72,7 +73,7 @@
 	display: flex;
 	align-items: center;
 
-	&__title {
+	.title {
 		font-size: 20px;
 		line-height: 24px;
 		color: #000000de;
@@ -81,7 +82,7 @@
 		margin: 0;
 	}
 
-	&__tooltip {
+	.tooltip {
 		margin-left: 10px;
 	}
 }

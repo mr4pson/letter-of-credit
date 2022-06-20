@@ -5,6 +5,13 @@ import { OnDestroyMixin, untilComponentDestroyed } from '@w11k/ngx-componentdest
 import { EMPTY, forkJoin, from, fromEvent, merge, Observable, of } from 'rxjs';
 import { catchError, debounceTime, delay, filter, map, pairwise, switchMap, takeUntil, tap } from 'rxjs/operators';
 
+import {
+  GET_ACCREDITIVE_INFO_ERROR_MESSAGE,
+  GET_COUNTERPARTY_INFO_ERROR_MESSAGE,
+  NEW_LOC_BUTTON_CLASS_LIST,
+  NEW_LOC_BUTTON_STYLES,
+  NEW_LOC_BUTTON_TEXT,
+} from './constants';
 import { SafePaymentButton } from './enums/safe-payment-button.enum';
 import { SmbPage } from './enums/smb-page.enum';
 import { smbPaths } from './constants/smp-paths.constant';
@@ -22,7 +29,7 @@ import { BaseModalComponent } from '@psb/fe-ui-kit';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AppComponent extends OnDestroyMixin {
-  public isIssueVissible$ = this.store.isIssueVissible$;
+  isIssueVissible$ = this.store.isIssueVissible$;
 
   constructor(
     private store: StoreService,
@@ -37,6 +44,16 @@ export class AppComponent extends OnDestroyMixin {
 
     this.ngService.setRenderer(this.renderer);
     this.initSmbApp();
+  }
+
+  handleOpenIssue(): void {
+    if (!this.store.payment) {
+      this.store.restoreDefaultState();
+    }
+
+    this.ngService.hideSmbDocuments();
+    this.store.isIssueVissible = true;
+    this.router.navigateByUrl(paths[Page.ACCREDITATION_AMOUNT]);
   }
 
   private initSmbApp(): void {
@@ -98,11 +115,9 @@ export class AppComponent extends OnDestroyMixin {
     this.store.isIssueVissible = false;
     this.store.isOrdinalPayment = false;
     if (event.url?.includes(smbPaths[SmbPage.MAIN])) {
-      console.log('MAIN PAGE');
-
       const smbAccountSeciton = this.ngService.getSmbAccountSectionComponent();
 
-      return smbAccountSeciton.accountAuxService.accountStoreService.observable.pipe(
+      return smbAccountSeciton.accountAuxService.accountStoreService.accountApiService.getCorpAccounts().pipe(
         delay(100),
         filter(accounts => accounts),
         switchMap(() => {
@@ -115,8 +130,6 @@ export class AppComponent extends OnDestroyMixin {
     }
 
     if (event.url?.includes(smbPaths[SmbPage.DOCUMENTS])) {
-      console.log('DOC PAGE');
-
       const documents = this.ngService.getSmbDocumentsComponent();
       const clientId = documents.clientInfoService.getDefaultClientId();
       const branchId = documents.clientInfoService.getDefaultBranchId();
@@ -163,14 +176,14 @@ export class AppComponent extends OnDestroyMixin {
       switchMap(() => forkJoin([
         this.accountService.getAllowLoC(receiverAutocomplete.receiverFormGroup.value.inn).pipe(
           catchError(() => {
-            this.errorHandler.showErrorMessage('Не удалось получить информацию о возможности запроса аккредитива.');
+            this.errorHandler.showErrorMessage(GET_ACCREDITIVE_INFO_ERROR_MESSAGE);
 
             return of(false);
           }),
         ),
         this.accountService.getIsBadReliability(receiverAutocomplete.receiverFormGroup.value.inn).pipe(
           catchError(() => {
-            this.errorHandler.showErrorMessage('Не удалось получить информацию о рейтинге контрагента.');
+            this.errorHandler.showErrorMessage(GET_COUNTERPARTY_INFO_ERROR_MESSAGE);
 
             return of(false);
           }),
@@ -232,25 +245,13 @@ export class AppComponent extends OnDestroyMixin {
   private createNewLocButton(newPaymentButton: Element): void {
     const newLocbtn = this.renderer.createElement('button');
 
-    newLocbtn.classList.add('btn', 'btn-default', 'btn-default-left', 'waves-effect', 'new-payment');
-    newLocbtn.innerText = 'Новый покрытый аккредитив';
-    newLocbtn.style.cssText = 'position: absolute; top: 51px; right: 0;';
+    newLocbtn.classList.add(...NEW_LOC_BUTTON_CLASS_LIST);
+    newLocbtn.innerText = NEW_LOC_BUTTON_TEXT;
+    newLocbtn.style.cssText = NEW_LOC_BUTTON_STYLES;
 
     this.renderer.listen(newLocbtn, 'click', () => {
       this.handleOpenIssue();
     });
     this.renderer.appendChild(newPaymentButton.parentNode, newLocbtn);
-  }
-
-  public handleOpenIssue(): void {
-    if (this.store.payment) {
-      // this.store.letterOfCredit = this.store.payment
-    } else {
-      this.store.restoreDefaultState();
-    }
-
-    this.ngService.hideSmbDocuments();
-    this.store.isIssueVissible = true;
-    this.router.navigateByUrl(paths[Page.ACCREDITATION_AMOUNT]);
   }
 }

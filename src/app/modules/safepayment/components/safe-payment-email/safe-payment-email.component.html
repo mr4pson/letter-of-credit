@@ -2,17 +2,17 @@
   <psb-text-input
     label="Email"
     [formControl]="emailFormControl"
-    class="email-form__field"
+    class="field"
   ></psb-text-input>
 
   <psb-icon
     *ngIf="emailFormControl.valid"
-    class="email-form__green-check"
+    class="green-check"
     [path]="'ServiceValidation_24.svg'"
   ></psb-icon>
 
   <psb-button
-    class="email-form__button"
+    class="button"
     [type]="ButtonType.Text"
     [size]="ButtonSize.Medium"
     (click)="takeEmail()"

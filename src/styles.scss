@@ -3,8 +3,7 @@
 @import "assets/_colors.scss";
 
 body, * {
-	// font-family: 'Roboto', sans-serif;
-	font-family: 'Inter', sans-serif !important;
+	font-family: 'Inter', sans-serif;
 }
 
 .loc-backdrop {
@@ -37,6 +36,7 @@ body, * {
 	.mat-dialog-container {
 		margin-left: auto;
 		margin-right: auto;
+		background: #fff;
 	}
 
 	.success-modal {
@@ -97,14 +97,14 @@ loc-inner {
 	}
 }
 
-.docs-holder__remove-btn {
+.docs-holder .remove-btn {
 	svg {
 		width: 30px;
 		height: 30px;
 	}
 }
 
-.add-doc-btn__icon {
+.add-doc-btn .icon {
 	svg {
 		width: 30px;
 		height: 30px;

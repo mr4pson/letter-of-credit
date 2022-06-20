@@ -10,7 +10,7 @@ import { FileUploaded } from '../interfaces/file-uploaded.interface';
 @Injectable()
 export class FileUploadService {
   private errorMessage$$ = new BehaviorSubject<string>('');
-  public errorMessage$ = this.errorMessage$$.asObservable().pipe(
+  errorMessage$ = this.errorMessage$$.asObservable().pipe(
     tap((errorMessage) => {
       if (errorMessage) {
         setTimeout(this.clearErrorMessage.bind(this), 1000);
@@ -18,16 +18,16 @@ export class FileUploadService {
     }),
   );
 
-  public get errorMessage() {
+  get errorMessage() {
     return this.errorMessage$$.getValue();
   }
 
-  public set errorMessage(message: string) {
+  set errorMessage(message: string) {
     this.errorMessage$$.next(message);
   }
 
   private files$$ = new BehaviorSubject<FileUploaded[]>([]);
-  public files$ = this.files$$.asObservable();
+  files$ = this.files$$.asObservable();
 
   get files() {
     return this.files$$.getValue();
@@ -37,7 +37,7 @@ export class FileUploadService {
     this.files$$.next(files);
   }
 
-  public selectFiles(event: NgxDropzoneChangeEvent): void {
+  selectFiles(event: NgxDropzoneChangeEvent): void {
     let rejectedFiles = 0;
 
     event.addedFiles.forEach((addedFile) => {
@@ -70,7 +70,7 @@ export class FileUploadService {
     }
   }
 
-  public removeFile(file: FileUploaded): void {
+  removeFile(file: FileUploaded): void {
     this.files.splice(this.files.indexOf(file), 1);
   }
 

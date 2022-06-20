@@ -9,10 +9,10 @@ import { StorageService } from '../../../services/storage.service';
 export class PartnersService {
   constructor(
     private http: HttpClient,
-    public storage: StorageService,
+    private storage: StorageService,
   ) {}
 
-  public getPartners(): Observable<Partner[]> {
+  getPartners(): Observable<Partner[]> {
     const url = `${this.storage.apiDomain}api/EDOWAR/partners/partners?v=${this.storage.apiVersion}`;
 
     return this.http.get<Partner[]>(url);

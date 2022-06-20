@@ -1,19 +1,19 @@
-@import "../../../../assets/_colors.scss";
+@import "../../../../../assets/_colors.scss";
 
 .email-form {
 	display: flex;
 	margin: 32px 0;
 	align-items: center;
 
-	&__field {
+	.field {
 		width: 300px;
 	}
 
-	&__button {
+	.button {
 		margin-left: 15px;
 	}
 
-	&__green-check {
+	.green-check {
 		color: #41b665;
 		margin-left: 20px;
 	}

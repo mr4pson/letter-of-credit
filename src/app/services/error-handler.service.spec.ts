@@ -26,11 +26,11 @@ describe('ErrorHandlerService', () => {
     notificationService = TestBed.inject(NotificationService);
   });
 
-  it('should inject handler on creation', () => {
+  it('Внедяет handler при создании', () => {
     expect(ErrorHandlerService.prototype.injectHandler).toHaveBeenCalled();
   });
 
-  it('should add error on showErrorMessage', () => {
+  it('Вызывает addError при showErrorMessage', () => {
     spyOn(service.alertingService, 'addError');
 
     service.showErrorMessage('Test');

@@ -9,7 +9,7 @@ import { NotificationService } from './notification.service';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class NotificationComponent {
-  public notifications$ = this.notificationService.notifications$;
+  notifications$ = this.notificationService.notifications$;
 
   constructor(
     private notificationService: NotificationService,

@@ -14,6 +14,7 @@ import { IssueStepsComponent } from './components/issue-steps/issue-steps.compon
 import { IssueSuccessComponent } from './components/issue-success/issue-success.component';
 import { IssueComponent } from './issue.component';
 import { SendApplicationComponent } from './components/send-application/send-application.component';
+import { FormService } from './components/accreditation-period/form.service';
 import { FileUploadService } from './services/file-upload.service';
 import { PsbModule } from '../psb/psb.module';
 import { PartnersService } from './services/partners.service';
@@ -52,6 +53,7 @@ import { AccountService } from 'src/app/services';
     IssueComponent,
   ],
   providers: [
+    FormService,
     StepService,
     AccountService,
     PartnersService,

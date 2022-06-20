@@ -5,21 +5,21 @@
   <div class="vertical-dots">
     <div class="dots-holder"></div>
   </div>
-  <div class="issue-steps__title">
+  <div class="title">
     ШАГ {{ getCurrentStepNumber(currentUrl) }} из 5 
   </div>
-  <div class="issue-steps__body">
+  <div class="body">
     <div
       class="step-item"
       *ngFor="let step of steps; let i = index"
       [class.step-item--active]="isStepActive(step, currentUrl)"
       [class.step-item--done]="isStepDone(i, currentUrl)"
     >
-      <div class="step-item__circle">
+      <div class="circle">
       </div>
-      <div class="step-item__text">
-        <span class="step-item__title">{{ step.title }}</span>
-        <span class="step-item__description">{{ step.description }}</span>
+      <div class="text">
+        <span class="title">{{ step.title }}</span>
+        <span class="description">{{ step.description }}</span>
       </div>
     </div>
   </div>

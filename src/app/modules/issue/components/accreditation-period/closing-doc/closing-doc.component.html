@@ -1,24 +1,27 @@
 <div class="docs-holder">
   <button
-		(click)="handleDelete()"
+    (click)="handleDelete()"
     type="button"
-    class="docs-holder__remove-btn"
+    class="remove-btn"
   >
     <psb-icon [path]="'CloseFilled_24.svg'"></psb-icon>
   </button>
 
-  <ng-container [formGroup]="fromGroup">
+  <ng-container
+    *ngIf="formGroup"
+    [formGroup]="formGroup"
+  >
     <div class="fields">
       <psb-text-input
-        class="fields__doc-field"
+        class="doc-field"
         label="Документ"
-        formControlName="document"
+        [formControlName]="ClosingDocFormField.Document"
       ></psb-text-input>
 
       <psb-number-input
-        class="fields__count-field"
+        class="count-field"
         label="Количество"
-        formControlName="amount"
+        [formControlName]="ClosingDocFormField.Amount"
         [thousandsSeparator]="''"
       ></psb-number-input>
     </div>
@@ -26,11 +29,11 @@
     <div class="only-orig-checkbox">
       <psb-checkbox
         label="Только оригинал документа"
-        formControlName="onlyOriginalDocument"
+        [formControlName]="ClosingDocFormField.OnlyOriginalDocument"
         name="only-orig-doc"
       >
         <psb-tooltip
-          class="only-orig-checkbox__tooltip"
+          class="tooltip"
           tooltipType="white"
           text="Заполняется только в случае необходимости"
         ></psb-tooltip>
@@ -38,9 +41,9 @@
     </div>
 
     <psb-text-input
-      class="docs-holder__additional-field"
+      class="additional-field"
       label="Дополнительные требования к документу"
-      formControlName="additionalRequirements"
+      [formControlName]="ClosingDocFormField.AdditionalRequirements"
       description="Кем должен быть выпущен, подписан или форма заверения, необходимые отметки, язык на котором предоставляется документ. ИНН и наименование грузоотправителя, грузополучателя, место назначения груза."
     ></psb-text-input>
   </ng-container>

@@ -15,22 +15,22 @@ describe('StorageService', () => {
     service = TestBed.inject(StorageService);
   });
 
-  it('should return sessionStorage access token on getAccessToken', () => {
+  it('Возвращает test-access-token при вызове getAccessToken с ключом auth.accessToken', () => {
     sessionStorage.setItem('auth.accessToken', 'test-access-token');
     expect(service.getAccessToken()).toEqual(sessionStorage.getItem('auth.accessToken'));
   });
 
-  it('should return sessionStorage clientId on getClientID', () => {
+  it('Возвращает test-client-id при вызове getClientID с ключом client.defaultClientId', () => {
     sessionStorage.setItem('auth.defaultClientId', 'test-client-id');
     expect(service.getClientID()).toEqual(sessionStorage.getItem('client.defaultClientId'));
   });
 
-  it('should return sessionStorage accountId on getAccountID', () => {
+  it('Возвращает test-account-id при вызове getAccountID с ключом client.selectedAccountId', () => {
     sessionStorage.setItem('auth.selectedAccountId', 'test-account-id');
     expect(service.getAccountID()).toEqual(sessionStorage.getItem('client.selectedAccountId'));
   });
 
-  it('should return sessionStorage branchId on getBranchID', () => {
+  it('Возвращает test-branch-id при вызове getBranchID с ключом cert.defaultBranchId', () => {
     sessionStorage.setItem('auth.defaultBranchId', 'test-branch-id');
     expect(service.getBranchID()).toEqual(sessionStorage.getItem('cert.defaultBranchId'));
   });

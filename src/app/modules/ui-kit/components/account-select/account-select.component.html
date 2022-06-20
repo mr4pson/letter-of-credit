@@ -14,30 +14,31 @@
       (clickOutside)="handleClickOutside()"
       class="account-select"
     >
+      {{ selectedAccountObject.value | json }}
       <div
-        class="account-select__dropdown-header"
+        class="dropdown-header"
         (click)="handleHeaderClick()"
       >
-        <span class="account-select__dropdown-label dropdown-label">
-          <div class="dropdown-label__content-row">
-            <div class="dropdown-label__small-label">Счет списания</div>
-            <div class="dropdown-label__content-col">
+        <span class="dropdown-label dropdown-label">
+          <div class="content-row">
+            <div class="small-label">Счет списания</div>
+            <div class="content-col">
               {{ selectedAccountObject.value?.title }}
             </div>
             <div
               *ngIf="isAccountCodeVisible"
-              class="dropdown-label__content-col"
+              class="content-col"
             >
               {{ selectedAccountObject.value?.accountCode }}
             </div>
-            <div class="dropdown-label__content-col">
+            <div class="content-col">
               <ng-container *ngIf="selectedAccountObject.value?.balance !== null">
                 {{ selectedAccountObject.value?.balance | formatMoney }}
               </ng-container>
             </div>
           </div>
         </span>
-        <div class="account-select__chevron-icon">
+        <div class="chevron-icon">
           <psb-icon [path]="'ServiceArrowNormal_24.svg'"></psb-icon>
         </div>
       </div>
@@ -45,25 +46,25 @@
         *ngIf="(dropped$ | async)"
         class="dropdown-panel"
       >
-        <div class="dropdown-panel__items-wrapper">
+        <div class="items-wrapper">
           <ul
             role="listbox"
-            class="dropdown-panel__items"
+            class="items"
           >
             <li
               *ngFor="let account of accounts"
-              class=" dropdown-label dropdown-panel__item"
+              class=" dropdown-label item"
               (click)="handleSelectAccount(account)"
             >
-              <div class="dropdown-label__content-row">
-                <div class="dropdown-label__content-col">{{ account.title }}</div>
+              <div class="content-row">
+                <div class="content-col">{{ account.title }}</div>
                 <div
                   *ngIf="isAccountCodeVisible"
-                  class="dropdown-label__content-col"
+                  class="content-col"
                 >
                   {{ account.accountCode }}
                 </div>
-                <div class="dropdown-label__content-col">{{ account.balance }}&nbsp;₽</div>
+                <div class="content-col">{{ account.balance }}&nbsp;₽</div>
               </div>
             </li>
           </ul>

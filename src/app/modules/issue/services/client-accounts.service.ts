@@ -9,7 +9,7 @@ import { AccountService } from 'src/app/services';
 export class ClientAccountService {
   constructor(private accountService: AccountService) { }
 
-  public getClientAccounts() {
+  getClientAccounts() {
     return  this.accountService.getAccountList().pipe(
       map(accounts => (
           accounts.map<ClientAccount>(account => ({

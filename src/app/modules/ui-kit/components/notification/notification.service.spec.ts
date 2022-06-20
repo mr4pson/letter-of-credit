@@ -13,13 +13,13 @@ describe('NotificationService', () => {
     service.notifications = [];
   });
 
-  it('should add notification in the list', () => {
+  it('При добавлении ошибки в сервис добавляет ее в список ошибок', () => {
     service.addError({ info: 'Test' });
 
     expect(service.notifications.length).toEqual(1);
   });
 
-  it('should remove notification after 3 seconds', fakeAsync(() => {
+  it('Добавляет ошибки и затем удаляет ее через 3 секунды', fakeAsync(() => {
     service.notifications$.subscribe();
     service.addError({ info: 'Test' });
 

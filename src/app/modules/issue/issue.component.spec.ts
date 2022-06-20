@@ -57,20 +57,16 @@ describe('IssueComponent', () => {
     router.initialNavigation();
   });
 
-  it('should create', () => {
-    expect(component).toBeTruthy();
-  });
-
-  it('should call navigateBack while clicking back button', () => {
+  it('Вызывает navigateBack при клике на кнопку назад', () => {
     spyOn(component, 'navigateBack');
-    const backButton = fixture.debugElement.query(By.css('.back-btn'));
 
+    const backButton = fixture.debugElement.query(By.css('.back-btn'));
     backButton.nativeElement.click();
 
     expect(component.navigateBack).toHaveBeenCalled();
   });
 
-  it('should navigate back on prev step', () => {
+  it('При инициализации текущего шага, как второго и при клике на кнопку назад редиректит на первый шаг', () => {
     spyOn(router, 'navigateByUrl');
     component.currentUrl = component.steps[1].url;
 
@@ -79,7 +75,7 @@ describe('IssueComponent', () => {
     expect(router.navigateByUrl).toHaveBeenCalledWith(component.steps[0].url);
   });
 
-  it('should call showSmbDocuments if navigating back on fist step', () => {
+  it('При навигации на первый шаг вызывает showSmbDocuments', () => {
     ngService = TestBed.inject(NgService);
     component.currentUrl = component.steps[0].url;
 

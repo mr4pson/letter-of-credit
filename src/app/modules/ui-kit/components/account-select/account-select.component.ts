@@ -1,5 +1,4 @@
-import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core';
-import { ControlValueAccessor } from '@angular/forms';
+import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 
 import { CustomControlAccessorDirective } from '../../directives/custom-control-accessor.directive';
@@ -12,29 +11,29 @@ import { ClientAccount } from 'src/app/modules/issue/interfaces/client-account.i
   styleUrls: ['account-select.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class AccountSelectComponent extends CustomControlAccessorDirective {
-  @Input() public accounts: ClientAccount[] = [];
-  @Input() public isAccountCodeVisible = false;
-  @Input() public placeholderHidden = false;
-  @Input() public description = '';
+export class AccountSelectComponent extends CustomControlAccessorDirective implements OnInit {
+  @Input() accounts: ClientAccount[] = [];
+  @Input() isAccountCodeVisible = false;
+  @Input() placeholderHidden = false;
+  @Input() description = '';
 
   @Output() accountSelect = new EventEmitter<ClientAccount>();
 
-  public selectedAccount$$ = new BehaviorSubject<ClientAccount>(null);
-  public selectedAccount$ = this.selectedAccount$$.asObservable();
-  get selectedAccount() {
+  selectedAccount$$ = new BehaviorSubject<ClientAccount>(null);
+  selectedAccount$ = this.selectedAccount$$.asObservable();
+  private get selectedAccount() {
     return this.selectedAccount$$.getValue();
   }
-  set selectedAccount(value) {
+  private set selectedAccount(value) {
     this.selectedAccount$$.next(value);
   }
 
   private dropped$$ = new BehaviorSubject(false);
-  public dropped$ = this.dropped$$.asObservable();
-  get dropped() {
+  dropped$ = this.dropped$$.asObservable();
+  private get dropped() {
     return this.dropped$$.getValue();
   }
-  set dropped(value) {
+  private set dropped(value) {
     this.dropped$$.next(value);
   }
 
@@ -44,15 +43,15 @@ export class AccountSelectComponent extends CustomControlAccessorDirective {
       && Object.values(this.formControl.errors)[0];
   }
 
-  public handleHeaderClick(): void {
+  handleHeaderClick(): void {
     this.dropped = !this.dropped;
   }
 
-  public handleClickOutside(): void {
+  handleClickOutside(): void {
     this.dropped = false;
   }
 
-  public handleSelectAccount(account: ClientAccount): void {
+  handleSelectAccount(account: ClientAccount): void {
     this.dropped = false;
     this.selectedAccount = account;
 

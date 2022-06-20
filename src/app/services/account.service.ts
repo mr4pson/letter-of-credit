@@ -17,13 +17,13 @@ import { LetterService } from 'src/api/services';
 @Injectable()
 export class AccountService {
   constructor(
-    public store: StoreService,
-    public storage: StorageService,
+    private store: StoreService,
+    private storage: StorageService,
     private http: HttpClient,
     private letterService: LetterService,
   ) {}
 
-  public getAllowLoC(reciverINN: string): Observable<boolean> {
+  getAllowLoC(reciverINN: string): Observable<boolean> {
     return this.letterService.apiLcIsLcOffersEnabledClientIdGet$Response({
       clientId: this.storage.getClientID(),
       branchId: this.storage.getBranchID(),
@@ -36,7 +36,7 @@ export class AccountService {
     );
   }
 
-  public getIsBadReliability(reciverINN: string): Observable<boolean> {
+  getIsBadReliability(reciverINN: string): Observable<boolean> {
     const url =
       `${this.storage.apiDomain}api/Document/reliability/${reciverINN}?v=${this.storage.apiVersion}`;
 
@@ -68,7 +68,7 @@ export class AccountService {
     }
   }
 
-  public setDisableLoCOffers(reciverINN: string): Observable<boolean> {
+  setDisableLoCOffers(reciverINN: string): Observable<boolean> {
     return this.letterService .apiLcEnableLcOffersClientIdPost$Json({
       clientId: this.storage.getClientID(),
       branchId: this.storage.getBranchID(),
@@ -82,7 +82,7 @@ export class AccountService {
     );
   }
 
-  public getAccountList(): Observable<Account[]> {
+  getAccountList(): Observable<Account[]> {
     const url =
       `${this.storage.apiDomain}api/Account/clients/${this.storage.getClientID()}?branchId=${this.storage.getBranchID()}&account=${this.storage.getAccountID()}&v=${
         this.storage.apiVersion
@@ -100,19 +100,19 @@ export class AccountService {
     );
   }
 
-  public getCommision(total: number): Observable<number> {
+  getCommision(total: number): Observable<number> {
     return this.letterService.apiLcCalculateCommissionGet$Json({ total }).pipe(
       map(response => response?.commissionValue),
     );
   }
 
-  public searchClientByInn(inn: string): Observable<Client[]> {
+  searchClientByInn(inn: string): Observable<Client[]> {
     const url = `${this.storage.apiDomain}api/Document/clients/searchByInn/${inn}?v=${this.storage.apiVersion}`;
 
     return this.http.get<Client[]>(url);
   }
 
-  public searchBankByBik(bik: string): Observable<BankSearch> {
+  searchBankByBik(bik: string): Observable<BankSearch> {
     const url =
       `${this.storage.apiDomain}api/Document/getReceiverBanks/${bik}?v=${this.storage.apiVersion}`;
 

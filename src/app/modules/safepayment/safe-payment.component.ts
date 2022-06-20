@@ -1,11 +1,11 @@
 import { ChangeDetectionStrategy, Component, ViewChild } from '@angular/core';
-import { FormControl, FormGroup } from '@angular/forms';
+import { FormBuilder, FormGroup } from '@angular/forms';
 import { MatDialogRef } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 
 import { Page, paths } from '../issue/constants/routes';
 import { SafePayStates } from './enums/safe-payment.enum';
-import { SafePaymentEmailComponent } from './safe-payment-email/safe-payment-email.component';
+import { SafePaymentEmailComponent } from './components/safe-payment-email/safe-payment-email.component';
 import { SafePaymentStateManagerService } from './services/safe-payment-state-manager.service';
 
 import { BaseModalComponent } from '@psb/fe-ui-kit';
@@ -14,6 +14,7 @@ import { SafePaymentButton } from 'src/app/enums/safe-payment-button.enum';
 import { ReliableSign } from 'src/app/modules/safepayment/enums/reliable-sign.enum';
 import { StoreService } from 'src/app/services/store.service';
 import { RELIABLE_MAP } from './constants/reliable-map.constant';
+import { SafePaymentFormField } from './enums/safe-payment-form-field.enum';
 
 @Component({
   selector: 'safe-payment',
@@ -24,47 +25,44 @@ import { RELIABLE_MAP } from './constants/reliable-map.constant';
 export class SafePaymentComponent {
   @ViewChild(SafePaymentEmailComponent) emailComponent: HTMLElement;
 
-  public safePaymentDialog: MatDialogRef<BaseModalComponent, any>;
-  public get isShowAgenda(): boolean {
-    return SafePayStates.ShowAgenda === this.stateManager.state;
-  }
-  public get isShowEmail(): boolean {
-    return SafePayStates.ShowEmail === this.stateManager.state;
-  }
-  public SafePaymentButton = SafePaymentButton;
-  public ButtonType = ButtonType;
-  public ButtonSize = ButtonSize;
-  public sPayGroup = new FormGroup({
-    dontWantSafePayment: new FormControl(false),
-  });
-  public letterOfCredit = this.store.letterOfCredit;
+  safePaymentDialog: MatDialogRef<BaseModalComponent, any>;
+  SafePaymentButton = SafePaymentButton;
+  ButtonType = ButtonType;
+  ButtonSize = ButtonSize;
+  form: FormGroup;
+  SafePaymentFormField = SafePaymentFormField;
+  letterOfCredit = this.store.letterOfCredit;
+  SafePayStates = SafePayStates;
 
   constructor(
+    public stateManager: SafePaymentStateManagerService,
     private store: StoreService,
-    private stateManager: SafePaymentStateManagerService,
     private dialogRef: MatDialogRef<BaseModalComponent>,
     private router: Router,
-  ) { }
+    private formBuilder: FormBuilder,
+  ) {
+    this.createForm();
+  }
 
-  public getReliableColor(): string {
+  getReliableColor(): string {
     return RELIABLE_MAP.color[this.store.reciverStatus] ?? ReliableSign.reliableGray;
   }
 
-  public getReliableText(): string {
+  getReliableText(): string {
     return RELIABLE_MAP.text[this.store.reciverStatus] ?? ReliableSign.reliableGrayText;
   }
 
-  public doSafePay() {
+  doSafePay() {
     this.dialogRef.close(SafePaymentButton.DoPay);
     this.store.isIssueVissible = true;
     this.router.navigateByUrl(paths[Page.ACCREDITATION_AMOUNT]);
   }
 
-  public closeDialog(payButton: SafePaymentButton = SafePaymentButton.OrdinalPay) {
+  closeDialog(payButton: SafePaymentButton = SafePaymentButton.OrdinalPay) {
     this.dialogRef.close(payButton);
   }
 
-  public takeEmail(email: string): void {
+  takeEmail(email: string): void {
     if (email.trim() === '') {
       return;
     }
@@ -73,7 +71,13 @@ export class SafePaymentComponent {
     this.stateManager.state = SafePayStates.ShowAgenda;
   }
 
-  public showEmail() {
+  showEmail() {
     this.stateManager.state = SafePayStates.ShowEmail;
+  }
+
+  private createForm(): void {
+    this.form = this.formBuilder.group({
+      dontWantSafePayment: [false],
+    });
   }
 }

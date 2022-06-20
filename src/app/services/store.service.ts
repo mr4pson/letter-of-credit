@@ -10,30 +10,30 @@ import { LetterOfCredit } from '../modules/issue/interfaces/letter-of-credit.int
 @Injectable()
 export class StoreService {
   private isIssueVissible$$ = new BehaviorSubject(false);
-  public isIssueVissible$ = this.isIssueVissible$$.asObservable();
-  public get isIssueVissible(): boolean {
+  isIssueVissible$ = this.isIssueVissible$$.asObservable();
+  get isIssueVissible(): boolean {
     return this.isIssueVissible$$.getValue();
   }
-  public set isIssueVissible(visibility: boolean) {
+  set isIssueVissible(visibility: boolean) {
     this.isIssueVissible$$.next(visibility);
   }
 
   private isOrdinalPayment$$ = new BehaviorSubject(false);
-  public isOrdinalPayment$ = this.isOrdinalPayment$$.asObservable();
-  public get isOrdinalPayment(): boolean {
+  isOrdinalPayment$ = this.isOrdinalPayment$$.asObservable();
+  get isOrdinalPayment(): boolean {
     return this.isOrdinalPayment$$.getValue();
   }
-  public set isOrdinalPayment(value: boolean) {
+  set isOrdinalPayment(value: boolean) {
     this.isOrdinalPayment$$.next(value);
   }
 
-  public dialog: MatDialog;
-  public payment: SmbPayment;
-  public reciverStatus: ReciverStatus = ReciverStatus.Unknown;
-  public clientEmail = '';
-  public letterOfCredit: LetterOfCredit = DEFAULT_LOC_INSTANCE;
+  dialog: MatDialog;
+  payment: SmbPayment;
+  reciverStatus: ReciverStatus = ReciverStatus.Unknown;
+  clientEmail = '';
+  letterOfCredit: LetterOfCredit = DEFAULT_LOC_INSTANCE;
 
-  public restoreDefaultState() {
+  restoreDefaultState() {
     this.clientEmail = '';
     this.reciverStatus = ReciverStatus.Unknown;
     this.letterOfCredit = DEFAULT_LOC_INSTANCE;

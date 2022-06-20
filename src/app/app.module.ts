@@ -46,7 +46,7 @@ registerLocaleData(ru);
   bootstrap: [AppComponent],
 })
 export class AppModule {
-  constructor(public appRef: ApplicationRef) {}
+  constructor(private appRef: ApplicationRef) {}
   hmrOnInit(store) {
     if (!store || !store.state) return;
     console.log('HMR store', store);

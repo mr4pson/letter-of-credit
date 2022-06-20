@@ -3,23 +3,23 @@
 .send-application {
 	padding-bottom: 48px;
 
-	&__description {
+	.description {
 		margin: 20px 0 40px 0;
 	}
 
-	&__agree-checkbox {
+	.agree-checkbox {
 		display: flex;
 		height: 33px;
 	}
 }
 
 .contact {
-	&__title {
+	.title {
 		margin-top: 40px;
 	}
 
-	&__name,
-	&__phone {
+	.name,
+	.phone {
 		display: block;
 		width: 440px;
 	}

@@ -1,7 +1,7 @@
 @import "../../../../../assets/colors";
 
 .counterparty-contract {
-	&__date-picker {
+	.date-picker {
 		margin-top: 24px;
 	}
 
@@ -9,13 +9,13 @@
 		margin-right: 40px;
 	}
 
-	&__date-picker,
-	&__nds-select {
+	.date-picker,
+	.nds-select {
 		width: 280px;
 		display: inline-block;
 	}
 
-	&__nds-actions {
+	.nds-actions {
 		display: flex;
 		flex-direction: row;
 
@@ -28,18 +28,18 @@
 		}
 	}
 
-	&__nds-actions,
-	&__nds-select {
+	.nds-actions,
+	.nds-select {
 		padding-top: 24px;
 	}
 
-	&__scan-title {
+	.scan-title {
 		margin: 52px 0 20px 0;
 	}
 }
 
-psb-datepicker.counterparty-contract__date-picker,
-psb-input-select.counterparty-contract__nds-select,
+psb-datepicker.counterparty-contract .date-picker,
+psb-input-select.counterparty-contract .nds-select,
 psb-text-input.contract-info {
 	width: 280px;
 	display: block;
@@ -51,7 +51,7 @@ psb-text-input.contract-info {
 	width: 100%;
 	padding-top: 24px;
 
-	&__info {
+	.info {
 		width: 95%;
 		display: inline-block;
 	}
@@ -68,24 +68,24 @@ div.file-uploader {
 	margin: 20px 0 40px 0;
 	padding: 20px 24px 10px 24px;
 
-	&__info {
+	.info {
 		display: flex;
 		justify-content: space-between;
 		font-size: 12px;
 		color: $black-alpha-38;
 	}
 
-	&__tooltip-info {
+	.tooltip-info {
 		display: flex;
 	}
 
-	&__uploaded-files {
+	.uploaded-files {
 		display: flex;
 		position: relative;
 		padding: 10px 0;
 	}
 
-	&__upload-btn {
+	.upload-btn {
 		position: relative;
 		width: 96px;
 		height: 114px;
@@ -164,12 +164,12 @@ div.file-uploader {
 		height: 122px !important;
 		margin: 6px 2px !important;
 
-		&__file-name {
+		.file-name {
 			max-width: 84px;
 		}
 	}
 
-	&__file-size {
+	.file-size {
 		position: absolute;
 		bottom: 30px;
 		left: 10px;
@@ -178,7 +178,7 @@ div.file-uploader {
 		color: $black-alpha-20;
 	}
 
-	&__file-name {
+	.file-name {
 		position: absolute;
 		bottom: 10px;
 		left: 10px;

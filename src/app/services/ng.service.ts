@@ -71,10 +71,6 @@ export class NgService {
     return this.renderer.selectRootElement(SmbSelector.DocumentsNewPaymentButton, true);
   }
 
-  getPaymentFormCloseElement(): HTMLElement {
-    return this.renderer.selectRootElement(SmbSelector.PaymentFormCloseButton, true);
-  }
-
   hideSmbDocuments() {
     this.renderer.selectRootElement(SmbSelector.Documents, true).classList.add('hidden');
   }

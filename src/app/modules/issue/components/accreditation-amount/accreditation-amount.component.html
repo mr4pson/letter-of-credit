@@ -5,20 +5,20 @@
 >
   <div class="accredit-sum">
     <psb-number-input
+      [formControlName]="AccreditationAmountFormField.IssueSum"
       label="Сумма аккредитива"
-      formControlName="issueSum"
       suffix=" ₽"
-      class="accredit-sum__form-field"
+      class="form-field"
     ></psb-number-input>
   </div>
   <psb-text>
     <div class="commission">
       <span>Комиссия за выпуск аккредитива:</span>
-      <span class="commission__sum">
+      <span class="sum">
         {{ (commission$ | async) | formatMoney }}
       </span>
       <psb-tooltip
-        class="commission__tooltip"
+        class="tooltip"
         tooltipType="white"
         text="Рассчитывается комиссия за открытие аккредитива, взимаемая ПСБ. Возможны комиссии сторонних банков."
       ></psb-tooltip>
@@ -29,16 +29,16 @@
     class="debit-account"
   >
     <loc-account-select
-      formControlName="selectedAccount"
+      [formControlName]="AccreditationAmountFormField.SelectedAccount"
       [accounts]="accountsObject.value"
     ></loc-account-select>
     <psb-tooltip
-      class="debit-account__tooltip"
+      class="tooltip"
       tooltipType="white"
       text="Сумма аккредитива будет автоматически списана с расчетного счета на счет по учету покрытия после согласования Заявления на выпуск аккредитива"
     ></psb-tooltip>
   </div>
-  <p class="accredit-amount__info">
+  <p class="info">
     Полный перечень тарифов по
     <a
       href="https://www.psbank.ru/MediumBusiness/CashService/RKO/Documentary"
@@ -48,13 +48,13 @@
     </a>
     .
   </p>
-  <p class="accredit-amount__info">
+  <p class="info">
     Документы о поставке товара/выполнении работ не представлены
 		контрагентом до даты окончания аккредитива? Мы вернем денежные средства
 		вам на расчётный счёт на следующий день.
   </p>
   <psb-button
-    class="accredit-amount__submit"
+    class="submit"
     [isSubmit]="true"
     [type]="ButtonType.Primary"
   >

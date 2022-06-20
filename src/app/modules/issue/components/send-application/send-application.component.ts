@@ -1,17 +1,19 @@
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
-import { FormControl, FormGroup } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { OnDestroyMixin, untilComponentDestroyed } from '@w11k/ngx-componentdestroyed';
 import { merge } from 'rxjs';
 import { tap } from 'rxjs/operators';
 
 import { IssueSuccessComponent } from '../issue-success/issue-success.component';
+import { SendApplicationFormField } from '../../enums/send-application-form-field.enum';
 
 import { ButtonType, SuccessModalComponent, SuccessModalType } from '@psb/fe-ui-kit';
 import { getRequiredFormControlValidator } from '@psb/validations/required/validation';
 import { StoreService } from 'src/app/services/store.service';
 import { NgService } from 'src/app/services/ng.service';
 import { isFormValid } from 'src/app/utils';
+import { SET_PHONE_NUMBER_CONTROL_MESSAGE, SET_USER_INFO_CONTROL_MESSAGE } from './constants';
 
 @Component({
   selector: 'send-application',
@@ -20,24 +22,16 @@ import { isFormValid } from 'src/app/utils';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SendApplicationComponent extends OnDestroyMixin implements OnInit {
-  public form = new FormGroup({
-    agreeWithTerms: new FormControl(true),
-    createLocTemplate: new FormControl(true),
-    contactPerson: new FormControl('', [
-      getRequiredFormControlValidator('Вы забыли написать фамилию, имя и отчество.'),
-    ]),
-    contactPhone: new FormControl('', [
-      getRequiredFormControlValidator('Укажите контактный телефон ответственного'),
-    ]),
-  });
+  form: FormGroup;
 
-  public ButtonType = ButtonType;
+  ButtonType = ButtonType;
+  SendApplicationFormField = SendApplicationFormField;
 
-  get contactPerson() {
+  private get contactPerson() {
     return this.form.controls.contactPerson;
   }
 
-  get contactPhone() {
+  private get contactPhone() {
     return this.form.controls.contactPhone;
   }
 
@@ -45,8 +39,10 @@ export class SendApplicationComponent extends OnDestroyMixin implements OnInit {
     private store: StoreService,
     private dialog: MatDialog,
     private ngService: NgService,
+    private formBuilder: FormBuilder,
   ) {
     super();
+    this.createForm();
   }
 
   ngOnInit(): void {
@@ -72,10 +68,25 @@ export class SendApplicationComponent extends OnDestroyMixin implements OnInit {
     this.form.patchValue(this.store.letterOfCredit);
   }
 
-  public handleSubmit(): void {
+  handleSubmit(): void {
     if (isFormValid(this.form)) {
       this.openSuccessDialog();
     }
+  }
+
+  private createForm(): void {
+    this.form = this.formBuilder.group({
+      agreeWithTerms: [true],
+      createLocTemplate: [true],
+      contactPerson: ['', [
+          getRequiredFormControlValidator(SET_USER_INFO_CONTROL_MESSAGE),
+        ]
+      ],
+      contactPhone: ['', [
+          getRequiredFormControlValidator(SET_PHONE_NUMBER_CONTROL_MESSAGE),
+        ]
+      ],
+    });
   }
 
   private openSuccessDialog(): void {

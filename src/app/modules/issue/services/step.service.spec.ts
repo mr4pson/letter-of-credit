@@ -20,19 +20,19 @@ describe('StepService', () => {
     router.initialNavigation();
   });
 
-  it('should initialize steps', () => {
+  it('Инициализурует шаги', () => {
     expect(service.steps).toBe(STEPS);
   });
 
-  it('should getPrevUrl return previous step url', () => {
+  it('При вызове getPrevUrl со значением url 2 шага возвращает урл предыдущего шага', () => {
     expect(service.getPrevUrl(STEPS[1].url)).toBe(STEPS[0].url);
   });
 
-  it('should return a current step number', () => {
+  it('Возвращает текущий номер шага', () => {
     expect(service.getCurrentStepNumber(STEPS[0].url)).toBe(1);
   });
 
-  it('should set step description', () => {
+  it('Задает описание шага', () => {
     const TEST_DESCRIPTION = 'test description';
     service.setStepDescription(STEPS[0].url, TEST_DESCRIPTION);
 

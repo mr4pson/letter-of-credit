@@ -26,19 +26,15 @@ describe('SafePaymentAgendaComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create', () => {
-    expect(component).toBeTruthy();
-  });
-
-  it('should get agenda item number', () => {
+  it('Возвращает 1 при инексе getAgendaItemNumber равным 0', () => {
     expect(component.getAgendaItemNumber(0)).toEqual(1);
   });
 
-  it('should return false on checkItemHasDelimiter 0 index', () => {
+  it('Возвращает false при индексе checkItemHasDelimiter равным 0', () => {
     expect(component.checkItemHasDelimiter(0)).toBeTruthy();
   });
 
-  it('should return true on checkItemHasDelimiter 3 index', () => {
+  it('Возвращает true при индексе checkItemHasDelimiter равным 3', () => {
     expect(component.checkItemHasDelimiter(3)).toBeFalsy();
   });
 });

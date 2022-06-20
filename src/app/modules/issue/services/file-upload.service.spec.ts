@@ -16,7 +16,7 @@ describe('FileUploadService', () => {
     service = TestBed.inject(FileUploadService);
   });
 
-  it('should add file to the list', () => {
+  it('Добавляет один файл в список файлов', () => {
     const file = new File([], 'testFile1.pdf');
     const seletFilesEvent = {
       addedFiles: [file],
@@ -28,7 +28,7 @@ describe('FileUploadService', () => {
     expect(service.files.length).toBe(seletFilesEvent.addedFiles.length);
   });
 
-  it('should not add file due to file extension and set error message if a file didn\'t load', () => {
+  it('Не добавляет файл с недопустимым расширением и задает сообщение об ошибке о недопустимых типах файлов', () => {
     const file = new File([], 'testFile1.jpg');
     const seletFilesEvent = {
       addedFiles: [file],
@@ -41,7 +41,7 @@ describe('FileUploadService', () => {
     expect(service.errorMessage).toBe(FileError.NotSuitableTypes);
   });
 
-  it('should not load file with same fileName again and show file already loadded error message', () => {
+  it('Не добавляет файл повторно с таким же именем и показывает ошибку, что файл уже был загружен', () => {
     const file = new File([], 'testFile1.pdf');
     const seletFilesEvent = {
       addedFiles: [file],
@@ -55,14 +55,14 @@ describe('FileUploadService', () => {
     expect(service.errorMessage).toBe(`Файл "${file.name}" уже загружен.`);
   });
 
-  it('should clear error message in 1 second', fakeAsync(() => {
+  it('Отчищает сообщение об ошибке через 1 секунду', fakeAsync(() => {
     const file = new File([], 'testFile1.pdf');
     const seletFilesEvent = {
       addedFiles: [file],
       rejectedFiles: [],
     } as NgxDropzoneChangeEvent;
 
-    service.selectFiles(seletFilesEvent);
+    // service.selectFiles(seletFilesEvent);
     service.selectFiles(seletFilesEvent);
     service.errorMessage$.subscribe();
     tick(1000);
@@ -70,7 +70,7 @@ describe('FileUploadService', () => {
     expect(service.errorMessage).toBe('');
   }));
 
-  it('should remove file', fakeAsync(() => {
+  it('Удаляет файл', fakeAsync(() => {
     const file = new File([], 'testFile1.pdf');
     const seletFilesEvent = {
       addedFiles: [file],

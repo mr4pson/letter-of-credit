@@ -1,11 +1,11 @@
 @import "../../../../../assets/colors";
 
 .accredit-amount {
-	&__submit {
+	.submit {
 		margin-top: 10px;
 	}
 
-	&__info {
+	.info {
 		font-size: 16px;
 		line-height: 24px;
 		color: #666;
@@ -16,7 +16,7 @@
 .accredit-sum {
 	margin-top: 24px;
 
-	&__form-field {
+	.form-field {
 		width: 200px;
 		display: inline-block;
 	}
@@ -26,13 +26,13 @@
 	display: flex;
 	align-items: center;
 
-	&__sum {
+	.sum {
 		margin-left: 8px;
 		font-size: 18px;
 		color: $black-alpha-87;
 	}
 
-	&__tooltip {
+	.tooltip {
 		margin-left: 15px;
 	}
 }
@@ -45,18 +45,18 @@
 	padding-right: 30px;
 	margin-top: 36px;
 
-	&__sum {
+	.sum {
 		color: $black-alpha-38;
 		font-size: 16px;
 		top: 26px;
 		right: 60px;
 	}
 
-	&__tooltip {
+	.tooltip {
 		margin: 9px 0 5px 20px;
 	}
 
-	&__attribute {
+	.attribute {
 		display: inline-block;
 	}
 }

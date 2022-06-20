@@ -11,10 +11,12 @@ import { StepService } from '../../services/step.service';
 import { AccreditationAmountComponent } from './accreditation-amount.component';
 import { ClientAccountService } from '../../services/client-accounts.service';
 import { Page, paths } from '../../constants/routes';
+import { clickSubmitButton } from './testIng';
 
 import { AccountService, ErrorHandlerService, StoreService } from 'src/app/services';
 import { PsbModule } from 'src/app/modules/psb/psb.module';
 import { UiKitModule } from 'src/app/modules/ui-kit/ui-kit.module';
+import { isFormValid } from 'src/app/utils';
 
 describe('AccreditationAmountComponent', () => {
   let component: AccreditationAmountComponent;
@@ -27,6 +29,11 @@ describe('AccreditationAmountComponent', () => {
       accountCode: '0000 0000 0000 0000',
     },
   ];
+
+  const initialForm = {
+    issueSum: '100',
+    selectedAccount: accounts[0],
+  };
 
   const commission$$ = new BehaviorSubject(0);
   const accounts$$ = new BehaviorSubject([]);
@@ -81,11 +88,7 @@ describe('AccreditationAmountComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create', () => {
-    expect(component).toBeTruthy();
-  });
-
-  it('should set initial form value', () => {
+  it('При patchValue форма принимает аналогичное значение заданному', () => {
     const initialForm = {
       issueSum: '100',
       selectedAccount: accounts[0],
@@ -95,7 +98,7 @@ describe('AccreditationAmountComponent', () => {
     expect(initialForm).toEqual(component.form.value);
   });
 
-  it('should get new commission after issueSum value changed', fakeAsync(() => {
+  it('При задании суммы комиссии как 100 изменяет значение комиссии до 10', fakeAsync(() => {
     const commissionValue = 10;
     commission$$.next(commissionValue);
     component.form.controls.issueSum.patchValue('100');
@@ -105,32 +108,27 @@ describe('AccreditationAmountComponent', () => {
     expect(component.commission).toEqual(commissionValue);
   }));
 
-  it('should get accounts on initialization and set first acc as value', fakeAsync(() => {
+  it('Задает первый аккаунт после получения списка аккаунтов', fakeAsync(() => {
     accounts$$.next(accounts);
     tick();
 
     expect(component.form.controls.selectedAccount.value).toEqual(accounts[0]);
   }));
 
-  it('should call handleSubmit on button click', () => {
+  it('Вызывает handleSubmit при сабмите формы', () => {
     spyOn(component, 'handleSubmit');
-    const submitButton = fixture.debugElement.query(By.css('.accredit-amount__submit button'));
-    submitButton.nativeElement.click();
+    clickSubmitButton(fixture);
 
     expect(component.handleSubmit).toHaveBeenCalled();
   });
 
-  it('should navigate to counterparty on valid form submit click', () => {
-    const initialForm = {
-      issueSum: '100',
-      selectedAccount: accounts[0],
-    };
+  it('Редиректит к маршруту send appliation при валидной форме', () => {
     component.form.patchValue(initialForm);
 
     spyOn(router, 'navigateByUrl');
-    const submitButton = fixture.debugElement.query(By.css('.accredit-amount__submit button'));
-    submitButton.nativeElement.click();
+    clickSubmitButton(fixture);
 
+    expect(isFormValid(component.form)).toBeTruthy();
     expect(router.navigateByUrl).toHaveBeenCalledWith(paths[Page.COUNTERPARTY]);
   });
 });

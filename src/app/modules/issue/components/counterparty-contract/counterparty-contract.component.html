@@ -4,13 +4,13 @@
   (submit)="handleSubmit()"
 >
   <psb-datepicker
-    class="counterparty-contract__date-picker paint-disabled-as-normal"
+    class="date-picker paint-disabled-as-normal"
     label="Дата заключения договора"
-    formControlName="contractDate"
+    [formControlName]="CounterpartyContractFormField.ContractDate"
     [maxValidDate]="maxContractDate"
   ></psb-datepicker>
 
-  <div class="counterparty-contract__nds-actions">
+  <div class="nds-actions">
     <psb-button
       [type]="selectedNds > 0 ? ButtonType.Primary : ButtonType.Text"
       [class.nds-buttons--inactive]="selectedNds === 0"
@@ -30,23 +30,23 @@
   <psb-input-select
     label="Сумма НДС"
     [options]="ndsList"
-    class="counterparty-contract__nds-select"
+    class="nds-select"
     placeholder="Выберите атрибут"
-    formControlName="selectedNds"
+    [formControlName]="CounterpartyContractFormField.SelectedNds"
   ></psb-input-select>
 
   <psb-text-input
     class="contract-info"
     label="Название и номер договора"
-    formControlName="contract"
+    [formControlName]="CounterpartyContractFormField.Contract"
     description="Например, договор купли-продажи"
   ></psb-text-input>
 
   <div class="contract-subject">
     <psb-text-input
-      class="contract-subject__info"
+      class="info"
       label="Предмет договора (Наименование Товаров/Услуг/Работ)"
-      formControlName="contractInfo"
+      [formControlName]="CounterpartyContractFormField.ContractInfo"
       description="Например, поставка оборудования для деревообработки – токарный станок - 2 шт."
     ></psb-text-input>
 
@@ -59,7 +59,7 @@
 
   <psb-heading
     type="3"
-    class="counterparty-contract__scan-title"
+    class="scan-title"
   >
     Прикрепите скан договора (необязательно)
   </psb-heading>
@@ -76,13 +76,13 @@
     ngx-dropzone
     (change)="handleSelectFiles($event)"
   >
-    <div class="file-uploader__info">
+    <div class="info">
       <div>
         <span class="main-color">Выберите файлы</span>
         или перетяните их
 				в эту область.
       </div>
-      <div class="file-uploader__tooltip-info">
+      <div class="tooltip-info">
         Какие файлы подойдут?
         <psb-tooltip
           class="tooltip"
@@ -97,8 +97,8 @@
       #simpleBarRef
       (wheel)="wheelScroll($event, simpleBarRef)"
     >
-      <div class="file-uploader__uploaded-files">
-        <div class="file-uploader__upload-btn"></div>
+      <div class="uploaded-files">
+        <div class="upload-btn"></div>
 
         <ng-container *ngFor="let file of files$ | async">
           <ngx-dropzone-preview
@@ -108,9 +108,9 @@
           >
             <ngx-dropzone-label>
               <img [src]="'assets/icons/loading.svg' | secure | async">
-              <div class="dropzone-preview__file-size">{{ file.sizeFormatted }}</div>
+              <div class="file-size">{{ file.sizeFormatted }}</div>
               <div
-                class="dropzone-preview__file-name"
+                class="file-name"
                 title="{{ file.native.name }}"
               >
                 <span>{{ file.native.name }}</span>
@@ -134,7 +134,7 @@
     </div>
   </div>
   <psb-button
-    class="counterparty-contract__submit"
+    class="submit"
     [isSubmit]="true"
     [type]="ButtonType.Primary"
   >

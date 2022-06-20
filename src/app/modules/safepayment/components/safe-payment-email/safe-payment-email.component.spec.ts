@@ -2,12 +2,12 @@ import { CommonModule } from '@angular/common';
 import '@angular/common/locales/global/ru';
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { ReactiveFormsModule } from '@angular/forms';
-import { By } from '@angular/platform-browser';
 
 import { SafePaymentEmailComponent } from './safe-payment-email.component';
 
 import { PsbModule } from 'src/app/modules/psb/psb.module';
 import { StoreService } from 'src/app/services';
+import { emailButtonClick } from './testing';
 
 describe('SafePaymentEmailComponent', () => {
   let component: SafePaymentEmailComponent;
@@ -36,25 +36,19 @@ describe('SafePaymentEmailComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create', () => {
-    expect(component).toBeTruthy();
-  });
-
-  it('should call takeEmail on button click', () => {
+  it('Вызывает takeEmail при клике на кнопку "Получить материалы"', () => {
     spyOn(component, 'takeEmail');
-    const btn = fixture.debugElement.query(By.css('.email-form__button'));
-    btn.nativeElement.click();
+    emailButtonClick(fixture);
 
     expect(component.takeEmail).toHaveBeenCalled();
   });
 
-  it('should emit value on click if email valid', () => {
+  it('Эмитит значение при клике на кнопку  "Получить материалы" в случае, если email валидный', () => {
     const testEmail = 'test@mail.ru';
     component.emailFormControl.patchValue('test@mail.ru');
 
     spyOn(component.takeValidEmail, 'emit');
-    const btn = fixture.debugElement.query(By.css('.email-form__button'));
-    btn.nativeElement.click();
+    emailButtonClick(fixture);
 
     expect(component.takeValidEmail.emit).toHaveBeenCalledWith(testEmail);
   });

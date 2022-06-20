@@ -1,20 +1,27 @@
-import { ChangeDetectionStrategy, Component, Input, OnInit } from '@angular/core';
-import { FormArray, FormControl, FormGroup } from '@angular/forms';
+import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import { FormArray, FormGroup } from '@angular/forms';
+/*
+  Вот что я нашел в public-api в библиотеке @psb/angular-tools. Не нашел там замены untilComponentDestroyed
+  export { DynamicComponentsService } from '@psb/angular-tools/src/services';
+  export { ClickOutsideDirective, ClickOutsideModule } from '@psb/angular-tools/src/click-outside';
+  export * from '@psb/angular-tools/src/pipes/money-amount';
+  export * from '@psb/angular-tools/src/pipes/endings';
+*/
 import { OnDestroyMixin, untilComponentDestroyed } from '@w11k/ngx-componentdestroyed';
-import { merge } from 'rxjs';
-import { filter, tap } from 'rxjs/operators';
+import { filter } from 'rxjs/operators';
 import { Router } from '@angular/router';
 
 import { ClosingDoc } from '../../interfaces/closing-doc.interface';
 import { Page, paths } from '../../constants/routes';
 import { StepService } from '../../services/step.service';
+import { AccreditationPeriodFormField } from '../../enums/accreditation-period-form-field.enum';
 
 import { ButtonType } from '@psb/fe-ui-kit';
-import { getRequiredFormControlValidator } from '@psb/validations/required';
 import { StoreService } from 'src/app/services/store.service';
 import { getSubstractDatesDays, getSummedDateDays, getTomorrowDate } from 'src/app/utils/utils';
 import moment from 'moment';
 import { isFormValid } from 'src/app/utils';
+import { FormService } from './form.service';
 
 @Component({
   selector: 'accreditation-period',
@@ -23,48 +30,38 @@ import { isFormValid } from 'src/app/utils';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AccreditationPeriodComponent extends OnDestroyMixin implements OnInit {
-  public form = new FormGroup({
-    endLocDate: new FormControl(getTomorrowDate(), [
-      getRequiredFormControlValidator(
-        'Укажите дату окончания аккредитива',
-      ),
-    ]),
-    locDaysNumber: new FormControl(''),
-    isDocumentDigital: new FormControl(true),
-    allowUsePartOfLoc: new FormControl(true),
-    closingDocs: new FormArray([]),
-  });
+  form = this.formService.createForm();
+  ButtonType = ButtonType;
+  minEndLocDate = getTomorrowDate();
+  currentDate = new Date();
+  AccreditationPeriodFormField = AccreditationPeriodFormField;
 
-  public ButtonType = ButtonType;
-  public minEndLocDate = getTomorrowDate();
-  public currentDate = new Date();
-
-  get endLocDateControl() {
-    return this.form.controls.endLocDate;
+  private get endLocDateControl() {
+    return this.form.controls[AccreditationPeriodFormField.EndLocDate];
   }
 
-  get locDaysNumberControl() {
-    return this.form.controls.locDaysNumber;
+  private get locDaysNumberControl() {
+    return this.form.controls[AccreditationPeriodFormField.LocDaysNumber];
   }
 
-  get isDocumentDigitalControl() {
-    return this.form.controls.isDocumentDigital;
+  private get isDocumentDigitalControl() {
+    return this.form.controls[AccreditationPeriodFormField.IsDocumentDigital];
   }
 
-  get allowUsePartOfLocControl() {
-    return this.form.controls.allowUsePartOfLoc;
+  private get allowUsePartOfLocControl() {
+    return this.form.controls[AccreditationPeriodFormField.AllowUsePartOfLoc];
   }
 
-  get closingDocsControl(): FormArray {
-    return this.form.controls.closingDocs as FormArray;
-  }
+  closingDocsControl: FormArray;
 
   constructor(
     private store: StoreService,
     private router: Router,
     private stepService: StepService,
+    private formService: FormService,
   ) {
     super();
+    this.closingDocsControl = this.form.controls[AccreditationPeriodFormField.ClosingDocs] as FormArray;
   }
 
   ngOnInit(): void {
@@ -75,115 +72,43 @@ export class AccreditationPeriodComponent extends OnDestroyMixin implements OnIn
       endLocDate: initialEndLocDate ? moment(initialEndLocDate) :  moment(getTomorrowDate()),
     });
 
-    const initialFormValue = {
-      endLocDate: new Date('06/05/2022'),
-      locDaysNumber: '23',
-      closingDocs: [
-        {
-          additionalRequirements: 'test req',
-          amount: 1,
-          document: 'test doc',
-          onlyOriginalDocument: true,
-        },
-      ],
-      isDocumentDigital: true,
-      allowUsePartOfLoc: false,
-    };
-
-    this.form.patchValue(initialFormValue);
-
-    merge(
-      this.endLocDateControl.valueChanges.pipe(
-        filter(endLocDate => endLocDate && endLocDate.getTime() > 0),
-        tap((endLocDate: Date) => {
-          const newLocDaysNumber = getSubstractDatesDays(endLocDate, this.currentDate);
-
-          if (newLocDaysNumber > 0 && newLocDaysNumber !== this.locDaysNumberControl.value) {
-            this.store.letterOfCredit.endLocDate = this.endLocDateControl.valid
-              ? endLocDate
-            : getTomorrowDate();
-
-            this.setLocDays();
-          }
-        }),
-      ),
-      this.locDaysNumberControl.valueChanges.pipe(
-        tap((locDaysNumber) => {
-          const newEndLocDate = getSummedDateDays(this.currentDate, Number(locDaysNumber));
-
-          if (newEndLocDate === this.endLocDateControl.value) {
-
-            return;
-          }
-
-          const days: number = Number(locDaysNumber);
-          if (days < 1 || days > 365) {
-            this.locDaysNumberControl.setValue('');
-
-            return;
-          }
-
-          this.setLocDate(days);
-        }),
-      ),
-      this.isDocumentDigitalControl.valueChanges.pipe(
-        tap(() => this.store.letterOfCredit.isDocumentDigital = this.isDocumentDigitalControl.value),
-      ),
-      this.allowUsePartOfLocControl.valueChanges.pipe(
-        tap(() => this.store.letterOfCredit.allowUsePartOfLoc = this.allowUsePartOfLocControl.value),
-      ),
-      this.closingDocsControl.valueChanges.pipe(
-        tap((closingDocs: ClosingDoc[]) => {
-          this.store.letterOfCredit.closingDocs = [];
-          closingDocs.forEach((closingDoc: ClosingDoc) => {
-            if (!closingDoc.document?.trim()) {
-
-              return;
-            }
-            this.store.letterOfCredit.closingDocs.push({ ...closingDoc });
-          });
-        }),
-      ),
-    ).pipe(
+    this.endLocDateControl.valueChanges.pipe(
+      filter(endLocDate => endLocDate && endLocDate.getTime() > 0),
       untilComponentDestroyed(this),
-    ).subscribe();
+    ).subscribe(this.setStoreEndLocDate.bind(this));
+
+    this.locDaysNumberControl.valueChanges.pipe(
+      untilComponentDestroyed(this),
+    ).subscribe(this.setLocDateOnDaysNumberChange.bind(this));
+
+    this.isDocumentDigitalControl.valueChanges.pipe(
+      untilComponentDestroyed(this),
+    ).subscribe(this.setStoreIsDocumentDigital.bind(this));
+
+    this.allowUsePartOfLocControl.valueChanges.pipe(
+      untilComponentDestroyed(this),
+    ).subscribe(this.setStoreAllowUsePartOfLoc.bind(this));
+
+    this.closingDocsControl.valueChanges.pipe(
+      untilComponentDestroyed(this),
+    ).subscribe(this.setStoreClosingDocs.bind(this));
 
     if (this.store.letterOfCredit.closingDocs) {
       this.store.letterOfCredit.closingDocs.forEach(closingDoc => this.addClosingDoc(closingDoc));
 
       return;
     }
-
-    this.addClosingDoc();
   }
 
-  public addClosingDoc({
-    document,
-    amount,
-    onlyOriginalDocument,
-    additionalRequirements,
-  } = {} as ClosingDoc): void {
-    const docFormGroup = {
-      document: new FormControl(document),
-      amount: new FormControl(amount ?? 1),
-      onlyOriginalDocument: new FormControl(
-        onlyOriginalDocument !== undefined ? onlyOriginalDocument : true,
-      ),
-      additionalRequirements: new FormControl(
-        additionalRequirements,
-      ),
-    };
-
-    this.closingDocsControl.push(
-      new FormGroup(docFormGroup),
-    );
+  addClosingDoc(closingDoc = {} as ClosingDoc): void {
+    this.formService.addClosingDocControl(closingDoc);
   }
 
-  public handleDelete(index: number): void {
+  handleDelete(index: number): void {
     this.closingDocsControl.controls.splice(index, 1);
   }
 
-  public handleSubmit(): void {
+  handleSubmit(): void {
     if (isFormValid(this.form)) {
       const endLocDate = new Date(this.store.letterOfCredit.endLocDate.toString());
       const stepDescription = `до ${endLocDate.toLocaleDateString(
@@ -197,6 +122,56 @@ export class AccreditationPeriodComponent extends OnDestroyMixin implements OnIn
       );
       this.router.navigateByUrl(paths[Page.SEND_APPLICATION]);
     }
+  }
+
+  private setStoreEndLocDate(endLocDate: Date): void {
+    const newLocDaysNumber = getSubstractDatesDays(endLocDate, this.currentDate);
+
+    if (newLocDaysNumber > 0 && newLocDaysNumber !== this.locDaysNumberControl.value) {
+      this.store.letterOfCredit.endLocDate = this.endLocDateControl.valid
+        ? endLocDate
+      : getTomorrowDate();
+
+      this.setLocDays();
+    }
+  }
+
+  private setLocDateOnDaysNumberChange(locDaysNumber): void {
+    const newEndLocDate = getSummedDateDays(this.currentDate, Number(locDaysNumber));
+
+    if (newEndLocDate === this.endLocDateControl.value) {
+
+      return;
+    }
+
+    const days: number = Number(locDaysNumber);
+
+    if (days < 1 || days > 365) {
+      this.locDaysNumberControl.setValue('');
+
+      return;
+    }
+
+    this.setLocDate(days);
+  }
+
+  private setStoreIsDocumentDigital(): void {
+    this.store.letterOfCredit.isDocumentDigital = this.isDocumentDigitalControl.value;
+  }
+
+  private setStoreAllowUsePartOfLoc(): void {
+    this.store.letterOfCredit.allowUsePartOfLoc = this.allowUsePartOfLocControl.value
+  }
+
+  private setStoreClosingDocs(closingDocs: ClosingDoc[]): void {
+    this.store.letterOfCredit.closingDocs = [];
+    closingDocs.forEach((closingDoc: ClosingDoc) => {
+      if (!closingDoc.document?.trim()) {
+
+        return;
+      }
+      this.store.letterOfCredit.closingDocs.push({ ...closingDoc });
+    });
   }
 
   private setLocDate(days: number): void {

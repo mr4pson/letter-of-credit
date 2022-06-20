@@ -1,12 +1,13 @@
-import { ComponentFixture, fakeAsync, TestBed, tick, waitForAsync } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
-import { BehaviorSubject, of } from 'rxjs';
+import { BehaviorSubject } from 'rxjs';
 
 import { NotificationComponent } from './notification.component';
 import { NotificationModule } from './notification.module';
 import { NotificationService } from './notification.service';
 
 import { NotificationType } from '@psb/fe-ui-kit';
+import { getNotificationsWrapper } from './testing';
 
 describe('NotificationComponent', () => {
   let component: NotificationComponent;
@@ -38,20 +39,16 @@ describe('NotificationComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create', () => {
-    expect(component).toBeTruthy();
-  });
-
-  it('should not display any notification', () => {
+  it('При пустом списке уведомлений не отображает уведомления', () => {
     notifications$$.next([]);
     fixture.detectChanges();
 
-    const notificationsWrapper = fixture.debugElement.query(By.css('.notifications-wrapper'));
+    const notificationsWrapper = getNotificationsWrapper(fixture);
 
     expect(notificationsWrapper.children.length).toEqual(0);
   });
 
-  it('should display 1 notification', () => {
+  it('При инициализации одного уведомления отображает его внутри компонента', () => {
     notifications$$.next([
       {
         id: 1,
@@ -61,7 +58,7 @@ describe('NotificationComponent', () => {
     ]);
     fixture.detectChanges();
 
-    const notificationsWrapper = fixture.debugElement.query(By.css('.notifications-wrapper'));
+    const notificationsWrapper = getNotificationsWrapper(fixture);
 
     expect(notificationsWrapper.children.length).toEqual(1);
   });

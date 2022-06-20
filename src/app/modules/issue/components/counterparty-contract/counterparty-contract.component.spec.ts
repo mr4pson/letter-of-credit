@@ -5,7 +5,6 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
 import { BehaviorSubject } from 'rxjs';
-import { By } from '@angular/platform-browser';
 import { NgxDropzoneChangeEvent, NgxDropzoneModule } from 'ngx-dropzone';
 
 import { StepService } from '../../services/step.service';
@@ -14,11 +13,13 @@ import { CounterpartyContractComponent } from './counterparty-contract.component
 import { FileUploadService } from '../../services/file-upload.service';
 import { FileUploaded } from '../../interfaces/file-uploaded.interface';
 import { NDS_LIST } from '../../constants/constants';
+import { clickNoVatBtn, clickSubmitButton, clickVatBtn } from './testing';
 
 import { PsbModule } from 'src/app/modules/psb/psb.module';
 import { UiKitModule } from 'src/app/modules/ui-kit/ui-kit.module';
 import { StoreService } from 'src/app/services';
 import { SimplebarAngularModule } from 'simplebar-angular';
+import { isFormValid } from 'src/app/utils';
 
 describe('CounterpartyContractComponent', () => {
   let component: CounterpartyContractComponent;
@@ -28,6 +29,13 @@ describe('CounterpartyContractComponent', () => {
 
   const files$$ = new BehaviorSubject([]);
   const errorMessage$$ = new BehaviorSubject([]);
+
+  const initialForm = {
+    contractDate: new Date('02/02/2022'),
+    selectedNds: NDS_LIST[2].label,
+    contract: 'test contract',
+    contractInfo: 'test contractInfo',
+  };
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
@@ -69,23 +77,13 @@ describe('CounterpartyContractComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create', () => {
-    expect(component).toBeTruthy();
-  });
-
-  it('should set initial form value', () => {
-    const initialForm = {
-      contractDate: new Date('02/02/2022'),
-      selectedNds: NDS_LIST[2].label,
-      contract: 'test contract',
-      contractInfo: 'test contractInfo',
-    };
+  it('При patchValue форма принимает аналогичное значение заданному', () => {
     component.form.patchValue(initialForm);
 
     expect(initialForm).toEqual(component.form.value);
   });
 
-  it('should call fileUpload selectFiles on handleSelectFiles call', () => {
+  it('Вызывает selectFiles в fileUploadService при вызове handleSelectFiles', () => {
     const file = new File([], 'test file.png');
     const seletFilesEvent = {
       addedFiles: [file],
@@ -98,7 +96,7 @@ describe('CounterpartyContractComponent', () => {
     expect(fileUploadService.selectFiles).toHaveBeenCalledWith(seletFilesEvent);
   });
 
-  it('should call fileUpload removeFile on handleRemoveFile call', () => {
+  it('Вызывает removeFile в fileUploadService при вызове handleRemoveFile', () => {
     const file = new File([], 'test file.png');
     const fileUploaded = {
       native: file,
@@ -111,50 +109,35 @@ describe('CounterpartyContractComponent', () => {
     expect(fileUploadService.removeFile).toHaveBeenCalledWith(fileUploaded);
   });
 
-  it('should call setVat on button click', () => {
+  it('Вызывает setVat при клике на кнопку "НДС включён"', () => {
     spyOn(component, 'setVat');
-    const vatBtn = fixture.debugElement.query(
-      By.css('.counterparty-contract__nds-actions psb-button:first-child button'),
-    );
-    vatBtn.nativeElement.click();
-    fixture.detectChanges();
+    clickVatBtn(fixture);
 
     expect(component.setVat).toHaveBeenCalled();
   });
 
-  it('should call unsetVat on button click', () => {
+  it('Вызывает unsetVat при клике на кнопку "Без НДС"', () => {
     spyOn(component, 'unsetVat');
-    const vatBtn = fixture.debugElement.query(
-      By.css('.counterparty-contract__nds-actions psb-button:last-child button'),
-    );
-    vatBtn.nativeElement.click();
+    clickNoVatBtn(fixture);
     fixture.detectChanges();
 
     expect(component.unsetVat).toHaveBeenCalled();
   });
 
-  it('should call handleSubmit on button click', () => {
+  it('Вызывает handleSubmit при сабмите формы', () => {
     spyOn(component, 'handleSubmit');
-    const submitButton = fixture.debugElement.query(By.css('.counterparty-contract__submit button'));
-    submitButton.nativeElement.click();
-    fixture.detectChanges();
+    clickSubmitButton(fixture);
 
     expect(component.handleSubmit).toHaveBeenCalled();
   });
 
-  it('should navigate to counterparty on valid form submit click', () => {
-    const initialForm = {
-      contractDate: new Date(),
-      selectedNds: NDS_LIST[2].label,
-      contract: 'test contract',
-      contractInfo: 'test contractInfo',
-    };
+  it('Редиректит к маршруту accreditation period при валидной форме', () => {
     component.form.patchValue(initialForm);
 
     spyOn(router, 'navigateByUrl');
-    const submitButton = fixture.debugElement.query(By.css('.counterparty-contract__submit button'));
-    submitButton.nativeElement.click();
+    clickSubmitButton(fixture);
 
+    expect(isFormValid(component.form)).toBeTruthy();
     expect(router.navigateByUrl).toHaveBeenCalledWith(paths[Page.ACCREDITATION_PERIOD]);
   });
 });
