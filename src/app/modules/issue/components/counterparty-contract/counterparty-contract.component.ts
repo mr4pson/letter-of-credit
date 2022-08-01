@@ -1,5 +1,4 @@
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import { tap } from 'rxjs/operators';
 import { merge } from 'rxjs';
 import { OnDestroyMixin, untilComponentDestroyed } from '@w11k/ngx-componentdestroyed';
@@ -12,14 +11,13 @@ import { FileUploaded } from '../../interfaces/file-uploaded.interface';
 import { Page, paths } from '../../constants/routes';
 import { StepService } from '../../services/step.service';
 import { CounterpartyContractFormField } from '../../enums/counterparty-contract-form-field.enum';
-import { SET_AGREEMENT_NUMBER_CONTROL_MESSAGE, SET_AGREEMEN_SUBJECT_CONTROL_MESSAGE, SET_DATE_CONTROL_MESSAGE } from './constants';
 
 import { ButtonType } from '@psb/fe-ui-kit/src/components/button';
 import { SelectedItem } from '@psb/fe-ui-kit/src/components/input-select';
-import { getRequiredFormControlValidator } from '@psb/validations/required';
 import { SimplebarAngularComponent } from 'simplebar-angular/lib/simplebar-angular.component';
 import { StoreService } from 'src/app/services/store.service';
 import { isFormValid } from 'src/app/utils';
+import { CounterpartyContractFormService } from './counterparty-contract-form.service';
 
 @Component({
     selector: 'counterparty-contract',
@@ -30,45 +28,28 @@ import { isFormValid } from 'src/app/utils';
 export class CounterpartyContractComponent extends OnDestroyMixin implements OnInit {
     files$ = this.fileUploadService.files$;
     errorMessage$ = this.fileUploadService.errorMessage$;
-    form: FormGroup;
+    form = this.formService.createForm();
     ndsList = NDS_LIST;
     ButtonType = ButtonType;
     maxContractDate = new Date();
     selectedNds = 20;
     CounterpartyContractFormField = CounterpartyContractFormField;
 
-    private get contractDateControl() {
-        return this.form.controls.contractDate;
-    }
-
-    private get selectedNdsControl() {
-        return this.form.controls.selectedNds;
-    }
-
-    private get contractControl() {
-        return this.form.controls.contract;
-    }
-
-    private get contractInfoControl() {
-        return this.form.controls.contractInfo;
-    }
-
     constructor(
         private store: StoreService,
         private fileUploadService: FileUploadService,
         private router: Router,
         private stepService: StepService,
-        private formBuilder: FormBuilder,
+        private formService: CounterpartyContractFormService,
     ) {
         super();
-        this.createForm();
     }
 
     ngOnInit(): void {
         this.form.patchValue(this.store.letterOfCredit);
 
         merge(
-            this.selectedNdsControl.valueChanges.pipe(
+            this.formService.selectedNdsControl.valueChanges.pipe(
                 tap((title: string) => {
                     const selectedNds = this.ndsList.find(
                         (ndsItem: SelectedItem) => ndsItem.label === title,
@@ -76,23 +57,23 @@ export class CounterpartyContractComponent extends OnDestroyMixin implements OnI
                     this.selectedNds = selectedNds?.value;
                 }),
             ),
-            this.contractDateControl.valueChanges.pipe(
+            this.formService.contractDateControl.valueChanges.pipe(
                 tap((contractDate: Date) => {
-                    this.store.letterOfCredit.contractDate = this.contractDateControl.valid
+                    this.store.letterOfCredit.contractDate = this.formService.contractDateControl.valid
                         ? contractDate
                         : null;
                 }),
             ),
-            this.contractControl.valueChanges.pipe(
+            this.formService.contractControl.valueChanges.pipe(
                 tap((contract: string) => {
-                    this.store.letterOfCredit.contract = this.contractControl.valid
+                    this.store.letterOfCredit.contract = this.formService.contractControl.valid
                         ? contract
                         : '';
                 }),
             ),
-            this.contractInfoControl.valueChanges.pipe<string>(
+            this.formService.contractInfoControl.valueChanges.pipe<string>(
                 tap((contractInfo: string) => {
-                    this.store.letterOfCredit.contractInfo = this.contractInfoControl.valid
+                    this.store.letterOfCredit.contractInfo = this.formService.contractInfoControl.valid
                         ? contractInfo
                         : '';
                 }),
@@ -104,7 +85,7 @@ export class CounterpartyContractComponent extends OnDestroyMixin implements OnI
 
     setVat(): void {
         if (this.selectedNds === 0) {
-            this.selectedNdsControl.setValue(
+            this.formService.selectedNdsControl.setValue(
                 this.ndsList[this.ndsList.length - 1].label,
             );
         }
@@ -112,7 +93,7 @@ export class CounterpartyContractComponent extends OnDestroyMixin implements OnI
 
     unsetVat(): void {
         if (this.selectedNds > 0) {
-            this.selectedNdsControl.setValue(
+            this.formService.selectedNdsControl.setValue(
                 this.ndsList[0].label,
             );
         }
@@ -133,7 +114,7 @@ export class CounterpartyContractComponent extends OnDestroyMixin implements OnI
 
     handleSubmit(): void {
         if (isFormValid(this.form)) {
-            const stepDescription = this.contractDateControl.value.toLocaleDateString(
+            const stepDescription = this.formService.contractDateControl.value.toLocaleDateString(
                 'ru-RU',
                 { year: 'numeric', month: 'long', day: 'numeric' },
             );
@@ -144,23 +125,5 @@ export class CounterpartyContractComponent extends OnDestroyMixin implements OnI
             );
             this.router.navigateByUrl(paths[Page.ACCREDITATION_PERIOD]);
         }
-    }
-
-    private createForm(): void {
-        this.form = this.formBuilder.group({
-            contractDate: ['', [
-                getRequiredFormControlValidator(SET_DATE_CONTROL_MESSAGE),
-            ]
-            ],
-            selectedNds: [NDS_LIST[2].label],
-            contract: ['', [
-                getRequiredFormControlValidator(SET_AGREEMENT_NUMBER_CONTROL_MESSAGE),
-            ]
-            ],
-            contractInfo: ['', [
-                getRequiredFormControlValidator(SET_AGREEMEN_SUBJECT_CONTROL_MESSAGE),
-            ]
-            ],
-        });
     }
 }

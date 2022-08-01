@@ -2,7 +2,6 @@ import { ComponentFixture, fakeAsync, TestBed, tick, waitForAsync } from '@angul
 import { ReactiveFormsModule } from '@angular/forms';
 import { RouterTestingModule } from '@angular/router/testing';
 import { CommonModule } from '@angular/common';
-import { By } from '@angular/platform-browser';
 import '@angular/common/locales/global/ru';
 import { BehaviorSubject } from 'rxjs';
 import { Router } from '@angular/router';
@@ -11,6 +10,7 @@ import { StepService } from '../../services/step.service';
 import { AccreditationAmountComponent } from './accreditation-amount.component';
 import { ClientAccountService } from '../../services/client-accounts.service';
 import { Page, paths } from '../../constants/routes';
+import { AccreditationAmountFormService } from './accreditation-amount-form.service';
 import { clickSubmitButton } from './testIng';
 
 import { AccountService, ErrorHandlerService, StoreService } from 'src/app/services';
@@ -53,6 +53,7 @@ describe('AccreditationAmountComponent', () => {
             providers: [
                 StoreService,
                 StepService,
+                AccreditationAmountFormService,
                 {
                     provide: AccountService,
                     useValue: {

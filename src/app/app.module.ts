@@ -19,7 +19,7 @@ import { ApiModule } from '../api/api.module';
 import { NgService } from './services/ng.service';
 import { SafePaymentModule } from './modules/safepayment/safe-payment.module';
 import { UiKitModule } from './modules/ui-kit/ui-kit.module';
-import { BaseModalModule } from '@psb/fe-ui-kit';
+import { MaterialModule } from './modules/material/material-module';
 
 registerLocaleData(ru);
 @NgModule({
@@ -31,10 +31,10 @@ registerLocaleData(ru);
         BrowserModule,
         BrowserAnimationsModule,
         PsbModule,
+        MaterialModule,
         UiKitModule,
         IssueModule,
         SafePaymentModule,
-        BaseModalModule,
     ],
     providers: [
         { provide: LOCALE_ID, useValue: 'ru' },

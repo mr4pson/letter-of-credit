@@ -5,11 +5,11 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
 import { BehaviorSubject } from 'rxjs';
-import { By } from '@angular/platform-browser';
 
 import { StepService } from '../../services/step.service';
 import { СounterpartyComponent } from './counterparty.component';
 import { PartnersService } from '../../services/partners.service';
+import { CounterpartyFormService } from './counterparty-form.service';
 import { Page, paths } from '../../constants/routes';
 import { clickSubmitButton } from './testing';
 
@@ -56,6 +56,7 @@ describe('CounterpartyComponent', () => {
             providers: [
                 StoreService,
                 StepService,
+                CounterpartyFormService,
                 {
                     provide: AccountService,
                     useValue: {

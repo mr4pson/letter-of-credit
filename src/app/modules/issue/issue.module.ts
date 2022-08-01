@@ -14,7 +14,11 @@ import { IssueStepsComponent } from './components/issue-steps/issue-steps.compon
 import { IssueSuccessComponent } from './components/issue-success/issue-success.component';
 import { IssueComponent } from './issue.component';
 import { SendApplicationComponent } from './components/send-application/send-application.component';
-import { FormService } from './components/accreditation-period/form.service';
+import { AccreditationPeriodFormService } from './components/accreditation-period/accreditation-period-form.service';
+import { AccreditationAmountFormService } from './components/accreditation-amount/accreditation-amount-form.service';
+import { CounterpartyContractFormService } from './components/counterparty-contract/counterparty-contract-form.service';
+import { SendApplicationFormService } from './components/send-application/send-application-form.service';
+import { CounterpartyFormService } from './components/counterparty/counterparty-form.service';
 import { FileUploadService } from './services/file-upload.service';
 import { PsbModule } from '../psb/psb.module';
 import { PartnersService } from './services/partners.service';
@@ -53,12 +57,16 @@ import { AccountService } from 'src/app/services';
         IssueComponent,
     ],
     providers: [
-        FormService,
         StepService,
         AccountService,
         PartnersService,
         FileUploadService,
         ClientAccountService,
+        CounterpartyFormService,
+        SendApplicationFormService,
+        AccreditationAmountFormService,
+        AccreditationPeriodFormService,
+        CounterpartyContractFormService,
     ],
 })
 export class IssueModule { }

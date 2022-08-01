@@ -1,5 +1,4 @@
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
-import { By } from '@angular/platform-browser';
 import { BehaviorSubject } from 'rxjs';
 
 import { NotificationComponent } from './notification.component';
@@ -10,56 +9,56 @@ import { NotificationType } from '@psb/fe-ui-kit';
 import { getNotificationsWrapper } from './testing';
 
 describe('NotificationComponent', () => {
-  let component: NotificationComponent;
-  let fixture: ComponentFixture<NotificationComponent>;
-  let notificationService: NotificationService;
-  const notifications$$ = new BehaviorSubject([]);
+    let component: NotificationComponent;
+    let fixture: ComponentFixture<NotificationComponent>;
+    let notificationService: NotificationService;
+    const notifications$$ = new BehaviorSubject([]);
 
-  beforeEach(waitForAsync(() => {
-    TestBed.configureTestingModule({
-      imports: [
-        NotificationModule,
-      ],
-      providers: [
-        {
-          provide: NotificationService,
-          useValue: {
-            notifications$: notifications$$.asObservable(),
-          },
-        },
-      ],
-    }).compileComponents();
-  }));
+    beforeEach(waitForAsync(() => {
+        TestBed.configureTestingModule({
+            imports: [
+                NotificationModule,
+            ],
+            providers: [
+                {
+                    provide: NotificationService,
+                    useValue: {
+                        notifications$: notifications$$.asObservable(),
+                    },
+                },
+            ],
+        }).compileComponents();
+    }));
 
-  beforeEach(() => {
-    fixture = TestBed.createComponent(NotificationComponent);
-    component = fixture.componentInstance;
-    notificationService = TestBed.inject(NotificationService);
+    beforeEach(() => {
+        fixture = TestBed.createComponent(NotificationComponent);
+        component = fixture.componentInstance;
+        notificationService = TestBed.inject(NotificationService);
 
-    fixture.detectChanges();
-  });
+        fixture.detectChanges();
+    });
 
-  it('При пустом списке уведомлений не отображает уведомления', () => {
-    notifications$$.next([]);
-    fixture.detectChanges();
+    it('При пустом списке уведомлений не отображает уведомления', () => {
+        notifications$$.next([]);
+        fixture.detectChanges();
 
-    const notificationsWrapper = getNotificationsWrapper(fixture);
+        const notificationsWrapper = getNotificationsWrapper(fixture);
 
-    expect(notificationsWrapper.children.length).toEqual(0);
-  });
+        expect(notificationsWrapper.children.length).toEqual(0);
+    });
 
-  it('При инициализации одного уведомления отображает его внутри компонента', () => {
-    notifications$$.next([
-      {
-        id: 1,
-        message: 'test',
-        type: NotificationType.Error,
-      },
-    ]);
-    fixture.detectChanges();
+    it('При инициализации одного уведомления отображает его внутри компонента', () => {
+        notifications$$.next([
+            {
+                id: 1,
+                message: 'test',
+                type: NotificationType.Error,
+            },
+        ]);
+        fixture.detectChanges();
 
-    const notificationsWrapper = getNotificationsWrapper(fixture);
+        const notificationsWrapper = getNotificationsWrapper(fixture);
 
-    expect(notificationsWrapper.children.length).toEqual(1);
-  });
+        expect(notificationsWrapper.children.length).toEqual(1);
+    });
 });

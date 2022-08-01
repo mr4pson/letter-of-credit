@@ -10,46 +10,46 @@ import { StoreService } from 'src/app/services';
 import { emailButtonClick } from './testing';
 
 describe('SafePaymentEmailComponent', () => {
-  let component: SafePaymentEmailComponent;
-  let fixture: ComponentFixture<SafePaymentEmailComponent>;
+    let component: SafePaymentEmailComponent;
+    let fixture: ComponentFixture<SafePaymentEmailComponent>;
 
-  beforeEach(waitForAsync(() => {
-    TestBed.configureTestingModule({
-      declarations: [
-        SafePaymentEmailComponent,
-      ],
-      imports: [
-        CommonModule,
-        PsbModule,
-        ReactiveFormsModule,
-      ],
-      providers: [
-        StoreService,
-      ],
-    }).compileComponents();
-  }));
+    beforeEach(waitForAsync(() => {
+        TestBed.configureTestingModule({
+            declarations: [
+                SafePaymentEmailComponent,
+            ],
+            imports: [
+                CommonModule,
+                PsbModule,
+                ReactiveFormsModule,
+            ],
+            providers: [
+                StoreService,
+            ],
+        }).compileComponents();
+    }));
 
-  beforeEach(() => {
-    fixture = TestBed.createComponent(SafePaymentEmailComponent);
-    component = fixture.componentInstance;
+    beforeEach(() => {
+        fixture = TestBed.createComponent(SafePaymentEmailComponent);
+        component = fixture.componentInstance;
 
-    fixture.detectChanges();
-  });
+        fixture.detectChanges();
+    });
 
-  it('Вызывает takeEmail при клике на кнопку "Получить материалы"', () => {
-    spyOn(component, 'takeEmail');
-    emailButtonClick(fixture);
+    it('Вызывает takeEmail при клике на кнопку "Получить материалы"', () => {
+        spyOn(component, 'takeEmail');
+        emailButtonClick(fixture);
 
-    expect(component.takeEmail).toHaveBeenCalled();
-  });
+        expect(component.takeEmail).toHaveBeenCalled();
+    });
 
-  it('Эмитит значение при клике на кнопку  "Получить материалы" в случае, если email валидный', () => {
-    const testEmail = 'test@mail.ru';
-    component.emailFormControl.patchValue('test@mail.ru');
+    it('Эмитит значение при клике на кнопку  "Получить материалы" в случае, если email валидный', () => {
+        const testEmail = 'test@mail.ru';
+        component.emailFormControl.patchValue('test@mail.ru');
 
-    spyOn(component.takeValidEmail, 'emit');
-    emailButtonClick(fixture);
+        spyOn(component.takeValidEmail, 'emit');
+        emailButtonClick(fixture);
 
-    expect(component.takeValidEmail.emit).toHaveBeenCalledWith(testEmail);
-  });
+        expect(component.takeValidEmail.emit).toHaveBeenCalledWith(testEmail);
+    });
 });

@@ -9,36 +9,36 @@ import { NotificationType } from '@psb/fe-ui-kit';
 
 @Injectable()
 export class NotificationService {
-  private notifications$$ = new BehaviorSubject<Notification[]>([]);
-  notifications$ = this.notifications$$.asObservable().pipe(
-    tap((notifications) => {
-      if (notifications.length > 0) {
-        setTimeout(this.removeNotification.bind(this), 3000);
-      }
-    }),
-  );
-  get notifications() {
-    return this.notifications$$.getValue();
-  }
-  set notifications(list) {
-    this.notifications$$.next(list);
-  }
+    private notifications$$ = new BehaviorSubject<Notification[]>([]);
+    notifications$ = this.notifications$$.asObservable().pipe(
+        tap((notifications) => {
+            if (notifications.length > 0) {
+                setTimeout(this.removeNotification.bind(this), 3000);
+            }
+        }),
+    );
+    get notifications() {
+        return this.notifications$$.getValue();
+    }
+    set notifications(list) {
+        this.notifications$$.next(list);
+    }
 
-  private lastNotificationId = 0;
+    private lastNotificationId = 0;
 
-  addError(config: { info: string }): void {
-    const notification: Notification = {
-      message: config.info,
-      id: this.lastNotificationId,
-      type: NotificationType.Error,
-    };
-    this.notifications = [...this.notifications, notification];
-    this.lastNotificationId += 1;
-  }
+    addError(config: { info: string }): void {
+        const notification: Notification = {
+            message: config.info,
+            id: this.lastNotificationId,
+            type: NotificationType.Error,
+        };
+        this.notifications = [...this.notifications, notification];
+        this.lastNotificationId += 1;
+    }
 
-  private removeNotification(): void {
-    const notifications = [...this.notifications];
-    notifications.shift();
-    this.notifications = notifications;
-  }
+    private removeNotification(): void {
+        const notifications = [...this.notifications];
+        notifications.shift();
+        this.notifications = notifications;
+    }
 }

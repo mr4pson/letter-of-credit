@@ -1,22 +1,24 @@
 <div class="email-form">
-  <psb-text-input
-    label="Email"
-    [formControl]="emailFormControl"
-    class="field"
-  ></psb-text-input>
+    <psb-text-input
+        label="Email"
+        [formControl]="emailFormControl"
+        class="field"
+    ></psb-text-input>
 
-  <psb-icon
-    *ngIf="emailFormControl.valid"
-    class="green-check"
-    [path]="'ServiceValidation_24.svg'"
-  ></psb-icon>
 
-  <psb-button
-    class="button"
-    [type]="ButtonType.Text"
-    [size]="ButtonSize.Medium"
-    (click)="takeEmail()"
-  >
-    Получить материалы
-  </psb-button>
+    <psb-icon
+        *ngIf="emailFormControl.valid"
+        class="green-check"
+        [path]="'ServiceValidation_24.svg'"
+    ></psb-icon>
+
+
+    <psb-button
+        class="button"
+        [type]="ButtonType.Text"
+        [size]="ButtonSize.Medium"
+        (click)="takeEmail()"
+    >
+        Получить материалы
+    </psb-button>
 </div>

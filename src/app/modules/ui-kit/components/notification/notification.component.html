@@ -1,7 +1,7 @@
 <div class="notifications-wrapper">
-  <psb-notification
-    *ngFor="let notification of (notifications$ | async)"
-    [type]="notification.type"
-    [heading]="notification.message"
-  ></psb-notification>
+    <psb-notification
+        *ngFor="let notification of (notifications$ | async)"
+        [type]="notification.type"
+        [heading]="notification.message"
+    ></psb-notification>
 </div>

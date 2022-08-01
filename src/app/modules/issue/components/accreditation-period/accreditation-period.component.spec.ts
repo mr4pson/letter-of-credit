@@ -10,7 +10,7 @@ import { StepService } from '../../services/step.service';
 import { ClosingDocComponent } from './closing-doc/closing-doc.component';
 import { Page, paths } from '../../constants/routes';
 import { AccreditationPeriodFormField } from '../../enums/accreditation-period-form-field.enum';
-import { FormService } from './form.service';
+import { AccreditationPeriodFormService } from './accreditation-period-form.service';
 import { clickAddDocBtn, clickRemoveBtn, clickSubmitButton, getClosingDocs } from './testing';
 
 import { StoreService } from 'src/app/services';
@@ -52,7 +52,7 @@ describe('AccreditationPeriodComponent', () => {
             providers: [
                 StoreService,
                 StepService,
-                FormService,
+                AccreditationPeriodFormService,
             ],
         }).compileComponents();
     }));

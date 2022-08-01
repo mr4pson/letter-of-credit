@@ -10,20 +10,20 @@ import { NotificationModule } from './components/notification/notification.modul
 import { ClickOutsideModule } from '@psb/angular-tools';
 
 @NgModule({
-  declarations: [
-    AccountSelectComponent,
-  ],
-  imports: [
-    BrowserAnimationsModule,
-    BrowserModule,
-    ClickOutsideModule,
-    CommonModule,
-    NotificationModule,
-    PsbModule,
-  ],
-  exports: [
-    AccountSelectComponent,
-    NotificationModule,
-  ],
+    declarations: [
+        AccountSelectComponent,
+    ],
+    imports: [
+        BrowserAnimationsModule,
+        BrowserModule,
+        ClickOutsideModule,
+        CommonModule,
+        NotificationModule,
+        PsbModule,
+    ],
+    exports: [
+        AccountSelectComponent,
+        NotificationModule,
+    ],
 })
 export class UiKitModule { }

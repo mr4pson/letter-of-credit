@@ -1,1318 +1,1352 @@
 {
-  "openapi": "3.0.1",
-  "info": {
-    "title": "PSB Letter Of Credit API",
-    "version": "v1"
-  },
-  "paths": {
-    "/auth/generateToken": {
-      "get": {
-        "tags": ["Authorization"],
-        "parameters": [
-          {
-            "name": "userId",
-            "in": "query",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "branchId",
-            "in": "query",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "clientId",
-            "in": "query",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Success"
-          }
-        }
-      }
+    "openapi": "3.0.1",
+    "info": {
+        "title": "PSB Letter Of Credit API",
+        "version": "v1"
     },
-    "/api/LC/enableLCOffers/{clientId}": {
-      "post": {
-        "tags": ["Letter"],
-        "summary": "Метод выключает режим автоматического предложения покрытого аккредитива для конкретного контрагента",
-        "parameters": [
-          {
-            "name": "clientId",
-            "in": "path",
-            "description": "Идентификатор клиента",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "branchId",
-            "in": "query",
-            "description": "Идентификатор филиала",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "contractor",
-            "in": "query",
-            "description": "ИНН контрагента",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Success",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/BaseResponseModel"
+    "paths": {
+        "/auth/generateToken": {
+            "get": {
+                "tags": [
+                    "Authorization"
+                ],
+                "parameters": [
+                    {
+                        "name": "userId",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "branchId",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "clientId",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success"
+                    }
                 }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/BaseResponseModel"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/BaseResponseModel"
-                }
-              }
             }
-          }
+        },
+        "/api/LC/enableLCOffers/{clientId}": {
+            "post": {
+                "tags": [
+                    "Letter"
+                ],
+                "summary": "Метод выключает режим автоматического предложения покрытого аккредитива для конкретного контрагента",
+                "parameters": [
+                    {
+                        "name": "clientId",
+                        "in": "path",
+                        "description": "Идентификатор клиента",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "branchId",
+                        "in": "query",
+                        "description": "Идентификатор филиала",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "contractor",
+                        "in": "query",
+                        "description": "ИНН контрагента",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "content": {
+                            "text/plain": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/BaseResponseModel"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/BaseResponseModel"
+                                }
+                            },
+                            "text/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/BaseResponseModel"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/LC/isLCOffersEnabled/{clientId}": {
+            "get": {
+                "tags": [
+                    "Letter"
+                ],
+                "summary": "Метод проверяет можно или нет показывать всплывающее окно для предложения на покрытый аккредитив конкретному контрагенту",
+                "parameters": [
+                    {
+                        "name": "clientId",
+                        "in": "path",
+                        "description": "Идентификатор клиента",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "branchId",
+                        "in": "query",
+                        "description": "Идентификатор филиала",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "contractor",
+                        "in": "query",
+                        "description": "ИНН контрагента",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success"
+                    }
+                }
+            }
+        },
+        "/api/LC/registerOffer/{clientId}": {
+            "post": {
+                "tags": [
+                    "Letter"
+                ],
+                "summary": "Метод проверяет можно или нет показывать всплывающее окно для предложения на покрытый аккредитив конкретному контрагенту",
+                "parameters": [
+                    {
+                        "name": "clientId",
+                        "in": "path",
+                        "description": "Идентификатор клиента",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "branchId",
+                        "in": "query",
+                        "description": "Идентификатор филиала",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "contractor",
+                        "in": "query",
+                        "description": "ИНН контрагента",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "content": {
+                            "text/plain": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/BaseResponseModel"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/BaseResponseModel"
+                                }
+                            },
+                            "text/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/BaseResponseModel"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/LC/documents/{clientId}": {
+            "get": {
+                "tags": [
+                    "Letter"
+                ],
+                "summary": "Метод возвращает список поданных заявок на покрытый аккредитив, отобранных в соответствии с заданными параметрами",
+                "parameters": [
+                    {
+                        "name": "clientId",
+                        "in": "path",
+                        "description": "Идентификатор клиента",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "branchId",
+                        "in": "query",
+                        "description": "Идентификатор филиала",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "startDate",
+                        "in": "query",
+                        "description": "Начало периода выборки",
+                        "schema": {
+                            "type": "string",
+                            "format": "dd.MM.yyyy HH:mm:ss"
+                        }
+                    },
+                    {
+                        "name": "endDate",
+                        "in": "query",
+                        "description": "Конец периода выборки",
+                        "schema": {
+                            "type": "string",
+                            "format": "dd.MM.yyyy HH:mm:ss"
+                        }
+                    },
+                    {
+                        "name": "state",
+                        "in": "query",
+                        "description": "Статус, в соответствии со статусной моделью",
+                        "schema": {
+                            "type": "integer",
+                            "format": "int32"
+                        }
+                    },
+                    {
+                        "name": "count",
+                        "in": "query",
+                        "description": "Количество выводимых элементов списка",
+                        "schema": {
+                            "type": "integer",
+                            "format": "int32"
+                        }
+                    },
+                    {
+                        "name": "offset",
+                        "in": "query",
+                        "description": "Начиная с какого индекса выводить",
+                        "schema": {
+                            "type": "integer",
+                            "format": "int32"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "content": {
+                            "text/plain": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/LetterListItemModel"
+                                    }
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/LetterListItemModel"
+                                    }
+                                }
+                            },
+                            "text/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/LetterListItemModel"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/LC/documents/{clientId}/Create": {
+            "post": {
+                "tags": [
+                    "Letter"
+                ],
+                "summary": "Метод создает заявку на покрытый аккредитив",
+                "parameters": [
+                    {
+                        "name": "clientId",
+                        "in": "path",
+                        "description": "Идентификатор клиента",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "branchId",
+                        "in": "query",
+                        "description": "Идентификатор филиала",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "description": "Форма заявки в виде JSON",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/LetterEditModel"
+                            }
+                        },
+                        "text/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/LetterEditModel"
+                            }
+                        },
+                        "application/*+json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/LetterEditModel"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "content": {
+                            "text/plain": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/LetterEditResult"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/LetterEditResult"
+                                }
+                            },
+                            "text/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/LetterEditResult"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/LC/documents/{clientId}/Update": {
+            "post": {
+                "tags": [
+                    "Letter"
+                ],
+                "summary": "Метод обновляет заявку на покрытый аккредитив",
+                "parameters": [
+                    {
+                        "name": "clientId",
+                        "in": "path",
+                        "description": "Идентификатор клиента",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "branchId",
+                        "in": "query",
+                        "description": "Идентификатор филиала",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "letterId",
+                        "in": "query",
+                        "description": "Идентификатор заявки",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "description": "Форма заявки в виде JSON",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/LetterEditModel"
+                            }
+                        },
+                        "text/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/LetterEditModel"
+                            }
+                        },
+                        "application/*+json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/LetterEditModel"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "content": {
+                            "text/plain": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/LetterEditResult"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/LetterEditResult"
+                                }
+                            },
+                            "text/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/LetterEditResult"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/LC/documents/{clientId}/getInfo": {
+            "get": {
+                "tags": [
+                    "Letter"
+                ],
+                "summary": "Метод возвращает полные данные заявления",
+                "parameters": [
+                    {
+                        "name": "clientId",
+                        "in": "path",
+                        "description": "Идентификатор клиента",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "branchId",
+                        "in": "query",
+                        "description": "Идентификатор филиала",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "letterId",
+                        "in": "query",
+                        "description": "Идентификатор заявки",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "content": {
+                            "text/plain": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/LetterListExtendedModel"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/LetterListExtendedModel"
+                                }
+                            },
+                            "text/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/LetterListExtendedModel"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/LC/documents/{clientId}/getContractFromLetter": {
+            "get": {
+                "tags": [
+                    "Letter"
+                ],
+                "summary": "Получение содержимого файла в бинарном виде",
+                "parameters": [
+                    {
+                        "name": "clientId",
+                        "in": "path",
+                        "description": "Идентификатор клиента",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "branchId",
+                        "in": "query",
+                        "description": "Идентификатор филиала",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "letterId",
+                        "in": "query",
+                        "description": "Идентификатор заявки",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid"
+                        }
+                    },
+                    {
+                        "name": "contractFileId",
+                        "in": "query",
+                        "description": "Идентификатор файла",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success"
+                    }
+                }
+            }
+        },
+        "/api/LC/documents/{clientId}/appendContractToLetter": {
+            "post": {
+                "tags": [
+                    "Letter"
+                ],
+                "summary": "Метод позволяет добавить файл договора к заявке",
+                "parameters": [
+                    {
+                        "name": "clientId",
+                        "in": "path",
+                        "description": "Идентификатор клиента",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "branchId",
+                        "in": "query",
+                        "description": "Идентификатор филиала",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "letterId",
+                        "in": "query",
+                        "description": "Идентификатор заявки",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "description": "",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/LetterContractFileModel"
+                            }
+                        },
+                        "text/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/LetterContractFileModel"
+                            }
+                        },
+                        "application/*+json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/LetterContractFileModel"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "content": {
+                            "text/plain": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/BaseResponseModel"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/BaseResponseModel"
+                                }
+                            },
+                            "text/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/BaseResponseModel"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/LC/documents/{clientId}/removeContractFromLetter": {
+            "post": {
+                "tags": [
+                    "Letter"
+                ],
+                "summary": "Метод удаляет загруженный в заявку файл",
+                "parameters": [
+                    {
+                        "name": "clientId",
+                        "in": "path",
+                        "description": "Идентификатор клиента",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "branchId",
+                        "in": "query",
+                        "description": "Идентификатор филиала",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "letterId",
+                        "in": "query",
+                        "description": "Идентификатор заявки",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid"
+                        }
+                    },
+                    {
+                        "name": "contractFileId",
+                        "in": "query",
+                        "description": "Идентификатор файла",
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "content": {
+                            "text/plain": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/BaseResponseModel"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/BaseResponseModel"
+                                }
+                            },
+                            "text/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/BaseResponseModel"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/LC/calculateCommission": {
+            "get": {
+                "tags": [
+                    "Letter"
+                ],
+                "summary": "Метод рассчитывает размер комиссии на выпуск покрытого аккредитива для указанной суммы",
+                "parameters": [
+                    {
+                        "name": "total",
+                        "in": "query",
+                        "description": "Сумма на которую необходимо рассчитать размер комиссии",
+                        "schema": {
+                            "type": "number",
+                            "format": "double"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "content": {
+                            "text/plain": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/LetterCommissionResponseModel"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/LetterCommissionResponseModel"
+                                }
+                            },
+                            "text/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/LetterCommissionResponseModel"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/LC/documents/{clientId}/State": {
+            "get": {
+                "tags": [
+                    "Letter"
+                ],
+                "summary": "Метод возвращает статус рассмотрения заявки на аккредитив",
+                "parameters": [
+                    {
+                        "name": "clientId",
+                        "in": "path",
+                        "description": "Идентификатор клиента",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "branchId",
+                        "in": "query",
+                        "description": "Идентификатор филиала",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "letterId",
+                        "in": "query",
+                        "description": "Идентификатор заявки",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success"
+                    }
+                }
+            }
+        },
+        "/api/LC/sendDeteiledInformation": {
+            "post": {
+                "tags": [
+                    "Letter"
+                ],
+                "summary": "Метод отправляет электронное письмо с подробным описанием услуги на указанный адрес электронной почты",
+                "parameters": [
+                    {
+                        "name": "email",
+                        "in": "query",
+                        "description": "Адрес почты на который необходимо отправить письмо",
+                        "required": true,
+                        "schema": {
+                            "pattern": "^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+.[a-zA-Z0-9-.]+$",
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "content": {
+                            "text/plain": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/BaseResponseModel"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/BaseResponseModel"
+                                }
+                            },
+                            "text/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/BaseResponseModel"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/LC/documents/{clientId}/getTemplate": {
+            "get": {
+                "tags": [
+                    "Letter"
+                ],
+                "summary": "Метод отправляет в ДБО запрос на генерацию файла заявления",
+                "parameters": [
+                    {
+                        "name": "clientId",
+                        "in": "path",
+                        "description": "Идентификатор клиента",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "branchId",
+                        "in": "query",
+                        "description": "Идентификатор филиала",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "letterId",
+                        "in": "query",
+                        "description": "Идентификатор заявки",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success"
+                    }
+                }
+            }
         }
-      }
     },
-    "/api/LC/isLCOffersEnabled/{clientId}": {
-      "get": {
-        "tags": ["Letter"],
-        "summary": "Метод проверяет можно или нет показывать всплывающее окно для предложения на покрытый аккредитив конкретному контрагенту",
-        "parameters": [
-          {
-            "name": "clientId",
-            "in": "path",
-            "description": "Идентификатор клиента",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "branchId",
-            "in": "query",
-            "description": "Идентификатор филиала",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "contractor",
-            "in": "query",
-            "description": "ИНН контрагента",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Success"
-          }
-        }
-      }
-    },
-    "/api/LC/registerOffer/{clientId}": {
-      "post": {
-        "tags": ["Letter"],
-        "summary": "Метод проверяет можно или нет показывать всплывающее окно для предложения на покрытый аккредитив конкретному контрагенту",
-        "parameters": [
-          {
-            "name": "clientId",
-            "in": "path",
-            "description": "Идентификатор клиента",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "branchId",
-            "in": "query",
-            "description": "Идентификатор филиала",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "contractor",
-            "in": "query",
-            "description": "ИНН контрагента",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Success",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/BaseResponseModel"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/BaseResponseModel"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/BaseResponseModel"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/LC/documents/{clientId}": {
-      "get": {
-        "tags": ["Letter"],
-        "summary": "Метод возвращает список поданных заявок на покрытый аккредитив, отобранных в соответствии с заданными параметрами",
-        "parameters": [
-          {
-            "name": "clientId",
-            "in": "path",
-            "description": "Идентификатор клиента",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "branchId",
-            "in": "query",
-            "description": "Идентификатор филиала",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "startDate",
-            "in": "query",
-            "description": "Начало периода выборки",
-            "schema": {
-              "type": "string",
-              "format": "dd.MM.yyyy HH:mm:ss"
-            }
-          },
-          {
-            "name": "endDate",
-            "in": "query",
-            "description": "Конец периода выборки",
-            "schema": {
-              "type": "string",
-              "format": "dd.MM.yyyy HH:mm:ss"
-            }
-          },
-          {
-            "name": "state",
-            "in": "query",
-            "description": "Статус, в соответствии со статусной моделью",
-            "schema": {
-              "type": "integer",
-              "format": "int32"
-            }
-          },
-          {
-            "name": "count",
-            "in": "query",
-            "description": "Количество выводимых элементов списка",
-            "schema": {
-              "type": "integer",
-              "format": "int32"
-            }
-          },
-          {
-            "name": "offset",
-            "in": "query",
-            "description": "Начиная с какого индекса выводить",
-            "schema": {
-              "type": "integer",
-              "format": "int32"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Success",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/LetterListItemModel"
-                  }
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/LetterListItemModel"
-                  }
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/LetterListItemModel"
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/LC/documents/{clientId}/Create": {
-      "post": {
-        "tags": ["Letter"],
-        "summary": "Метод создает заявку на покрытый аккредитив",
-        "parameters": [
-          {
-            "name": "clientId",
-            "in": "path",
-            "description": "Идентификатор клиента",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "branchId",
-            "in": "query",
-            "description": "Идентификатор филиала",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "requestBody": {
-          "description": "Форма заявки в виде JSON",
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/LetterEditModel"
-              }
+    "components": {
+        "schemas": {
+            "BaseResponseModel": {
+                "type": "object",
+                "properties": {
+                    "success": {
+                        "type": "boolean",
+                        "description": "Успешность выполнения операции"
+                    },
+                    "message": {
+                        "type": "string",
+                        "description": "Комментарий выполнения",
+                        "nullable": true
+                    }
+                },
+                "additionalProperties": false
             },
-            "text/json": {
-              "schema": {
-                "$ref": "#/components/schemas/LetterEditModel"
-              }
+            "LetterClosingDocumentEditModel": {
+                "required": [
+                    "documentTitle"
+                ],
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "string",
+                        "description": "Идентификатор документа",
+                        "format": "uuid",
+                        "nullable": true
+                    },
+                    "documentTitle": {
+                        "maxLength": 255,
+                        "minLength": 0,
+                        "type": "string",
+                        "description": "Наименование документа"
+                    },
+                    "documentsCount": {
+                        "maximum": 99,
+                        "minimum": 1,
+                        "type": "integer",
+                        "description": "Количество",
+                        "format": "int32"
+                    },
+                    "originalOnly": {
+                        "type": "boolean",
+                        "description": "Оригинал/копия"
+                    },
+                    "additionalRequirements": {
+                        "maxLength": 255,
+                        "minLength": 0,
+                        "type": "string",
+                        "description": "Дополнительные требования",
+                        "nullable": true
+                    }
+                },
+                "additionalProperties": false
             },
-            "application/*+json": {
-              "schema": {
-                "$ref": "#/components/schemas/LetterEditModel"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "Success",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/LetterEditResult"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/LetterEditResult"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/LetterEditResult"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/LC/documents/{clientId}/Update": {
-      "post": {
-        "tags": ["Letter"],
-        "summary": "Метод обновляет заявку на покрытый аккредитив",
-        "parameters": [
-          {
-            "name": "clientId",
-            "in": "path",
-            "description": "Идентификатор клиента",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "branchId",
-            "in": "query",
-            "description": "Идентификатор филиала",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "letterId",
-            "in": "query",
-            "description": "Идентификатор заявки",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "format": "uuid"
-            }
-          }
-        ],
-        "requestBody": {
-          "description": "Форма заявки в виде JSON",
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/LetterEditModel"
-              }
+            "LetterCommissionResponseModel": {
+                "type": "object",
+                "properties": {
+                    "commissionValue": {
+                        "type": "number",
+                        "description": "Размер комиссии",
+                        "format": "double"
+                    }
+                },
+                "additionalProperties": false
             },
-            "text/json": {
-              "schema": {
-                "$ref": "#/components/schemas/LetterEditModel"
-              }
+            "LetterContractFileModel": {
+                "required": [
+                    "fileName"
+                ],
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "string",
+                        "description": "Идентификатор загружаемого файла",
+                        "format": "uuid",
+                        "nullable": true
+                    },
+                    "fileName": {
+                        "maxLength": 255,
+                        "minLength": 0,
+                        "type": "string",
+                        "description": "Имя загружаемого файла"
+                    },
+                    "data": {
+                        "type": "string",
+                        "description": "Содержимое загружаемого файла в base64",
+                        "nullable": true
+                    }
+                },
+                "additionalProperties": false
             },
-            "application/*+json": {
-              "schema": {
-                "$ref": "#/components/schemas/LetterEditModel"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "Success",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/LetterEditResult"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/LetterEditResult"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/LetterEditResult"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/LC/documents/{clientId}/getInfo": {
-      "get": {
-        "tags": ["Letter"],
-        "summary": "Метод возвращает полные данные заявления",
-        "parameters": [
-          {
-            "name": "clientId",
-            "in": "path",
-            "description": "Идентификатор клиента",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "branchId",
-            "in": "query",
-            "description": "Идентификатор филиала",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "letterId",
-            "in": "query",
-            "description": "Идентификатор заявки",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "format": "uuid"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Success",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/LetterListExtendedModel"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/LetterListExtendedModel"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/LetterListExtendedModel"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/LC/documents/{clientId}/getContractFromLetter": {
-      "get": {
-        "tags": ["Letter"],
-        "summary": "Получение содержимого файла в бинарном виде",
-        "parameters": [
-          {
-            "name": "clientId",
-            "in": "path",
-            "description": "Идентификатор клиента",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "branchId",
-            "in": "query",
-            "description": "Идентификатор филиала",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "letterId",
-            "in": "query",
-            "description": "Идентификатор заявки",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "format": "uuid"
-            }
-          },
-          {
-            "name": "contractFileId",
-            "in": "query",
-            "description": "Идентификатор файла",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "format": "uuid"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Success"
-          }
-        }
-      }
-    },
-    "/api/LC/documents/{clientId}/appendContractToLetter": {
-      "post": {
-        "tags": ["Letter"],
-        "summary": "Метод позволяет добавить файл договора к заявке",
-        "parameters": [
-          {
-            "name": "clientId",
-            "in": "path",
-            "description": "Идентификатор клиента",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "branchId",
-            "in": "query",
-            "description": "Идентификатор филиала",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "letterId",
-            "in": "query",
-            "description": "Идентификатор заявки",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "format": "uuid"
-            }
-          }
-        ],
-        "requestBody": {
-          "description": "",
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/LetterContractFileModel"
-              }
+            "LetterEditModel": {
+                "required": [
+                    "account",
+                    "bic",
+                    "contactPerson",
+                    "contactPhone",
+                    "contractDate",
+                    "contractorAccount",
+                    "contractorINN",
+                    "contractorTitle",
+                    "contractSubject",
+                    "contractTitleAndNumber",
+                    "lcEndDate",
+                    "ndsSum",
+                    "ndsValue",
+                    "total"
+                ],
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "string",
+                        "description": "Идентификатор",
+                        "format": "uuid"
+                    },
+                    "total": {
+                        "maximum": 9999999999.99,
+                        "minimum": 0.01,
+                        "type": "number",
+                        "description": "Сумма аккредитива",
+                        "format": "double"
+                    },
+                    "account": {
+                        "maxLength": 20,
+                        "minLength": 0,
+                        "type": "string",
+                        "description": "Счёт списания"
+                    },
+                    "contractorTitle": {
+                        "maxLength": 1000,
+                        "minLength": 0,
+                        "type": "string",
+                        "description": "Наименование контрагента"
+                    },
+                    "contractorINN": {
+                        "maxLength": 12,
+                        "minLength": 0,
+                        "type": "string",
+                        "description": "ИНН контрагента"
+                    },
+                    "bic": {
+                        "maxLength": 9,
+                        "minLength": 0,
+                        "type": "string",
+                        "description": "БИК контрагента"
+                    },
+                    "contractorAccount": {
+                        "maxLength": 20,
+                        "minLength": 0,
+                        "type": "string",
+                        "description": "Расчетный код контрагента"
+                    },
+                    "contractDate": {
+                        "type": "string",
+                        "description": "Дата договора",
+                        "format": "yyyy-MM-dd"
+                    },
+                    "ndsValue": {
+                        "type": "integer",
+                        "description": "НДС",
+                        "format": "int32"
+                    },
+                    "ndsSum": {
+                        "maximum": 9999999999.99,
+                        "minimum": 0.01,
+                        "type": "number",
+                        "description": "Сумма НДС",
+                        "format": "double"
+                    },
+                    "contractTitleAndNumber": {
+                        "maxLength": 255,
+                        "minLength": 0,
+                        "type": "string",
+                        "description": "Название и номер договора"
+                    },
+                    "contractSubject": {
+                        "maxLength": 2000,
+                        "minLength": 0,
+                        "type": "string",
+                        "description": "Предмет договора (Наименование Товаров/Услуг/Работ)"
+                    },
+                    "contractFiles": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/LetterContractFileModel"
+                        },
+                        "description": "Массив прикрепленных файлов",
+                        "nullable": true
+                    },
+                    "lcEndDate": {
+                        "type": "string",
+                        "description": "Дата окончания аккредитива",
+                        "format": "yyyy-MM-dd"
+                    },
+                    "lcDuration": {
+                        "type": "integer",
+                        "description": "Срок действия аккредитива в днях",
+                        "format": "int32",
+                        "nullable": true
+                    },
+                    "closingDocuments": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/LetterClosingDocumentEditModel"
+                        },
+                        "description": "Массив закрывающих документов",
+                        "nullable": true
+                    },
+                    "electronicSubmission": {
+                        "type": "boolean",
+                        "description": "Возможность предоставления закрывающих документов в электронном виде"
+                    },
+                    "partialPayment": {
+                        "type": "boolean",
+                        "description": "Разрешить контрагенту частичное использование аккредитива"
+                    },
+                    "agreement": {
+                        "type": "boolean",
+                        "description": "Я согласен с условиями открытия аккредитива"
+                    },
+                    "addToTemplates": {
+                        "type": "boolean",
+                        "description": "Создать шаблон аккредитива"
+                    },
+                    "contactPerson": {
+                        "maxLength": 160,
+                        "minLength": 0,
+                        "type": "string",
+                        "description": "ФИО ответственного"
+                    },
+                    "contactPhone": {
+                        "maxLength": 160,
+                        "minLength": 0,
+                        "type": "string",
+                        "description": "Контактный телефон ответственного"
+                    }
+                },
+                "additionalProperties": false
             },
-            "text/json": {
-              "schema": {
-                "$ref": "#/components/schemas/LetterContractFileModel"
-              }
+            "LetterEditResult": {
+                "type": "object",
+                "properties": {
+                    "success": {
+                        "type": "boolean",
+                        "description": "Успешность выполнения операции"
+                    },
+                    "message": {
+                        "type": "string",
+                        "description": "Комментарий выполнения",
+                        "nullable": true
+                    },
+                    "id": {
+                        "type": "string",
+                        "description": "Идентификатор созданного/отредактированного аккредитива",
+                        "format": "uuid"
+                    }
+                },
+                "additionalProperties": false
             },
-            "application/*+json": {
-              "schema": {
-                "$ref": "#/components/schemas/LetterContractFileModel"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "Success",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/BaseResponseModel"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/BaseResponseModel"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/BaseResponseModel"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/LC/documents/{clientId}/removeContractFromLetter": {
-      "post": {
-        "tags": ["Letter"],
-        "summary": "Метод удаляет загруженный в заявку файл",
-        "parameters": [
-          {
-            "name": "clientId",
-            "in": "path",
-            "description": "Идентификатор клиента",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "branchId",
-            "in": "query",
-            "description": "Идентификатор филиала",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "letterId",
-            "in": "query",
-            "description": "Идентификатор заявки",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "format": "uuid"
-            }
-          },
-          {
-            "name": "contractFileId",
-            "in": "query",
-            "description": "Идентификатор файла",
-            "schema": {
-              "type": "string",
-              "format": "uuid"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Success",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/BaseResponseModel"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/BaseResponseModel"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/BaseResponseModel"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/LC/calculateCommission": {
-      "get": {
-        "tags": ["Letter"],
-        "summary": "Метод рассчитывает размер комиссии на выпуск покрытого аккредитива для указанной суммы",
-        "parameters": [
-          {
-            "name": "total",
-            "in": "query",
-            "description": "Сумма на которую необходимо рассчитать размер комиссии",
-            "schema": {
-              "type": "number",
-              "format": "double"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Success",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/LetterCommissionResponseModel"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/LetterCommissionResponseModel"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/LetterCommissionResponseModel"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/LC/documents/{clientId}/State": {
-      "get": {
-        "tags": ["Letter"],
-        "summary": "Метод возвращает статус рассмотрения заявки на аккредитив",
-        "parameters": [
-          {
-            "name": "clientId",
-            "in": "path",
-            "description": "Идентификатор клиента",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "branchId",
-            "in": "query",
-            "description": "Идентификатор филиала",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "letterId",
-            "in": "query",
-            "description": "Идентификатор заявки",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "format": "uuid"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Success"
-          }
-        }
-      }
-    },
-    "/api/LC/sendDeteiledInformation": {
-      "post": {
-        "tags": ["Letter"],
-        "summary": "Метод отправляет электронное письмо с подробным описанием услуги на указанный адрес электронной почты",
-        "parameters": [
-          {
-            "name": "email",
-            "in": "query",
-            "description": "Адрес почты на который необходимо отправить письмо",
-            "required": true,
-            "schema": {
-              "pattern": "^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+.[a-zA-Z0-9-.]+$",
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Success",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/BaseResponseModel"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/BaseResponseModel"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/BaseResponseModel"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/LC/documents/{clientId}/getTemplate": {
-      "get": {
-        "tags": ["Letter"],
-        "summary": "Метод отправляет в ДБО запрос на генерацию файла заявления",
-        "parameters": [
-          {
-            "name": "clientId",
-            "in": "path",
-            "description": "Идентификатор клиента",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "branchId",
-            "in": "query",
-            "description": "Идентификатор филиала",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "letterId",
-            "in": "query",
-            "description": "Идентификатор заявки",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "format": "uuid"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Success"
-          }
-        }
-      }
-    }
-  },
-  "components": {
-    "schemas": {
-      "BaseResponseModel": {
-        "type": "object",
-        "properties": {
-          "success": {
-            "type": "boolean",
-            "description": "Успешность выполнения операции"
-          },
-          "message": {
-            "type": "string",
-            "description": "Комментарий выполнения",
-            "nullable": true
-          }
-        },
-        "additionalProperties": false
-      },
-      "LetterClosingDocumentEditModel": {
-        "required": ["documentTitle"],
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "string",
-            "description": "Идентификатор документа",
-            "format": "uuid",
-            "nullable": true
-          },
-          "documentTitle": {
-            "maxLength": 255,
-            "minLength": 0,
-            "type": "string",
-            "description": "Наименование документа"
-          },
-          "documentsCount": {
-            "maximum": 99,
-            "minimum": 1,
-            "type": "integer",
-            "description": "Количество",
-            "format": "int32"
-          },
-          "originalOnly": {
-            "type": "boolean",
-            "description": "Оригинал/копия"
-          },
-          "additionalRequirements": {
-            "maxLength": 255,
-            "minLength": 0,
-            "type": "string",
-            "description": "Дополнительные требования",
-            "nullable": true
-          }
-        },
-        "additionalProperties": false
-      },
-      "LetterCommissionResponseModel": {
-        "type": "object",
-        "properties": {
-          "commissionValue": {
-            "type": "number",
-            "description": "Размер комиссии",
-            "format": "double"
-          }
-        },
-        "additionalProperties": false
-      },
-      "LetterContractFileModel": {
-        "required": ["fileName"],
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "string",
-            "description": "Идентификатор загружаемого файла",
-            "format": "uuid",
-            "nullable": true
-          },
-          "fileName": {
-            "maxLength": 255,
-            "minLength": 0,
-            "type": "string",
-            "description": "Имя загружаемого файла"
-          },
-          "data": {
-            "type": "string",
-            "description": "Содержимое загружаемого файла в base64",
-            "nullable": true
-          }
-        },
-        "additionalProperties": false
-      },
-      "LetterEditModel": {
-        "required": [
-          "account",
-          "bic",
-          "contactPerson",
-          "contactPhone",
-          "contractDate",
-          "contractorAccount",
-          "contractorINN",
-          "contractorTitle",
-          "contractSubject",
-          "contractTitleAndNumber",
-          "lcEndDate",
-          "ndsSum",
-          "ndsValue",
-          "total"
-        ],
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "string",
-            "description": "Идентификатор",
-            "format": "uuid"
-          },
-          "total": {
-            "maximum": 9999999999.99,
-            "minimum": 0.01,
-            "type": "number",
-            "description": "Сумма аккредитива",
-            "format": "double"
-          },
-          "account": {
-            "maxLength": 20,
-            "minLength": 0,
-            "type": "string",
-            "description": "Счёт списания"
-          },
-          "contractorTitle": {
-            "maxLength": 1000,
-            "minLength": 0,
-            "type": "string",
-            "description": "Наименование контрагента"
-          },
-          "contractorINN": {
-            "maxLength": 12,
-            "minLength": 0,
-            "type": "string",
-            "description": "ИНН контрагента"
-          },
-          "bic": {
-            "maxLength": 9,
-            "minLength": 0,
-            "type": "string",
-            "description": "БИК контрагента"
-          },
-          "contractorAccount": {
-            "maxLength": 20,
-            "minLength": 0,
-            "type": "string",
-            "description": "Расчетный код контрагента"
-          },
-          "contractDate": {
-            "type": "string",
-            "description": "Дата договора",
-            "format": "yyyy-MM-dd"
-          },
-          "ndsValue": {
-            "type": "integer",
-            "description": "НДС",
-            "format": "int32"
-          },
-          "ndsSum": {
-            "maximum": 9999999999.99,
-            "minimum": 0.01,
-            "type": "number",
-            "description": "Сумма НДС",
-            "format": "double"
-          },
-          "contractTitleAndNumber": {
-            "maxLength": 255,
-            "minLength": 0,
-            "type": "string",
-            "description": "Название и номер договора"
-          },
-          "contractSubject": {
-            "maxLength": 2000,
-            "minLength": 0,
-            "type": "string",
-            "description": "Предмет договора (Наименование Товаров/Услуг/Работ)"
-          },
-          "contractFiles": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/LetterContractFileModel"
+            "LetterListExtendedModel": {
+                "required": [
+                    "account",
+                    "bic",
+                    "contactPerson",
+                    "contactPhone",
+                    "contractDate",
+                    "contractorAccount",
+                    "contractorINN",
+                    "contractorTitle",
+                    "contractSubject",
+                    "contractTitleAndNumber",
+                    "lcEndDate",
+                    "ndsSum",
+                    "ndsValue",
+                    "total"
+                ],
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "string",
+                        "description": "Идентификатор",
+                        "format": "uuid"
+                    },
+                    "total": {
+                        "maximum": 9999999999.99,
+                        "minimum": 0.01,
+                        "type": "number",
+                        "description": "Сумма аккредитива",
+                        "format": "double"
+                    },
+                    "account": {
+                        "maxLength": 20,
+                        "minLength": 0,
+                        "type": "string",
+                        "description": "Счёт списания"
+                    },
+                    "contractorTitle": {
+                        "maxLength": 1000,
+                        "minLength": 0,
+                        "type": "string",
+                        "description": "Наименование контрагента"
+                    },
+                    "contractorINN": {
+                        "maxLength": 12,
+                        "minLength": 0,
+                        "type": "string",
+                        "description": "ИНН контрагента"
+                    },
+                    "bic": {
+                        "maxLength": 9,
+                        "minLength": 0,
+                        "type": "string",
+                        "description": "БИК контрагента"
+                    },
+                    "contractorAccount": {
+                        "maxLength": 20,
+                        "minLength": 0,
+                        "type": "string",
+                        "description": "Расчетный код контрагента"
+                    },
+                    "contractDate": {
+                        "type": "string",
+                        "description": "Дата договора",
+                        "format": "yyyy-MM-dd"
+                    },
+                    "ndsValue": {
+                        "type": "integer",
+                        "description": "НДС",
+                        "format": "int32"
+                    },
+                    "ndsSum": {
+                        "maximum": 9999999999.99,
+                        "minimum": 0.01,
+                        "type": "number",
+                        "description": "Сумма НДС",
+                        "format": "double"
+                    },
+                    "contractTitleAndNumber": {
+                        "maxLength": 255,
+                        "minLength": 0,
+                        "type": "string",
+                        "description": "Название и номер договора"
+                    },
+                    "contractSubject": {
+                        "maxLength": 2000,
+                        "minLength": 0,
+                        "type": "string",
+                        "description": "Предмет договора (Наименование Товаров/Услуг/Работ)"
+                    },
+                    "contractFiles": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/LetterContractFileModel"
+                        },
+                        "description": "Массив прикрепленных файлов",
+                        "nullable": true
+                    },
+                    "lcEndDate": {
+                        "type": "string",
+                        "description": "Дата окончания аккредитива",
+                        "format": "yyyy-MM-dd"
+                    },
+                    "lcDuration": {
+                        "type": "integer",
+                        "description": "Срок действия аккредитива в днях",
+                        "format": "int32",
+                        "nullable": true
+                    },
+                    "closingDocuments": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/LetterClosingDocumentEditModel"
+                        },
+                        "description": "Массив закрывающих документов",
+                        "nullable": true
+                    },
+                    "electronicSubmission": {
+                        "type": "boolean",
+                        "description": "Возможность предоставления закрывающих документов в электронном виде"
+                    },
+                    "partialPayment": {
+                        "type": "boolean",
+                        "description": "Разрешить контрагенту частичное использование аккредитива"
+                    },
+                    "agreement": {
+                        "type": "boolean",
+                        "description": "Я согласен с условиями открытия аккредитива"
+                    },
+                    "addToTemplates": {
+                        "type": "boolean",
+                        "description": "Создать шаблон аккредитива"
+                    },
+                    "contactPerson": {
+                        "maxLength": 160,
+                        "minLength": 0,
+                        "type": "string",
+                        "description": "ФИО ответственного"
+                    },
+                    "contactPhone": {
+                        "maxLength": 160,
+                        "minLength": 0,
+                        "type": "string",
+                        "description": "Контактный телефон ответственного"
+                    },
+                    "state": {
+                        "type": "integer",
+                        "description": "Статус заявки",
+                        "format": "int32"
+                    }
+                },
+                "additionalProperties": false
             },
-            "description": "Массив прикрепленных файлов",
-            "nullable": true
-          },
-          "lcEndDate": {
-            "type": "string",
-            "description": "Дата окончания аккредитива",
-            "format": "yyyy-MM-dd"
-          },
-          "lcDuration": {
-            "type": "integer",
-            "description": "Срок действия аккредитива в днях",
-            "format": "int32",
-            "nullable": true
-          },
-          "closingDocuments": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/LetterClosingDocumentEditModel"
-            },
-            "description": "Массив закрывающих документов",
-            "nullable": true
-          },
-          "electronicSubmission": {
-            "type": "boolean",
-            "description": "Возможность предоставления закрывающих документов в электронном виде"
-          },
-          "partialPayment": {
-            "type": "boolean",
-            "description": "Разрешить контрагенту частичное использование аккредитива"
-          },
-          "agreement": {
-            "type": "boolean",
-            "description": "Я согласен с условиями открытия аккредитива"
-          },
-          "addToTemplates": {
-            "type": "boolean",
-            "description": "Создать шаблон аккредитива"
-          },
-          "contactPerson": {
-            "maxLength": 160,
-            "minLength": 0,
-            "type": "string",
-            "description": "ФИО ответственного"
-          },
-          "contactPhone": {
-            "maxLength": 160,
-            "minLength": 0,
-            "type": "string",
-            "description": "Контактный телефон ответственного"
-          }
+            "LetterListItemModel": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "string",
+                        "description": "Идентификатор заявления",
+                        "format": "uuid"
+                    },
+                    "letterDate": {
+                        "type": "string",
+                        "description": "Дата создания(подачи) заявления на покрытый аккредитив",
+                        "format": "dd.MM.yyyy"
+                    },
+                    "contractorName": {
+                        "type": "string",
+                        "description": "Наименование контрагента",
+                        "nullable": true
+                    },
+                    "total": {
+                        "type": "number",
+                        "description": "Общая сумма аккредитива",
+                        "format": "double"
+                    },
+                    "status": {
+                        "type": "integer",
+                        "description": "Статус заявления в виде целочисленного значения",
+                        "format": "int32"
+                    }
+                },
+                "additionalProperties": false
+            }
         },
-        "additionalProperties": false
-      },
-      "LetterEditResult": {
-        "type": "object",
-        "properties": {
-          "success": {
-            "type": "boolean",
-            "description": "Успешность выполнения операции"
-          },
-          "message": {
-            "type": "string",
-            "description": "Комментарий выполнения",
-            "nullable": true
-          },
-          "id": {
-            "type": "string",
-            "description": "Идентификатор созданного/отредактированного аккредитива",
-            "format": "uuid"
-          }
-        },
-        "additionalProperties": false
-      },
-      "LetterListExtendedModel": {
-        "required": [
-          "account",
-          "bic",
-          "contactPerson",
-          "contactPhone",
-          "contractDate",
-          "contractorAccount",
-          "contractorINN",
-          "contractorTitle",
-          "contractSubject",
-          "contractTitleAndNumber",
-          "lcEndDate",
-          "ndsSum",
-          "ndsValue",
-          "total"
-        ],
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "string",
-            "description": "Идентификатор",
-            "format": "uuid"
-          },
-          "total": {
-            "maximum": 9999999999.99,
-            "minimum": 0.01,
-            "type": "number",
-            "description": "Сумма аккредитива",
-            "format": "double"
-          },
-          "account": {
-            "maxLength": 20,
-            "minLength": 0,
-            "type": "string",
-            "description": "Счёт списания"
-          },
-          "contractorTitle": {
-            "maxLength": 1000,
-            "minLength": 0,
-            "type": "string",
-            "description": "Наименование контрагента"
-          },
-          "contractorINN": {
-            "maxLength": 12,
-            "minLength": 0,
-            "type": "string",
-            "description": "ИНН контрагента"
-          },
-          "bic": {
-            "maxLength": 9,
-            "minLength": 0,
-            "type": "string",
-            "description": "БИК контрагента"
-          },
-          "contractorAccount": {
-            "maxLength": 20,
-            "minLength": 0,
-            "type": "string",
-            "description": "Расчетный код контрагента"
-          },
-          "contractDate": {
-            "type": "string",
-            "description": "Дата договора",
-            "format": "yyyy-MM-dd"
-          },
-          "ndsValue": {
-            "type": "integer",
-            "description": "НДС",
-            "format": "int32"
-          },
-          "ndsSum": {
-            "maximum": 9999999999.99,
-            "minimum": 0.01,
-            "type": "number",
-            "description": "Сумма НДС",
-            "format": "double"
-          },
-          "contractTitleAndNumber": {
-            "maxLength": 255,
-            "minLength": 0,
-            "type": "string",
-            "description": "Название и номер договора"
-          },
-          "contractSubject": {
-            "maxLength": 2000,
-            "minLength": 0,
-            "type": "string",
-            "description": "Предмет договора (Наименование Товаров/Услуг/Работ)"
-          },
-          "contractFiles": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/LetterContractFileModel"
-            },
-            "description": "Массив прикрепленных файлов",
-            "nullable": true
-          },
-          "lcEndDate": {
-            "type": "string",
-            "description": "Дата окончания аккредитива",
-            "format": "yyyy-MM-dd"
-          },
-          "lcDuration": {
-            "type": "integer",
-            "description": "Срок действия аккредитива в днях",
-            "format": "int32",
-            "nullable": true
-          },
-          "closingDocuments": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/LetterClosingDocumentEditModel"
-            },
-            "description": "Массив закрывающих документов",
-            "nullable": true
-          },
-          "electronicSubmission": {
-            "type": "boolean",
-            "description": "Возможность предоставления закрывающих документов в электронном виде"
-          },
-          "partialPayment": {
-            "type": "boolean",
-            "description": "Разрешить контрагенту частичное использование аккредитива"
-          },
-          "agreement": {
-            "type": "boolean",
-            "description": "Я согласен с условиями открытия аккредитива"
-          },
-          "addToTemplates": {
-            "type": "boolean",
-            "description": "Создать шаблон аккредитива"
-          },
-          "contactPerson": {
-            "maxLength": 160,
-            "minLength": 0,
-            "type": "string",
-            "description": "ФИО ответственного"
-          },
-          "contactPhone": {
-            "maxLength": 160,
-            "minLength": 0,
-            "type": "string",
-            "description": "Контактный телефон ответственного"
-          },
-          "state": {
-            "type": "integer",
-            "description": "Статус заявки",
-            "format": "int32"
-          }
-        },
-        "additionalProperties": false
-      },
-      "LetterListItemModel": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "string",
-            "description": "Идентификатор заявления",
-            "format": "uuid"
-          },
-          "letterDate": {
-            "type": "string",
-            "description": "Дата создания(подачи) заявления на покрытый аккредитив",
-            "format": "dd.MM.yyyy"
-          },
-          "contractorName": {
-            "type": "string",
-            "description": "Наименование контрагента",
-            "nullable": true
-          },
-          "total": {
-            "type": "number",
-            "description": "Общая сумма аккредитива",
-            "format": "double"
-          },
-          "status": {
-            "type": "integer",
-            "description": "Статус заявления в виде целочисленного значения",
-            "format": "int32"
-          }
-        },
-        "additionalProperties": false
-      }
+        "securitySchemes": {
+            "Bearer": {
+                "type": "apiKey",
+                "description": "Введите авторизационный токен",
+                "name": "Authorization",
+                "in": "header"
+            }
+        }
     },
-    "securitySchemes": {
-      "Bearer": {
-        "type": "apiKey",
-        "description": "Введите авторизационный токен",
-        "name": "Authorization",
-        "in": "header"
-      }
-    }
-  },
-  "security": [
-    {
-      "Bearer": []
-    }
-  ]
+    "security": [
+        {
+            "Bearer": []
+        }
+    ]
 }

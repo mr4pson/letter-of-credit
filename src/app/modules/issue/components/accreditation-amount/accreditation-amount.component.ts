@@ -1,5 +1,4 @@
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { OnDestroyMixin } from '@w11k/ngx-componentdestroyed';
 import { catchError, map, switchMap, tap } from 'rxjs/operators';
 import { Observable, of } from 'rxjs';
@@ -10,14 +9,11 @@ import { ClientAccountService } from '../../services/client-accounts.service';
 import { StepService } from '../../services/step.service';
 import { AccreditationAmountFormField } from '../../enums/accreditation-amount-form-field.enum';
 
-import { getMinMaxFormControlValidator } from '@psb/validations/minMax';
-import { getRequiredFormControlValidator } from '@psb/validations/required/validation';
 import { ButtonType } from '@psb/fe-ui-kit';
 import { AccountService, ErrorHandlerService, StoreService } from 'src/app/services';
 import { isFormValid } from 'src/app/utils';
-import { ACCREDIT_SUM_CONTROL_MESSAGE, GET_ACCOUNTS_ERROR_MESSAGE, GET_COMMISSION_ERROR_MESSAGE, SELECT_ACCOUNT_CONTROL_MESSAGE } from './constants';
-import { Account } from 'src/app/interfaces';
-import { ClientAccount } from '../../interfaces/client-account.interface';
+import { GET_ACCOUNTS_ERROR_MESSAGE, GET_COMMISSION_ERROR_MESSAGE } from './constants';
+import { AccreditationAmountFormService } from './accreditation-amount-form.service';
 
 @Component({
     selector: 'accreditation-amount',
@@ -28,7 +24,7 @@ import { ClientAccount } from '../../interfaces/client-account.interface';
 export class AccreditationAmountComponent extends OnDestroyMixin implements OnInit {
     commission = 0;
     ButtonType = ButtonType;
-    form: FormGroup;
+    form = this.formService.createForm();
     AccreditationAmountFormField = AccreditationAmountFormField;
     commission$: Observable<number>;
     accounts$ = this.clientAccountService.getClientAccounts().pipe(
@@ -46,10 +42,6 @@ export class AccreditationAmountComponent extends OnDestroyMixin implements OnIn
         }),
     )
 
-    private get issueSum(): number {
-        return Number(this.form.controls[AccreditationAmountFormField.IssueSum].value);
-    }
-
     constructor(
         private store: StoreService,
         private accountService: AccountService,
@@ -57,10 +49,9 @@ export class AccreditationAmountComponent extends OnDestroyMixin implements OnIn
         private errorHandlerService: ErrorHandlerService,
         private stepService: StepService,
         private router: Router,
-        private formBuilder: FormBuilder,
+        private formService: AccreditationAmountFormService,
     ) {
         super();
-        this.createForm();
         this.commission$ = this.form.get(AccreditationAmountFormField.IssueSum).valueChanges.pipe(
             switchMap(issueSum => (
                 this.accountService.getCommision(Number(issueSum))
@@ -87,36 +78,13 @@ export class AccreditationAmountComponent extends OnDestroyMixin implements OnIn
 
     handleSubmit(): void {
         if (isFormValid(this.form)) {
-            this.store.letterOfCredit.paymentSum = this.issueSum;
+            this.store.letterOfCredit.paymentSum = this.formService.issueSum;
 
             this.stepService.setStepDescription(
                 paths[Page.ACCREDITATION_AMOUNT],
-                (Number(this.issueSum) + this.commission).toString(),
+                (Number(this.formService.issueSum) + this.commission).toString(),
             );
             this.router.navigateByUrl(paths[Page.COUNTERPARTY]);
         }
-    }
-
-    private createForm(): void {
-        this.form = this.formBuilder.group({
-            issueSum: [null, {
-                validators: [
-                    Validators.required,
-                    getRequiredFormControlValidator(ACCREDIT_SUM_CONTROL_MESSAGE),
-                    getMinMaxFormControlValidator({
-                        min: 1,
-                        max: 1_000_000_000_000,
-                        errorMessage: ACCREDIT_SUM_CONTROL_MESSAGE,
-                    }),
-                ],
-                updateOn: 'blur',
-            }
-            ],
-            selectedAccount: [null, [
-                Validators.required,
-                getRequiredFormControlValidator(SELECT_ACCOUNT_CONTROL_MESSAGE)
-            ]
-            ],
-        });
     }
 }

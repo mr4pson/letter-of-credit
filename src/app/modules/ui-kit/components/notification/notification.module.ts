@@ -9,20 +9,20 @@ import { NotificationComponent } from './notification.component';
 import { PsbModule } from 'src/app/modules/psb/psb.module';
 
 @NgModule({
-  declarations: [
-    NotificationComponent,
-  ],
-  imports: [
-    CommonModule,
-    BrowserModule,
-    BrowserAnimationsModule,
-    PsbModule,
-  ],
-  providers: [
-    NotificationService,
-  ],
-  exports: [
-    NotificationComponent,
-  ],
+    declarations: [
+        NotificationComponent,
+    ],
+    imports: [
+        CommonModule,
+        BrowserModule,
+        BrowserAnimationsModule,
+        PsbModule,
+    ],
+    providers: [
+        NotificationService,
+    ],
+    exports: [
+        NotificationComponent,
+    ],
 })
-export class NotificationModule {}
+export class NotificationModule { }

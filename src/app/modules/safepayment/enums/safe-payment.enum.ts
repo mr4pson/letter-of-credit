@@ -1,4 +1,4 @@
 export enum SafePayStates {
-  ShowAgenda,
-  ShowEmail,
+    ShowAgenda,
+    ShowEmail,
 }

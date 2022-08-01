@@ -1,5 +1,4 @@
 import { ChangeDetectionStrategy, Component, ViewChild } from '@angular/core';
-import { FormBuilder, FormGroup } from '@angular/forms';
 import { MatDialogRef } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 
@@ -16,74 +15,68 @@ import { StoreService } from 'src/app/services/store.service';
 import { RELIABLE_MAP } from './constants/reliable-map.constant';
 import { SafePaymentFormField } from './enums/safe-payment-form-field.enum';
 import { NgService } from 'src/app/services';
+import { SafePaymentFormService } from './safe-payment-form.service';
 
 @Component({
-  selector: 'safe-payment',
-  templateUrl: 'safe-payment.component.html',
-  styleUrls: ['safe-payment.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
+    selector: 'safe-payment',
+    templateUrl: 'safe-payment.component.html',
+    styleUrls: ['safe-payment.component.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SafePaymentComponent {
-  @ViewChild(SafePaymentEmailComponent) emailComponent: HTMLElement;
+    @ViewChild(SafePaymentEmailComponent) emailComponent: HTMLElement;
 
-  safePaymentDialog: MatDialogRef<BaseModalComponent, any>;
-  SafePaymentButton = SafePaymentButton;
-  ButtonType = ButtonType;
-  ButtonSize = ButtonSize;
-  form: FormGroup;
-  SafePaymentFormField = SafePaymentFormField;
-  letterOfCredit = this.store.letterOfCredit;
-  SafePayStates = SafePayStates;
+    safePaymentDialog: MatDialogRef<BaseModalComponent, any>;
+    SafePaymentButton = SafePaymentButton;
+    ButtonType = ButtonType;
+    ButtonSize = ButtonSize;
+    form = this.formService.createForm();
+    SafePaymentFormField = SafePaymentFormField;
+    letterOfCredit = this.store.letterOfCredit;
+    SafePayStates = SafePayStates;
 
-  constructor(
-    public stateManager: SafePaymentStateManagerService,
-    private store: StoreService,
-    private dialogRef: MatDialogRef<BaseModalComponent>,
-    private router: Router,
-    private formBuilder: FormBuilder,
-    private ngService: NgService,
-  ) {
-    this.createForm();
-  }
+    constructor(
+        public stateManager: SafePaymentStateManagerService,
+        private store: StoreService,
+        private dialogRef: MatDialogRef<BaseModalComponent>,
+        private router: Router,
+        private formService: SafePaymentFormService,
+        private ngService: NgService,
+    ) { }
 
-  getReliableColor(): string {
-    return RELIABLE_MAP.color[this.store.reciverStatus] ?? ReliableSign.reliableGray;
-  }
-
-  getReliableText(): string {
-    return RELIABLE_MAP.text[this.store.reciverStatus] ?? ReliableSign.reliableGrayText;
-  }
-
-  doSafePay() {
-    this.dialogRef.close(SafePaymentButton.DoPay);
-    this.ngService.hideSmbDocuments();
-    this.store.isIssueVissible = true;
-    this.router.navigateByUrl(paths[Page.ACCREDITATION_AMOUNT]);
-    setTimeout(() => {
-      this.ngService.scrollToTop();
-    }, 200);
-  }
-
-  closeDialog(payButton: SafePaymentButton = SafePaymentButton.OrdinalPay) {
-    this.dialogRef.close(payButton);
-  }
-
-  takeEmail(email: string): void {
-    if (email.trim() === '') {
-      return;
+    getReliableColor(): string {
+        return RELIABLE_MAP.color[this.store.reciverStatus] ?? ReliableSign.reliableGray;
     }
 
-    this.store.clientEmail = email;
-    this.stateManager.state = SafePayStates.ShowAgenda;
-  }
+    getReliableText(): string {
+        return RELIABLE_MAP.text[this.store.reciverStatus] ?? ReliableSign.reliableGrayText;
+    }
 
-  showEmail() {
-    this.stateManager.state = SafePayStates.ShowEmail;
-  }
+    doSafePay() {
+        this.dialogRef.close(SafePaymentButton.DoPay);
+        this.ngService.hideSmbDocuments();
+        this.store.isIssueVissible = true;
+        this.router.navigateByUrl(paths[Page.ACCREDITATION_AMOUNT]);
+        setTimeout(() => {
+            this.ngService.scrollToTop();
+        }, 200);
+    }
 
-  private createForm(): void {
-    this.form = this.formBuilder.group({
-      dontWantSafePayment: [false],
-    });
-  }
+    closeDialog(payButton: SafePaymentButton = SafePaymentButton.OrdinalPay) {
+        this.dialogRef.close(payButton);
+    }
+
+    takeEmail(email: string): void {
+        if (email.trim() === '') {
+            return;
+        }
+
+        this.store.clientEmail = email;
+        this.stateManager.state = SafePayStates.ShowAgenda;
+    }
+
+    showEmail() {
+        this.stateManager.state = SafePayStates.ShowEmail;
+    }
+
 }

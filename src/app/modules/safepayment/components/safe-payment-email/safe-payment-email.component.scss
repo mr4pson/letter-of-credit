@@ -2,20 +2,20 @@
 @import "../../../../../assets/sizes";
 
 .email-form {
-	display: flex;
-	margin: 32px 0;
-	align-items: center;
+    display: flex;
+    margin: 32px 0;
+    align-items: center;
 
-	.field {
-		width: 300px;
-	}
+    .field {
+        width: 300px;
+    }
 
-	.button {
-		margin-left: 15px;
-	}
+    .button {
+        margin-left: 15px;
+    }
 
-	.green-check {
-		color: $status-success;
-		margin-left: $size-20;
-	}
+    .green-check {
+        color: $status-success;
+        margin-left: $size-20;
+    }
 }

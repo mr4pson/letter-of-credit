@@ -1,80 +1,80 @@
 <psb-form-field
-  *ngIf="ngControl"
-  [placeholderHidden]="placeholderHidden"
-  #formFieldRef
+    *ngIf="ngControl"
+    [placeholderHidden]="placeholderHidden"
+    #formFieldRef
 >
-  <div class="form-field-container">
-    <div
-      psbInput
-      hidden
-    ></div>
-    <div
-      *ngIf="{ value: (selectedAccount$ | async) }; let selectedAccountObject"
-      psbClickOutside
-      (clickOutside)="handleClickOutside()"
-      class="account-select"
-    >
-      <div
-        class="dropdown-header"
-        (click)="handleHeaderClick()"
-      >
-        <span class="dropdown-label dropdown-label">
-          <div class="content-row">
-            <div class="small-label">Счет списания</div>
-            <div class="content-col">
-              {{ selectedAccountObject.value?.title }}
+    <div class="form-field-container">
+        <div
+            psbInput
+            hidden
+        ></div>
+        <div
+            *ngIf="{ value: (selectedAccount$ | async) }; let selectedAccountObject"
+            psbClickOutside
+            (clickOutside)="handleClickOutside()"
+            class="account-select"
+        >
+            <div
+                class="dropdown-header"
+                (click)="handleHeaderClick()"
+            >
+                <span class="dropdown-label dropdown-label">
+                    <div class="content-row">
+                        <div class="small-label">Счет списания</div>
+                        <div class="content-col">
+                            {{ selectedAccountObject.value?.title }}
+                        </div>
+                        <div
+                            *ngIf="isAccountCodeVisible"
+                            class="content-col"
+                        >
+                            {{ selectedAccountObject.value?.accountCode }}
+                        </div>
+                        <div class="content-col">
+                            <ng-container *ngIf="selectedAccountObject.value?.balance !== null">
+                                {{ selectedAccountObject.value?.balance | formatMoney }}
+                            </ng-container>
+                        </div>
+                    </div>
+                </span>
+                <div class="chevron-icon">
+                    <psb-icon [path]="'ServiceArrowNormal_24.svg'"></psb-icon>
+                </div>
             </div>
             <div
-              *ngIf="isAccountCodeVisible"
-              class="content-col"
+                *ngIf="(dropped$ | async)"
+                class="dropdown-panel"
             >
-              {{ selectedAccountObject.value?.accountCode }}
-            </div>
-            <div class="content-col">
-              <ng-container *ngIf="selectedAccountObject.value?.balance !== null">
-                {{ selectedAccountObject.value?.balance | formatMoney }}
-              </ng-container>
-            </div>
-          </div>
-        </span>
-        <div class="chevron-icon">
-          <psb-icon [path]="'ServiceArrowNormal_24.svg'"></psb-icon>
-        </div>
-      </div>
-      <div
-        *ngIf="(dropped$ | async)"
-        class="dropdown-panel"
-      >
-        <div class="items-wrapper">
-          <ul
-            role="listbox"
-            class="items"
-          >
-            <li
-              *ngFor="let account of accounts"
-              class=" dropdown-label item"
-              (click)="handleSelectAccount(account)"
-            >
-              <div class="content-row">
-                <div class="content-col">{{ account.title }}</div>
-                <div
-                  *ngIf="isAccountCodeVisible"
-                  class="content-col"
-                >
-                  {{ account.accountCode }}
+                <div class="items-wrapper">
+                    <ul
+                        role="listbox"
+                        class="items"
+                    >
+                        <li
+                            *ngFor="let account of accounts"
+                            class=" dropdown-label item"
+                            (click)="handleSelectAccount(account)"
+                        >
+                            <div class="content-row">
+                                <div class="content-col">{{ account.title }}</div>
+                                <div
+                                    *ngIf="isAccountCodeVisible"
+                                    class="content-col"
+                                >
+                                    {{ account.accountCode }}
+                                </div>
+                                <div class="content-col">{{ account.balance }}&nbsp;₽</div>
+                            </div>
+                        </li>
+                    </ul>
                 </div>
-                <div class="content-col">{{ account.balance }}&nbsp;₽</div>
-              </div>
-            </li>
-          </ul>
+            </div>
         </div>
-      </div>
     </div>
-  </div>
-  <psb-hint
-    *ngIf="error || description"
-    [error]="!!error"
-  >
-    {{ error || description }}
-  </psb-hint>
+    <psb-hint
+        *ngIf="error || description"
+        [error]="!!error"
+    >
+        {{ error || description }}
+    </psb-hint>
 </psb-form-field>

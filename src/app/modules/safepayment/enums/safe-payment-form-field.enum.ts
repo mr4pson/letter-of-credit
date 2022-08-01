@@ -1,3 +1,3 @@
 export enum SafePaymentFormField {
-  DontWantSafePayment = "dontWantSafePayment"
+    DontWantSafePayment = "dontWantSafePayment"
 }

@@ -1,14 +1,14 @@
 @import "../../../../../assets/sizes";
 
 .notifications-wrapper {
-  position: fixed;
-  bottom: 10px;
-  left: 10px;
-  width: calc(100% - 20px);
-  box-sizing: border-box;
-  z-index: 1000;
+    position: fixed;
+    bottom: 10px;
+    left: 10px;
+    width: calc(100% - 20px);
+    box-sizing: border-box;
+    z-index: 1000;
 }
 
 psb-notification {
-  margin-top: $size-10;
+    margin-top: $size-10;
 }
