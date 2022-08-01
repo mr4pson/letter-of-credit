@@ -12,75 +12,75 @@ import { IssueStepsComponent } from './components/issue-steps/issue-steps.compon
 import { NgService, StoreService } from 'src/app/services';
 
 describe('IssueComponent', () => {
-  let component: IssueComponent;
-  let fixture: ComponentFixture<IssueComponent>;
-  let location: Location;
-  let router: Router;
-  let ngService: NgService;
+    let component: IssueComponent;
+    let fixture: ComponentFixture<IssueComponent>;
+    let location: Location;
+    let router: Router;
+    let ngService: NgService;
 
-  beforeEach(waitForAsync(() => {
-    const mockStore = {
-      isIssueVissible: false,
-    };
+    beforeEach(waitForAsync(() => {
+        const mockStore = {
+            isIssueVissible: false,
+        };
 
-    TestBed.configureTestingModule({
-      declarations: [
-        IssueComponent,
-        IssueStepsComponent,
-      ],
-      imports: [
-        RouterTestingModule,
-        PsbModule,
-      ],
-      providers: [
-        StepService,
-        {
-          provide: NgService,
-          useValue: jasmine.createSpyObj('NgService', ['showSmbDocuments']),
-        },
-        {
-          provide: StoreService,
-          useValue: mockStore,
-        },
-      ],
-    }).compileComponents();
-  }));
+        TestBed.configureTestingModule({
+            declarations: [
+                IssueComponent,
+                IssueStepsComponent,
+            ],
+            imports: [
+                RouterTestingModule,
+                PsbModule,
+            ],
+            providers: [
+                StepService,
+                {
+                    provide: NgService,
+                    useValue: jasmine.createSpyObj('NgService', ['showSmbDocuments']),
+                },
+                {
+                    provide: StoreService,
+                    useValue: mockStore,
+                },
+            ],
+        }).compileComponents();
+    }));
 
-  beforeEach(() => {
-    router = TestBed.inject(Router);
-    location = TestBed.inject(Location);
-    fixture = TestBed.createComponent(IssueComponent);
-    component = fixture.componentInstance;
-    ngService = TestBed.inject(NgService);
+    beforeEach(() => {
+        router = TestBed.inject(Router);
+        location = TestBed.inject(Location);
+        fixture = TestBed.createComponent(IssueComponent);
+        component = fixture.componentInstance;
+        ngService = TestBed.inject(NgService);
 
-    fixture.detectChanges();
-    router.initialNavigation();
-  });
+        fixture.detectChanges();
+        router.initialNavigation();
+    });
 
-  it('Вызывает navigateBack при клике на кнопку назад', () => {
-    spyOn(component, 'navigateBack');
+    it('Вызывает navigateBack при клике на кнопку назад', () => {
+        spyOn(component, 'navigateBack');
 
-    const backButton = fixture.debugElement.query(By.css('.back-btn'));
-    backButton.nativeElement.click();
+        const backButton = fixture.debugElement.query(By.css('.back-btn'));
+        backButton.nativeElement.click();
 
-    expect(component.navigateBack).toHaveBeenCalled();
-  });
+        expect(component.navigateBack).toHaveBeenCalled();
+    });
 
-  it('При инициализации текущего шага, как второго и при клике на кнопку назад редиректит на первый шаг', () => {
-    spyOn(router, 'navigateByUrl');
-    component.currentUrl = component.steps[1].url;
+    it('При инициализации текущего шага, как второго и при клике на кнопку назад редиректит на первый шаг', () => {
+        spyOn(router, 'navigateByUrl');
+        component.currentUrl = component.steps[1].url;
 
-    component.navigateBack();
+        component.navigateBack();
 
-    expect(router.navigateByUrl).toHaveBeenCalledWith(component.steps[0].url);
-  });
+        expect(router.navigateByUrl).toHaveBeenCalledWith(component.steps[0].url);
+    });
 
-  it('При навигации на первый шаг вызывает showSmbDocuments', () => {
-    ngService = TestBed.inject(NgService);
-    component.currentUrl = component.steps[0].url;
+    it('При навигации на первый шаг вызывает showSmbDocuments', () => {
+        ngService = TestBed.inject(NgService);
+        component.currentUrl = component.steps[0].url;
 
-    component.navigateBack();
+        component.navigateBack();
 
-    expect(ngService.showSmbDocuments).toHaveBeenCalled();
-  });
+        expect(ngService.showSmbDocuments).toHaveBeenCalled();
+    });
 });

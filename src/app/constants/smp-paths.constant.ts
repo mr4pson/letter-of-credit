@@ -1,6 +1,7 @@
 import { SmbPage } from '../enums/smb-page.enum';
 
 export const smbPaths = {
-  [SmbPage.MAIN]: '/main',
-  [SmbPage.DOCUMENTS]: '/documents',
+    [SmbPage.Main]: '/main',
+    [SmbPage.Documents]: '/documents',
+    [SmbPage.CreatePayment]: '/create-payment',
 };

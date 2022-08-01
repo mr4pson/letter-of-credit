@@ -1,8 +1,9 @@
-@import "../../../assets/_colors.scss";
+@import "../../../assets/colors";
+@import "../../../assets/sizes";
 
 .company-info {
 	display: inline-block;
-	height: 24px;
+	height: $size-24;
 	padding-bottom: 28px;
 
 	.title {

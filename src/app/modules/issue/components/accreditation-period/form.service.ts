@@ -8,47 +8,47 @@ import { END_LOC_DATE_CONTROL_MESSAGE } from "./constants";
 
 @Injectable()
 export class FormService {
-  form: FormGroup;
-  constructor(
-    private formBuilder: FormBuilder,
-  ) {}
+    form: FormGroup;
+    constructor(
+        private formBuilder: FormBuilder,
+    ) { }
 
-  createForm() {
-    this.form = this.formBuilder.group({
-      endLocDate: [
-        getTomorrowDate(), [
-          getRequiredFormControlValidator(
-            END_LOC_DATE_CONTROL_MESSAGE,
-          ),
-        ]
-      ],
-      locDaysNumber: [''],
-      isDocumentDigital: [true],
-      allowUsePartOfLoc: [true],
-      closingDocs: this.formBuilder.array([]),
-    });
+    createForm() {
+        this.form = this.formBuilder.group({
+            endLocDate: [
+                getTomorrowDate(), [
+                    getRequiredFormControlValidator(
+                        END_LOC_DATE_CONTROL_MESSAGE,
+                    ),
+                ]
+            ],
+            locDaysNumber: [''],
+            isDocumentDigital: [true],
+            allowUsePartOfLoc: [true],
+            closingDocs: this.formBuilder.array([]),
+        });
 
-    return this.form;
-  }
+        return this.form;
+    }
 
-  addClosingDocControl({
-    document,
-    amount,
-    onlyOriginalDocument,
-    additionalRequirements,
-  } = {} as ClosingDoc) {
-    const closingDoc = {
-      document: [document],
-      amount: [amount ?? 1],
-      onlyOriginalDocument: [
-        onlyOriginalDocument !== undefined ? onlyOriginalDocument : true,
-      ],
-      additionalRequirements: [
+    addClosingDocControl({
+        document,
+        amount,
+        onlyOriginalDocument,
         additionalRequirements,
-      ],
-    };
-    const formGroup = this.formBuilder.group(closingDoc);
-  
-    (this.form.controls[AccreditationPeriodFormField.ClosingDocs] as FormArray).push(formGroup);
-  }
+    } = {} as ClosingDoc) {
+        const closingDoc = {
+            document: [document],
+            amount: [amount ?? 1],
+            onlyOriginalDocument: [
+                onlyOriginalDocument !== undefined ? onlyOriginalDocument : true,
+            ],
+            additionalRequirements: [
+                additionalRequirements,
+            ],
+        };
+        const formGroup = this.formBuilder.group(closingDoc);
+
+        (this.form.controls[AccreditationPeriodFormField.ClosingDocs] as FormArray).push(formGroup);
+    }
 }

@@ -1,5 +1,5 @@
 export interface ClientAccount {
-  title: string;
-  accountCode: string;
-  balance: number;
+    title: string;
+    accountCode: string;
+    balance: number;
 }

@@ -19,57 +19,57 @@ import { ApiModule } from '../api/api.module';
 import { NgService } from './services/ng.service';
 import { SafePaymentModule } from './modules/safepayment/safe-payment.module';
 import { UiKitModule } from './modules/ui-kit/ui-kit.module';
+import { BaseModalModule } from '@psb/fe-ui-kit';
 
 registerLocaleData(ru);
 @NgModule({
-  declarations: [
-    AppComponent,
-  ],
-  imports: [
-    ApiModule.forRoot({ rootUrl: '' } as ApiConfigurationParams),
-    BrowserModule,
-    BrowserAnimationsModule,
-    PsbModule,
-    UiKitModule,
-    IssueModule,
-    SafePaymentModule,
-  ],
-  providers: [
-    { provide: LOCALE_ID, useValue: 'ru' },
-    { provide: HTTP_INTERCEPTORS, useClass: HttpErrorInterceptor, multi: true },
-    StorageService,
-    StoreService,
-    AccountService,
-    ErrorHandlerService,
-    NgService,
-  ],
-  bootstrap: [AppComponent],
+    declarations: [
+        AppComponent,
+    ],
+    imports: [
+        ApiModule.forRoot({ rootUrl: '' } as ApiConfigurationParams),
+        BrowserModule,
+        BrowserAnimationsModule,
+        PsbModule,
+        UiKitModule,
+        IssueModule,
+        SafePaymentModule,
+        BaseModalModule,
+    ],
+    providers: [
+        { provide: LOCALE_ID, useValue: 'ru' },
+        { provide: HTTP_INTERCEPTORS, useClass: HttpErrorInterceptor, multi: true },
+        StorageService,
+        StoreService,
+        AccountService,
+        ErrorHandlerService,
+        NgService,
+    ],
+    bootstrap: [AppComponent],
 })
 export class AppModule {
-  constructor(private appRef: ApplicationRef) {}
-  hmrOnInit(store) {
-    if (!store || !store.state) return;
-    console.log('HMR store', store);
-    console.log('store.state.data:', store.state.data);
-    if ('restoreInputValues' in store) {
-      store.restoreInputValues();
+    constructor(private appRef: ApplicationRef) { }
+    hmrOnInit(store) {
+        if (!store || !store.state) return;
+        if ('restoreInputValues' in store) {
+            store.restoreInputValues();
+        }
+        // change detection
+        this.appRef.tick();
+        delete store.state;
+        delete store.restoreInputValues;
     }
-    // change detection
-    this.appRef.tick();
-    delete store.state;
-    delete store.restoreInputValues;
-  }
-  hmrOnDestroy(store) {
-    const cmpLocation = this.appRef.components.map(
-      cmp => cmp.location.nativeElement,
-    );
-    // recreate elements
-    store.disposeOldHosts = createNewHosts(cmpLocation);
-    store.restoreInputValues = createInputTransfer();
-    removeNgStyles();
-  }
-  hmrAfterDestroy(store) {
-    store.disposeOldHosts();
-    delete store.disposeOldHosts;
-  }
+    hmrOnDestroy(store) {
+        const cmpLocation = this.appRef.components.map(
+            cmp => cmp.location.nativeElement,
+        );
+        // recreate elements
+        store.disposeOldHosts = createNewHosts(cmpLocation);
+        store.restoreInputValues = createInputTransfer();
+        removeNgStyles();
+    }
+    hmrAfterDestroy(store) {
+        store.disposeOldHosts();
+        delete store.disposeOldHosts;
+    }
 }

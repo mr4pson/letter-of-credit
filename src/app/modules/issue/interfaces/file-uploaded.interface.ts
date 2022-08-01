@@ -1,4 +1,4 @@
 export interface FileUploaded {
-  native: File;
-  sizeFormatted: string;
+    native: File;
+    sizeFormatted: string;
 }

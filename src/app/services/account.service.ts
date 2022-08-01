@@ -16,112 +16,110 @@ import { LetterService } from 'src/api/services';
 
 @Injectable()
 export class AccountService {
-  constructor(
-    private store: StoreService,
-    private storage: StorageService,
-    private http: HttpClient,
-    private letterService: LetterService,
-  ) {}
+    constructor(
+        private store: StoreService,
+        private storage: StorageService,
+        private http: HttpClient,
+        private letterService: LetterService,
+    ) { }
 
-  getAllowLoC(reciverINN: string): Observable<boolean> {
-    return this.letterService.apiLcIsLcOffersEnabledClientIdGet$Response({
-      clientId: this.storage.getClientID(),
-      branchId: this.storage.getBranchID(),
-      contractor: reciverINN,
-    }).pipe(
-      map((response: any) => JSON.parse(response.body)),
-      map((response: { canShowOffer }) => {
-        return response.canShowOffer;
-      }),
-    );
-  }
-
-  getIsBadReliability(reciverINN: string): Observable<boolean> {
-    const url =
-      `${this.storage.apiDomain}api/Document/reliability/${reciverINN}?v=${this.storage.apiVersion}`;
-
-    return this.http.get(url).pipe(
-      map((reliability: ReliabilityResult) => {
-        this.setReciverStatus(reciverINN, reliability);
-
-        return (
-          reliability.yellow ||
-          reliability.red ||
-          (!reliability.red && !reliability.yellow && !reliability.green)
+    getAllowLoC(reciverINN: string): Observable<boolean> {
+        return this.letterService.apiLcIsLcOffersEnabledClientIdGet$Response({
+            clientId: this.storage.getClientID(),
+            branchId: this.storage.getBranchID(),
+            contractor: reciverINN,
+        }).pipe(
+            map((response: any) => JSON.parse(response.body)),
+            map((response: { canShowOffer }) => {
+                return response.canShowOffer;
+            }),
         );
-      }),
-    );
-  }
-
-  private setReciverStatus(
-    reciverINN: string,
-    reliability: ReliabilityResult,
-  ): void {
-    if (this.store.letterOfCredit.reciverInn === reciverINN) {
-      if (reliability.red) {
-        this.store.reciverStatus = ReciverStatus.Unreliable;
-      } else if (reliability.yellow) {
-        this.store.reciverStatus = ReciverStatus.PartlyReliable;
-      } else {
-        this.store.reciverStatus = ReciverStatus.Reliable;
-      }
     }
-  }
 
-  setDisableLoCOffers(reciverINN: string): Observable<boolean> {
-    return this.letterService .apiLcEnableLcOffersClientIdPost$Json({
-      clientId: this.storage.getClientID(),
-      branchId: this.storage.getBranchID(),
-      contractor: reciverINN,
-    }).pipe(
-      map((response) => {
-        if (!response && response.success) {
-          return true;
+    getIsBadReliability(reciverINN: string): Observable<boolean> {
+        const url =
+            `${this.storage.apiDomain}api/Document/reliability/${reciverINN}?v=${this.storage.apiVersion}`;
+
+        return this.http.get(url).pipe(
+            map((reliability: ReliabilityResult) => {
+                this.setReciverStatus(reciverINN, reliability);
+
+                return (
+                    reliability.yellow ||
+                    reliability.red ||
+                    (!reliability.red && !reliability.yellow && !reliability.green)
+                );
+            }),
+        );
+    }
+
+    private setReciverStatus(
+        reciverINN: string,
+        reliability: ReliabilityResult,
+    ): void {
+        if (this.store.letterOfCredit.reciverInn === reciverINN) {
+            if (reliability.red) {
+                this.store.reciverStatus = ReciverStatus.Unreliable;
+            } else if (reliability.yellow) {
+                this.store.reciverStatus = ReciverStatus.PartlyReliable;
+            } else {
+                this.store.reciverStatus = ReciverStatus.Reliable;
+            }
         }
-      }),
-    );
-  }
+    }
 
-  getAccountList(): Observable<Account[]> {
-    const url =
-      `${this.storage.apiDomain}api/Account/clients/${this.storage.getClientID()}?branchId=${this.storage.getBranchID()}&account=${this.storage.getAccountID()}&v=${
-        this.storage.apiVersion
-      }`;
+    setDisableLoCOffers(reciverINN: string): Observable<boolean> {
+        return this.letterService.apiLcEnableLcOffersClientIdPost$Json({
+            clientId: this.storage.getClientID(),
+            branchId: this.storage.getBranchID(),
+            contractor: reciverINN,
+        }).pipe(
+            map((response) => {
+                if (!response && response.success) {
+                    return true;
+                }
+            }),
+        );
+    }
 
-    return this.http.get<AccountResponse>(url).pipe(
-      map((response) => {
-        // if (response?.accounts?.length === 0) {
-        if (!response || !response.accounts || !response.accounts.length) {
-          return null;
-        }
+    getAccountList(): Observable<Account[]> {
+        const url =
+            `${this.storage.apiDomain}api/Account/clients/${this.storage.getClientID()}?branchId=${this.storage.getBranchID()}&account=${this.storage.getAccountID()}&v=${this.storage.apiVersion
+            }`;
 
-        return response.accounts;
-      }),
-    );
-  }
+        return this.http.get<AccountResponse>(url).pipe(
+            map((response) => {
+                if (!response || !response.accounts || !response.accounts.length) {
+                    return [];
+                }
 
-  getCommision(total: number): Observable<number> {
-    return this.letterService.apiLcCalculateCommissionGet$Json({ total }).pipe(
-      map(response => response?.commissionValue),
-    );
-  }
+                return response.accounts;
+            }),
+        );
+    }
 
-  searchClientByInn(inn: string): Observable<Client[]> {
-    const url = `${this.storage.apiDomain}api/Document/clients/searchByInn/${inn}?v=${this.storage.apiVersion}`;
+    getCommision(total: number): Observable<number> {
+        return this.letterService.apiLcCalculateCommissionGet$Json({ total }).pipe(
+            map(response => response?.commissionValue),
+        );
+    }
 
-    return this.http.get<Client[]>(url);
-  }
+    searchClientByInn(inn: string): Observable<Client[]> {
+        const url = `${this.storage.apiDomain}api/Document/clients/searchByInn/${inn}?v=${this.storage.apiVersion}`;
 
-  searchBankByBik(bik: string): Observable<BankSearch> {
-    const url =
-      `${this.storage.apiDomain}api/Document/getReceiverBanks/${bik}?v=${this.storage.apiVersion}`;
+        return this.http.get<Client[]>(url);
+    }
 
-    return this.http.get<BankSearch[]>(url).pipe(
-      map((response) => {
-        if (response && response.length > 0) {
-          return response[0];
-        }
-      }),
-    );
-  }
+    searchBankByBik(bik: string): Observable<BankSearch> {
+        const url =
+            `${this.storage.apiDomain}api/Document/getReceiverBanks/${bik}?v=${this.storage.apiVersion}`;
+
+        return this.http.get<BankSearch[]>(url).pipe(
+            map((response) => {
+                if (response && response.length > 0) {
+                    return response[0];
+                }
+            }),
+        );
+    }
 }

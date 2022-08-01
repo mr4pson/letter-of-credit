@@ -6,17 +6,17 @@ import { map } from 'rxjs/operators';
 
 // TODO remove secure pipe replacing all images that use it with psb-icon component
 @Pipe({
-  name: 'secure',
+    name: 'secure',
 })
 export class SecurePipe implements PipeTransform {
-  constructor(
-    private http: HttpClient,
-    private sanitizer: DomSanitizer,
-  ) { }
+    constructor(
+        private http: HttpClient,
+        private sanitizer: DomSanitizer,
+    ) { }
 
-  transform(url): Observable<SafeUrl> {
-    return this.http.get(url, { responseType: 'blob' }).pipe(
-      map(val => this.sanitizer.bypassSecurityTrustUrl(URL.createObjectURL(val))),
-    );
-  }
+    transform(url): Observable<SafeUrl> {
+        return this.http.get(url, { responseType: 'blob' }).pipe(
+            map(val => this.sanitizer.bypassSecurityTrustUrl(URL.createObjectURL(val))),
+        );
+    }
 }

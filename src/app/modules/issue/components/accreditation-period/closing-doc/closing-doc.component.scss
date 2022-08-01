@@ -1,52 +1,55 @@
+@import "../../../../../../assets/colors";
+@import "../../../../../../assets/sizes";
+
 .docs-holder {
-	background: #f5f5f5;
-	padding: 32px 16px;
-	margin-bottom: 24px;
-  position: relative;
+    background: $bg-grey-super-light;
+    padding: 32px 16px;
+    margin-bottom: $size-24;
+    position: relative;
 
-  .remove-btn {
-    position: absolute;
-    top: 10px;
-    right: 10px;
-    background: none;
-    border: none;
-    color: #d7d7d7;
-    cursor: pointer;
+    .remove-btn {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        background: none;
+        border: none;
+        color: $bg-grey-medium;
+        cursor: pointer;
 
-    psb-icon svg {
-      width: 30px;
-      height: 30px;
+        psb-icon svg {
+            width: 30px;
+            height: 30px;
+        }
     }
-  }
 
-	.additional-field {
-		display: block;
-		margin-bottom: 24px;
-	}
+    .additional-field {
+        display: block;
+        margin-bottom: $size-24;
+    }
 }
 
 .only-orig-checkbox {
-  display: inline-block;
-  margin-top: -10px;
-
-  .tooltip {
     display: inline-block;
-    margin-left: 10px;
-    vertical-align: middle;
-  }
+    margin-top: -$size-10;
+
+    .tooltip {
+        display: inline-block;
+        margin-left: $size-10;
+        vertical-align: middle;
+    }
 }
 
 .fields {
-  display: flex;
+    display: flex;
 
-  .doc-field {
-    width: 300px;
-    display: inline-block;
-  }
+    .doc-field {
+        width: 300px;
+        display: inline-block;
+    }
 
-  .count-field {
-    width: 216px;
-    display: inline-block;
-    margin-left: 20px;
-  }
+    .count-field {
+        width: 216px;
+        display: inline-block;
+        margin-left: $size-20;
+    }
 }

@@ -1,3 +1,6 @@
+@import "../../../../../assets/colors";
+@import "../../../../../assets/sizes";
+
 :host {
   display: block;
   width: 100%;
@@ -7,7 +10,7 @@
   font-family: "Inter";
   font-weight: normal !important;
   text-rendering: optimizeLegibility;
-  font-size: 16px;
+  font-size: $font-size-m;
   display: block;
   min-width: 0;
   background: transparent;
@@ -27,9 +30,9 @@
     right: -13px;
     top: 19px;
     width: 2em;
-    padding: 0;
+    padding: $size-zero;
     height: 18px;
-    color: #848484;
+    color: $bg-grey-light-dark;
 
     psb-icon {
       width: 18px;
@@ -48,14 +51,14 @@
   padding-right: 1em;
   font-weight: normal;
   line-height: 33px;
-  padding-top: 12px;
+  padding-top: $size-12;
   min-height: 33px;
 
   .small-label {
     position: absolute;
-    font-size: 12px;
+    font-size: $font-size-xs;
     top: -10px;
-    color: rgba(0,0,0,.54);
+    color: $black-alpha-54;
   }
 
   .content-row {
@@ -76,10 +79,10 @@
 }
 
 .dropdown-panel {
-  padding: 0;
+  padding: $size-zero;
   border: 1px solid #c8c8c8;
   border-radius: 3px;
-  background-color: #ffffff;
+  background-color: $white;
   box-shadow: 0 3px 6px 0 rgb(0 0 0 / 16%);
   min-width: 100%;
   max-width: 100%;
@@ -95,9 +98,9 @@
   }
 
   .items {
-    padding: 0;
+    padding: $size-zero;
     list-style: none;
-    margin: 0;
+    margin: $size-zero;
   }
 
   .item {
@@ -107,13 +110,13 @@
     cursor: pointer;
   
     &:hover {
-      background-color: #f8f8f8;
+      background-color: $bg-grey-super-light;
     }
   }
 
   .dropdown-label .content-col {
     &:last-child {
-      padding-right: 0;
+      padding-right: $size-zero;
     }
   }
 }

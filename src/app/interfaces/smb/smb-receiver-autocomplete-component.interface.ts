@@ -4,6 +4,6 @@ import { Observable } from 'rxjs';
 import { SmbComponentInterface } from './smb-component.interface';
 
 export interface SmbReceiverAutocompleteComponent extends SmbComponentInterface {
-  receiverFormGroup: FormGroup;
-  innValidChange: Observable<boolean>;
+    receiverFormGroup: FormGroup;
+    innValidChange: Observable<boolean>;
 }

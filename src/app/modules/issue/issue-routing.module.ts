@@ -9,16 +9,16 @@ import { SendApplicationComponent } from './components/send-application/send-app
 import { Page, paths } from './constants/routes';
 
 export const routes: Routes = [
-  { path: '', redirectTo: paths[Page.ACCREDITATION_AMOUNT], pathMatch: 'full' },
-  { path: paths[Page.ACCREDITATION_AMOUNT], component: AccreditationAmountComponent },
-  { path: paths[Page.COUNTERPARTY], component: СounterpartyComponent },
-  { path: paths[Page.COUNTERPARTY_CONTRACT], component: CounterpartyContractComponent },
-  { path: paths[Page.ACCREDITATION_PERIOD], component: AccreditationPeriodComponent },
-  { path: paths[Page.SEND_APPLICATION], component: SendApplicationComponent },
+    { path: '', redirectTo: paths[Page.ACCREDITATION_AMOUNT], pathMatch: 'full' },
+    { path: paths[Page.ACCREDITATION_AMOUNT], component: AccreditationAmountComponent },
+    { path: paths[Page.COUNTERPARTY], component: СounterpartyComponent },
+    { path: paths[Page.COUNTERPARTY_CONTRACT], component: CounterpartyContractComponent },
+    { path: paths[Page.ACCREDITATION_PERIOD], component: AccreditationPeriodComponent },
+    { path: paths[Page.SEND_APPLICATION], component: SendApplicationComponent },
 ];
 
 @NgModule({
-  imports: [RouterModule.forRoot(routes, { useHash: true, scrollPositionRestoration: 'enabled' })],
-  exports: [RouterModule],
+    imports: [RouterModule.forRoot(routes, { useHash: true, scrollPositionRestoration: 'enabled' })],
+    exports: [RouterModule],
 })
 export class IssueRoutingModule { }

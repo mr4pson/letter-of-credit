@@ -1,26 +1,26 @@
 @import "../../../../../assets/colors";
 
 .send-application {
-	padding-bottom: 48px;
+    padding-bottom: 48px;
 
-	.description {
-		margin: 20px 0 40px 0;
-	}
+    .description {
+        margin: 20px 0 40px 0;
+    }
 
-	.agree-checkbox {
-		display: flex;
-		height: 33px;
-	}
+    .agree-checkbox {
+        display: flex;
+        height: 33px;
+    }
 }
 
 .contact {
-	.title {
-		margin-top: 40px;
-	}
+    .title {
+        margin-top: 40px;
+    }
 
-	.name,
-	.phone {
-		display: block;
-		width: 440px;
-	}
+    .name,
+    .phone {
+        display: block;
+        width: 440px;
+    }
 }

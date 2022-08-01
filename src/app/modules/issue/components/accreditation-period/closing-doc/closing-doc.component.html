@@ -1,50 +1,50 @@
 <div class="docs-holder">
-  <button
-    (click)="handleDelete()"
-    type="button"
-    class="remove-btn"
-  >
-    <psb-icon [path]="'CloseFilled_24.svg'"></psb-icon>
-  </button>
+    <button
+        (click)="handleDelete()"
+        type="button"
+        class="remove-btn"
+    >
+        <psb-icon [path]="'CloseFilled_24.svg'"></psb-icon>
+    </button>
 
-  <ng-container
-    *ngIf="formGroup"
-    [formGroup]="formGroup"
-  >
-    <div class="fields">
-      <psb-text-input
-        class="doc-field"
-        label="Документ"
-        [formControlName]="ClosingDocFormField.Document"
-      ></psb-text-input>
+    <ng-container
+        *ngIf="formGroup"
+        [formGroup]="formGroup"
+    >
+        <div class="fields">
+            <psb-text-input
+                class="doc-field"
+                label="Документ"
+                [formControlName]="ClosingDocFormField.Document"
+            ></psb-text-input>
 
-      <psb-number-input
-        class="count-field"
-        label="Количество"
-        [formControlName]="ClosingDocFormField.Amount"
-        [thousandsSeparator]="''"
-      ></psb-number-input>
-    </div>
+            <psb-number-input
+                class="count-field"
+                label="Количество"
+                [formControlName]="ClosingDocFormField.Amount"
+                [thousandsSeparator]="''"
+            ></psb-number-input>
+        </div>
 
-    <div class="only-orig-checkbox">
-      <psb-checkbox
-        label="Только оригинал документа"
-        [formControlName]="ClosingDocFormField.OnlyOriginalDocument"
-        name="only-orig-doc"
-      >
-        <psb-tooltip
-          class="tooltip"
-          tooltipType="white"
-          text="Заполняется только в случае необходимости"
-        ></psb-tooltip>
-      </psb-checkbox>
-    </div>
+        <div class="only-orig-checkbox">
+            <psb-checkbox
+                label="Только оригинал документа"
+                [formControlName]="ClosingDocFormField.OnlyOriginalDocument"
+                name="only-orig-doc"
+            >
+                <psb-tooltip
+                    class="tooltip"
+                    tooltipType="white"
+                    text="Заполняется только в случае необходимости"
+                ></psb-tooltip>
+            </psb-checkbox>
+        </div>
 
-    <psb-text-input
-      class="additional-field"
-      label="Дополнительные требования к документу"
-      [formControlName]="ClosingDocFormField.AdditionalRequirements"
-      description="Кем должен быть выпущен, подписан или форма заверения, необходимые отметки, язык на котором предоставляется документ. ИНН и наименование грузоотправителя, грузополучателя, место назначения груза."
-    ></psb-text-input>
-  </ng-container>
+        <psb-text-input
+            class="additional-field"
+            label="Дополнительные требования к документу"
+            [formControlName]="ClosingDocFormField.AdditionalRequirements"
+            description="Кем должен быть выпущен, подписан или форма заверения, необходимые отметки, язык на котором предоставляется документ. ИНН и наименование грузоотправителя, грузополучателя, место назначения груза."
+        ></psb-text-input>
+    </ng-container>
 </div>

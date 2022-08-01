@@ -3,15 +3,15 @@ import { ReplaySubject } from 'rxjs';
 import { DOCUMENT } from '@angular/common';
 
 import {
-  Ng,
-  SmbAccountSectionComponent,
-  SmbAppComponent,
-  SmbComponentInterface,
-  SmbDocumentFilterComponent,
-  SmbDocumentsComponent,
-  SmbPaymentFormComponent,
-  SmbReceiverAutocompleteComponent,
-  SmbSavePublishBlockComponent,
+    Ng,
+    SmbAccountComponent,
+    SmbAppComponent,
+    SmbComponentInterface,
+    SmbDocumentFilterComponent,
+    SmbDocumentsComponent,
+    SmbPaymentFormComponent,
+    SmbReceiverAutocompleteComponent,
+    SmbSavePublishBlockComponent,
 } from '../interfaces';
 import { ErrorHandlerService } from './error-handler.service';
 import { SmbSelector } from '../enums/smb-selector.enum';
@@ -19,94 +19,94 @@ import { SmbSelector } from '../enums/smb-selector.enum';
 
 @Injectable()
 export class NgService {
-  private instance: Ng;
-  private ngDevMode: boolean;
-  private renderer: Renderer2;
-  private window = this.document.defaultView;
+    private instance: Ng;
+    private ngDevMode: boolean;
+    private renderer: Renderer2;
+    private window = this.document.defaultView;
 
-  constructor(
-    @Optional() @Inject(DOCUMENT) private document,
-    private errorHandler: ErrorHandlerService,
-  ) {
-    this.instance = this.window.ng;
-    this.ngDevMode = !!this.window.ngDevMode;
-    if (!this.ngDevMode) {
-      throw Error('Приложение в режиме prod. Ng сущность не инициализирована');
-    }
-  }
-
-  getSmbAppComponent(): SmbAppComponent {
-    return this.getComponent<SmbAppComponent>(SmbSelector.App);
-  }
-
-  getSmbPaymentFormComponent(): SmbPaymentFormComponent {
-    return this.getComponent<SmbPaymentFormComponent>(SmbSelector.RublePaymentForm);
-  }
-
-  getSmbAccountSectionComponent(): SmbAccountSectionComponent {
-    return this.getComponent<SmbAccountSectionComponent>(SmbSelector.AccountSection);
-  }
-
-  getSmbDocumentsComponent(): SmbDocumentsComponent {
-    return this.getComponent<SmbDocumentsComponent>(SmbSelector.Documents);
-  }
-
-  getSmbSavePublishBlockComponent(): SmbSavePublishBlockComponent {
-    return this.getComponent<SmbSavePublishBlockComponent>(SmbSelector.SavePublishBlock);
-  }
-
-  getSmbDocumentsFilterComponent(): SmbDocumentFilterComponent {
-    return this.getComponent<SmbDocumentFilterComponent>(SmbSelector.DocumentFilter);
-  }
-
-  getSmbReceiverAutocompleteComponent(): SmbReceiverAutocompleteComponent {
-    return this.getComponent<SmbReceiverAutocompleteComponent>(SmbSelector.ReceiverAutocomplete);
-  }
-
-  getMainNewPaymentButtonElement(): HTMLElement {
-    return this.renderer.selectRootElement(SmbSelector.MainNewPaymentButton, true);
-  }
-
-  getDocumentsNewPaymentButtonElement(): HTMLElement {
-    return this.renderer.selectRootElement(SmbSelector.DocumentsNewPaymentButton, true);
-  }
-
-  hideSmbDocuments() {
-    this.renderer.selectRootElement(SmbSelector.Documents, true).classList.add('hidden');
-  }
-
-  showSmbDocuments() {
-    this.renderer.selectRootElement(SmbSelector.Documents, true).classList.remove('hidden');
-  }
-
-  setRenderer(renderer: Renderer2): void {
-    this.renderer = renderer;
-  }
-
-  private getComponent<T>(selector: string): T | null {
-    let element: Element;
-
-    try {
-      element = this.renderer.selectRootElement(selector, true);
-    } catch (error) {
-      this.errorHandler.showErrorMessage(`Невозможно найти селектор ${selector} в DOM дереве`);
+    constructor(
+        @Optional() @Inject(DOCUMENT) private document,
+        private errorHandler: ErrorHandlerService,
+    ) {
+        this.instance = this.window.ng;
+        this.ngDevMode = !!this.window.ngDevMode;
+        if (!this.ngDevMode) {
+            throw Error('Приложение в режиме prod. Ng сущность не инициализирована');
+        }
     }
 
-    if (!element) {
-      return null;
+    getSmbAppComponent(): SmbAppComponent {
+        return this.getComponent<SmbAppComponent>(SmbSelector.App);
     }
 
-    const component = this.instance.getComponent
-      <T & Pick<SmbComponentInterface, 'destroyed$' | 'ngOnDestroy'>>(element);
+    getSmbPaymentFormComponent(): SmbPaymentFormComponent {
+        return this.getComponent<SmbPaymentFormComponent>(SmbSelector.RublePaymentForm);
+    }
 
-    component.destroyed$ = new ReplaySubject(1);
+    getSmbAccountComponent(): SmbAccountComponent {
+        return this.getComponent<SmbAccountComponent>(SmbSelector.Account);
+    }
 
-    component.ngOnDestroy = () => {
-      component.ngOnDestroy();
-      component.destroyed$.next(true);
-      component.destroyed$.complete();
-    };
+    getSmbDocumentsComponent(): SmbDocumentsComponent {
+        return this.getComponent<SmbDocumentsComponent>(SmbSelector.Documents);
+    }
 
-    return component;
-  }
+    getSmbSavePublishBlockComponent(): SmbSavePublishBlockComponent {
+        return this.getComponent<SmbSavePublishBlockComponent>(SmbSelector.SavePublishBlock);
+    }
+
+    getSmbDocumentsFilterComponent(): SmbDocumentFilterComponent {
+        return this.getComponent<SmbDocumentFilterComponent>(SmbSelector.DocumentFilter);
+    }
+
+    getSmbReceiverAutocompleteComponent(): SmbReceiverAutocompleteComponent {
+        return this.getComponent<SmbReceiverAutocompleteComponent>(SmbSelector.ReceiverAutocomplete);
+    }
+
+    getDocumentsNewPaymentButtonElement(): HTMLElement {
+        return this.renderer.selectRootElement(SmbSelector.DocumentsNewPaymentButton, true);
+    }
+
+    hideSmbDocuments() {
+        this.renderer.selectRootElement(SmbSelector.Documents, true).classList.add('hidden');
+    }
+
+    showSmbDocuments() {
+        this.renderer.selectRootElement(SmbSelector.Documents, true).classList.remove('hidden');
+    }
+
+    setRenderer(renderer: Renderer2): void {
+        this.renderer = renderer;
+    }
+
+    scrollToTop(): void {
+        this.window.scroll(0, 0);
+    }
+
+    private getComponent<T>(selector: string): T | null {
+        let element: Element;
+
+        try {
+            element = this.renderer.selectRootElement(selector, true);
+        } catch (error) {
+            this.errorHandler.showErrorMessage(`Невозможно найти селектор ${selector} в DOM дереве`);
+        }
+
+        if (!element) {
+            return null;
+        }
+
+        const component = this.instance.getComponent
+            <T & Pick<SmbComponentInterface, 'destroyed$' | 'ngOnDestroy'>>(element);
+
+        component.destroyed$ = new ReplaySubject(1);
+
+        component.ngOnDestroy = () => {
+            component.ngOnDestroy();
+            component.destroyed$.next(true);
+            component.destroyed$.complete();
+        };
+
+        return component;
+    }
 }

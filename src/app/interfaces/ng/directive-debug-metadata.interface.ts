@@ -1,4 +1,4 @@
 export interface DirectiveDebugMetadata {
-  inputs: Record<string, string>;
-  outputs: Record<string, string>;
+    inputs: Record<string, string>;
+    outputs: Record<string, string>;
 }

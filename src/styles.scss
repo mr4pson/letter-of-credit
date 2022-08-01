@@ -1,112 +1,114 @@
-@import "assets/indigo-pink.css";
+@import "assets/colors";
+@import "assets/sizes";
 
-@import "assets/_colors.scss";
-
-body, * {
-	font-family: 'Inter', sans-serif;
+body,
+* {
+    font-family: 'Inter', sans-serif;
 }
 
 .loc-backdrop {
-	background-color: $black-alpha-50;
+    background-color: $black-alpha-50;
 
-	& + .cdk-global-overlay-wrapper {
-		display: flex !important;
-		text-align: left !important;
-	}
+    &+.cdk-global-overlay-wrapper {
+        display: flex !important;
+        text-align: left !important;
+    }
 }
 
 .loc-overlay-spinner {
-	mat-dialog-container {
-		display: flex;
-		align-items: center;
-		background: transparent;
-		box-shadow: none;
-	}
+    mat-dialog-container {
+        display: flex;
+        align-items: center;
+        background: transparent;
+        box-shadow: none;
+    }
 }
 
 .loc-overlay {
-	max-width: 100vw !important;
+    max-width: 100vw !important;
 
-	&.loc-payment {
-		mat-dialog-container {
-			width: 840px !important;
-		}
-	}
+    &.loc-payment {
+        mat-dialog-container {
+            width: 840px !important;
+        }
+    }
 
-	.mat-dialog-container {
-		margin-left: auto;
-		margin-right: auto;
-		background: #fff;
-	}
+    .mat-dialog-container {
+        margin-left: auto;
+        margin-right: auto;
+        background: $white;
+    }
 
-	.success-modal {
-		.status-icon,
-		psb-heading {
-			text-align: left;
-		}
-	}
+    .success-modal {
+
+        .status-icon,
+        psb-heading {
+            text-align: left;
+        }
+    }
 }
 
 loc-inner,
 .loc-overlay {
-	a,
-	.main-color {
-		color: $main-blue !important;
-	}
 
-	.checkbox .checkbox-label {
-		color: $black-alpha-87;
-		padding-left: 0;
-	}
+    a,
+    .main-color {
+        color: $main-blue  !important;
+    }
 
-	psb-button {
-		display: inline-block;
-	}
+    .checkbox .checkbox-label {
+        color: $black-alpha-87;
+        padding-left: $size-zero;
+    }
 
-	psb-tooltip {
-		height: 16px;
-	}
+    psb-button {
+        display: inline-block;
+    }
 
-	psb-tooltip psb-icon svg {
-		color: $black-alpha-38 !important;
-		cursor: pointer;
-	}
+    psb-tooltip {
+        height: 16px;
+    }
+
+    psb-tooltip psb-icon svg {
+        color: $black-alpha-38  !important;
+        cursor: pointer;
+    }
 }
 
 loc-inner {
-	.simplebar-track.simplebar-horizontal .simplebar-scrollbar {
-		height: 4px !important;
+    .simplebar-track.simplebar-horizontal .simplebar-scrollbar {
+        height: 4px !important;
 
-		&::before {
-			background: $black-alpha-12 !important;
-		}
-	}
+        &::before {
+            background: $black-alpha-12  !important;
+        }
+    }
 
-	ngx-dropzone-remove-badge {
-		opacity: 1 !important;
-		background: $black-alpha-24 !important;
+    ngx-dropzone-remove-badge {
+        opacity: 1 !important;
+        background: $black-alpha-24  !important;
 
-		&:hover {
-			background: $main-blue !important;
-		}
-	}
+        &:hover {
+            background: $main-blue  !important;
+        }
+    }
 
-	psb-hint {
-		max-height: 50px;
-		overflow: hidden;
-	}
+    psb-hint {
+        max-height: 50px;
+        overflow: hidden;
+    }
 }
 
 .docs-holder .remove-btn {
-	svg {
-		width: 30px;
-		height: 30px;
-	}
+    svg {
+        width: 30px;
+        height: 30px;
+    }
 }
 
 .add-doc-btn .icon {
-	svg {
-		width: 30px;
-		height: 30px;
-	}
+    svg {
+        width: 30px;
+        height: 30px;
+    }
 }

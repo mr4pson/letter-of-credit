@@ -1,28 +1,28 @@
 <div class="issue">
-  <button
-    class=".back-btn back-btn"
-    (click)="navigateBack()"
-  >
-    <div class="arrow">&larr;</div>
-    <div class="label">Назад</div>
-  </button>
+    <button
+        class=".back-btn back-btn"
+        (click)="navigateBack()"
+    >
+        <div class="arrow">&larr;</div>
+        <div class="label">Назад</div>
+    </button>
 
-  <div class="content">
-    <div class="left-col">
-      <div class="issue-header">
-        <h3 class="title">Выпуск покрытого аккредитива</h3>
-        <psb-tooltip
-          class="tooltip"
-          tooltipType="white"
-          text="Банк выступает посредником между вами и вашим контрагентом. До момента совершения платежа ваши деньги хранятся на специальном счёте. Платёж вашему контрагенту будет совершён только после предоставления им документов в соответствии с условиями аккредитива. Больше информации по <a href=''>ссылке</a>."
-        ></psb-tooltip>
-      </div>
+    <div class="body">
+        <div class="left-col">
+            <div class="issue-header">
+                <h3 class="title">Выпуск покрытого аккредитива</h3>
+                <psb-tooltip
+                    class="tooltip"
+                    tooltipType="white"
+                    text="Банк выступает посредником между вами и вашим контрагентом. До момента совершения платежа ваши деньги хранятся на специальном счёте. Платёж вашему контрагенту будет совершён только после предоставления им документов в соответствии с условиями аккредитива. Больше информации по <a href=''>ссылке</a>."
+                ></psb-tooltip>
+            </div>
 
-      <router-outlet></router-outlet>
+            <router-outlet></router-outlet>
+        </div>
+
+        <div class="right-col">
+            <loc-issue-steps></loc-issue-steps>
+        </div>
     </div>
-
-    <div class="right-col">
-      <loc-issue-steps></loc-issue-steps>
-    </div>
-  </div>
 </div>

@@ -12,7 +12,7 @@ export * from './ng/ng.interface';
 export * from './smb/smb-component.interface';
 export * from './smb/smb-app-component.interface';
 export * from './smb/smb-account-aux-service.interface';
-export * from './smb/smb-account-section-component.interface';
+export * from './smb/smb-account-component.interface';
 export * from './smb/smb-alerting-service.interface';
 export * from './smb/smb-dialog-service.interface';
 export * from './smb/smb-document-filter-component.interface';

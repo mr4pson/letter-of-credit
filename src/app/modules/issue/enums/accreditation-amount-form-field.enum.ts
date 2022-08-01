@@ -1,4 +1,4 @@
 export enum AccreditationAmountFormField {
-  IssueSum = "issueSum",
-  SelectedAccount = "selectedAccount"
+    IssueSum = "issueSum",
+    SelectedAccount = "selectedAccount"
 }

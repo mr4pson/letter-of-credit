@@ -1,5 +1,5 @@
 export interface ReliabilityResult {
-  red: boolean;
-  yellow: boolean;
-  green: boolean;
+    red: boolean;
+    yellow: boolean;
+    green: boolean;
 }

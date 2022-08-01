@@ -1,58 +1,58 @@
 <form
-  class="send-application"
-  [formGroup]="form"
-  (submit)="handleSubmit()"
+    class="send-application"
+    [formGroup]="form"
+    (submit)="handleSubmit()"
 >
-  <p class="description">
-    В течение одного рабочего дня после отправки заявления с вами свяжется сотрудник банка, обработает вашу заявку и выпустит покрытый аккредитив для безопасного платежа вашему контрагенту.
-  </p>
+    <p class="description">
+        В течение одного рабочего дня после отправки заявления с вами свяжется сотрудник банка, обработает вашу заявку и выпустит покрытый аккредитив для безопасного платежа вашему контрагенту.
+    </p>
 
-  <label class="agree-checkbox">
-    <psb-checkbox
-      [formControlName]="SendApplicationFormField.AgreeWithTerms"
-      name="only-orig-doc"
-    >
-      <span>
-        Я согласен с
-        <a
-          href="https://www.psbank.ru/MediumBusiness/CashService/RKO/Documentary"
-          target="_blank"
+    <label class="agree-checkbox">
+        <psb-checkbox
+            [formControlName]="SendApplicationFormField.AgreeWithTerms"
+            name="only-orig-doc"
         >
-          условиями открытия
-        </a>
-        аккредитива
-      </span>
+            <span>
+                Я согласен с
+                <a
+                    href="https://www.psbank.ru/MediumBusiness/CashService/RKO/Documentary"
+                    target="_blank"
+                >
+                    условиями открытия
+                </a>
+                аккредитива
+            </span>
+        </psb-checkbox>
+    </label>
+
+    <psb-checkbox
+        [formControlName]="SendApplicationFormField.CreateLocTemplate"
+        name="only-orig-doc"
+    >
+        <span>Создать шаблон аккредитива</span>
     </psb-checkbox>
-  </label>
 
-  <psb-checkbox
-    [formControlName]="SendApplicationFormField.CreateLocTemplate"
-    name="only-orig-doc"
-  >
-    <span>Создать шаблон аккредитива</span>
-  </psb-checkbox>
+    <div class="contact">
+        <h2 class="title">
+            Контактные данные для уточнения вопросов:
+        </h2>
 
-  <div class="contact">
-    <h2 class="title">
-      Контактные данные для уточнения вопросов:
-    </h2>
+        <psb-text-input
+            class="name"
+            label="ФИО ответственного"
+            [formControlName]="SendApplicationFormField.ContactPerson"
+        ></psb-text-input>
 
-    <psb-text-input
-      class="name"
-      label="ФИО ответственного"
-      [formControlName]="SendApplicationFormField.ContactPerson"
-    ></psb-text-input>
-
-    <psb-phone-input
-      class="phone"
-      label="Контактный телефон ответственного"
-      [formControlName]="SendApplicationFormField.ContactPhone"
-    ></psb-phone-input>
-  </div>
-  <psb-button
-    [isSubmit]="true"
-    [type]="ButtonType.Primary"
-  >
-    Далее
-  </psb-button>
+        <psb-phone-input
+            class="phone"
+            label="Контактный телефон ответственного"
+            [formControlName]="SendApplicationFormField.ContactPhone"
+        ></psb-phone-input>
+    </div>
+    <psb-button
+        [isSubmit]="true"
+        [type]="ButtonType.Primary"
+    >
+        Далее
+    </psb-button>
 </form>

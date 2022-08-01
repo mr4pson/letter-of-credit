@@ -19,140 +19,140 @@ import { AccountService, ErrorHandlerService, StoreService } from 'src/app/servi
 import { isFormValid } from 'src/app/utils';
 
 describe('CounterpartyComponent', () => {
-  let component: СounterpartyComponent;
-  let fixture: ComponentFixture<СounterpartyComponent>;
-  let router: Router;
+    let component: СounterpartyComponent;
+    let fixture: ComponentFixture<СounterpartyComponent>;
+    let router: Router;
 
-  const clients$$ = new BehaviorSubject([]);
-  const partners$$ = new BehaviorSubject([]);
+    const clients$$ = new BehaviorSubject([]);
+    const partners$$ = new BehaviorSubject([]);
 
-  const initialForm = {
-    inn: '000000000000',
-    bik: '000000000',
-    account: '00000000000000000000',
-  };
-
-  const client = {
-    fullName: 'test fullName',
-    inn: '000000000002',
-    kpp: 'test kpp',
-    shortName: 'test shortName',
-    innFound: 'test innFound',
-    innTail: 'test innTail',
-  };
-
-  beforeEach(waitForAsync(() => {
-    TestBed.configureTestingModule({
-      declarations: [
-        СounterpartyComponent,
-      ],
-      imports: [
-        CommonModule,
-        PsbModule,
-        ReactiveFormsModule,
-        RouterTestingModule,
-        UiKitModule,
-      ],
-      providers: [
-        StoreService,
-        StepService,
-        {
-          provide: AccountService,
-          useValue: {
-            searchClientByInn: (inn: string) => {
-              return clients$$.asObservable();
-            },
-          },
-        },
-        {
-          provide: PartnersService,
-          useValue: {
-            getPartners: () => {
-              return partners$$.asObservable();
-            },
-          },
-        },
-        {
-          provide: ErrorHandlerService,
-          useValue: {
-            showErrorMessage: () => {},
-          },
-        },
-      ],
-    }).compileComponents();
-  }));
-
-  beforeEach(() => {
-    fixture = TestBed.createComponent(СounterpartyComponent);
-    component = fixture.componentInstance;
-    router = TestBed.inject(Router);
-
-    component.form.reset();
-    fixture.detectChanges();
-  });
-
-  it('При patchValue форма принимает аналогичное значение заданному', () => {
-    component.form.patchValue(initialForm);
-
-    expect(initialForm).toEqual(component.form.value);
-  });
-
-  it('Задает значение формы при инициализации партнера и клиента', () => {
-    const partner = {
-      shortName: 'test partner shortName',
-      inn: '000000000002',
-      banks: [
-        {
-          id: 1,
-          bik: '000000001',
-          acc: '00000000000000000001',
-        },
-      ],
+    const initialForm = {
+        inn: '000000000000',
+        bik: '000000000',
+        account: '00000000000000000000',
     };
 
-    partners$$.next([partner]);
+    const client = {
+        fullName: 'test fullName',
+        inn: '000000000002',
+        kpp: 'test kpp',
+        shortName: 'test shortName',
+        innFound: 'test innFound',
+        innTail: 'test innTail',
+    };
 
-    component.selectClient(client);
-    fixture.detectChanges();
+    beforeEach(waitForAsync(() => {
+        TestBed.configureTestingModule({
+            declarations: [
+                СounterpartyComponent,
+            ],
+            imports: [
+                CommonModule,
+                PsbModule,
+                ReactiveFormsModule,
+                RouterTestingModule,
+                UiKitModule,
+            ],
+            providers: [
+                StoreService,
+                StepService,
+                {
+                    provide: AccountService,
+                    useValue: {
+                        searchClientByInn: (inn: string) => {
+                            return clients$$.asObservable();
+                        },
+                    },
+                },
+                {
+                    provide: PartnersService,
+                    useValue: {
+                        getPartners: () => {
+                            return partners$$.asObservable();
+                        },
+                    },
+                },
+                {
+                    provide: ErrorHandlerService,
+                    useValue: {
+                        showErrorMessage: () => { },
+                    },
+                },
+            ],
+        }).compileComponents();
+    }));
 
-    expect(component.form.value).toEqual({
-      inn: client.inn,
-      bik: partner.banks[0].bik,
-      account: partner.banks[0].acc,
+    beforeEach(() => {
+        fixture = TestBed.createComponent(СounterpartyComponent);
+        component = fixture.componentInstance;
+        router = TestBed.inject(Router);
+
+        component.form.reset();
+        fixture.detectChanges();
     });
 
-    expect(component.clientCompanyName).toEqual(client.shortName);
-  });
+    it('При patchValue форма принимает аналогичное значение заданному', () => {
+        component.form.patchValue(initialForm);
 
-  it('При изменении ИНН получает список клиентов', (done: DoneFn) => {
-    component.clients$.subscribe((clients) => {
-      if (clients.length === 0) {
-        return;
-      }
-
-      expect(clients.length).toEqual(clients$$.getValue().length);
-      done();
+        expect(initialForm).toEqual(component.form.value);
     });
 
-    component.form.controls.inn.patchValue('000000000003');
+    it('Задает значение формы при инициализации партнера и клиента', () => {
+        const partner = {
+            shortName: 'test partner shortName',
+            inn: '000000000002',
+            banks: [
+                {
+                    id: 1,
+                    bik: '000000001',
+                    acc: '00000000000000000001',
+                },
+            ],
+        };
 
-    clients$$.next([client]);
-  });
+        partners$$.next([partner]);
 
-  it('Вызывает handleSubmit при сабмите формы', () => {
-    spyOn(component, 'handleSubmit');
-    clickSubmitButton(fixture);
+        component.selectClient(client);
+        fixture.detectChanges();
 
-    expect(component.handleSubmit).toHaveBeenCalled();
-  });
+        expect(component.form.value).toEqual({
+            inn: client.inn,
+            bik: partner.banks[0].bik,
+            account: partner.banks[0].acc,
+        });
 
-  it('Редиректит к маршруту counterparty contract при валидной форме', () => {
-    component.form.patchValue(initialForm);
+        expect(component.clientCompanyName).toEqual(client.shortName);
+    });
 
-    spyOn(router, 'navigateByUrl');
-    clickSubmitButton(fixture);
+    it('При изменении ИНН получает список клиентов', (done: DoneFn) => {
+        component.clients$.subscribe((clients) => {
+            if (clients.length === 0) {
+                return;
+            }
 
-    expect(isFormValid(component.form)).toBeTruthy();
-    expect(router.navigateByUrl).toHaveBeenCalledWith(paths[Page.COUNTERPARTY_CONTRACT]);
-  });
+            expect(clients.length).toEqual(clients$$.getValue().length);
+            done();
+        });
+
+        component.form.controls.inn.patchValue('000000000003');
+
+        clients$$.next([client]);
+    });
+
+    it('Вызывает handleSubmit при сабмите формы', () => {
+        spyOn(component, 'handleSubmit');
+        clickSubmitButton(fixture);
+
+        expect(component.handleSubmit).toHaveBeenCalled();
+    });
+
+    it('Редиректит к маршруту counterparty contract при валидной форме', () => {
+        component.form.patchValue(initialForm);
+
+        spyOn(router, 'navigateByUrl');
+        clickSubmitButton(fixture);
+
+        expect(isFormValid(component.form)).toBeTruthy();
+        expect(router.navigateByUrl).toHaveBeenCalledWith(paths[Page.COUNTERPARTY_CONTRACT]);
+    });
 });

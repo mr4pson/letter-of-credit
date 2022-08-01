@@ -22,122 +22,122 @@ import { SimplebarAngularModule } from 'simplebar-angular';
 import { isFormValid } from 'src/app/utils';
 
 describe('CounterpartyContractComponent', () => {
-  let component: CounterpartyContractComponent;
-  let fixture: ComponentFixture<CounterpartyContractComponent>;
-  let router: Router;
-  let fileUploadService: FileUploadService;
+    let component: CounterpartyContractComponent;
+    let fixture: ComponentFixture<CounterpartyContractComponent>;
+    let router: Router;
+    let fileUploadService: FileUploadService;
 
-  const files$$ = new BehaviorSubject([]);
-  const errorMessage$$ = new BehaviorSubject([]);
+    const files$$ = new BehaviorSubject([]);
+    const errorMessage$$ = new BehaviorSubject([]);
 
-  const initialForm = {
-    contractDate: new Date('02/02/2022'),
-    selectedNds: NDS_LIST[2].label,
-    contract: 'test contract',
-    contractInfo: 'test contractInfo',
-  };
+    const initialForm = {
+        contractDate: new Date('02/02/2022'),
+        selectedNds: NDS_LIST[2].label,
+        contract: 'test contract',
+        contractInfo: 'test contractInfo',
+    };
 
-  beforeEach(waitForAsync(() => {
-    TestBed.configureTestingModule({
-      declarations: [
-        CounterpartyContractComponent,
-      ],
-      imports: [
-        CommonModule,
-        PsbModule,
-        NgxDropzoneModule,
-        SimplebarAngularModule,
-        ReactiveFormsModule,
-        RouterTestingModule,
-        UiKitModule,
-      ],
-      providers: [
-        StoreService,
-        StepService,
-        {
-          provide: FileUploadService,
-          clients: {
-            files$: files$$.asObservable(),
-            errorMessage$: errorMessage$$.asObservable(),
-            selectFiles: (event: NgxDropzoneChangeEvent) => {},
-            removeFile: (file: FileUploaded) => {},
-          },
-        },
-      ],
-    }).compileComponents();
-  }));
+    beforeEach(waitForAsync(() => {
+        TestBed.configureTestingModule({
+            declarations: [
+                CounterpartyContractComponent,
+            ],
+            imports: [
+                CommonModule,
+                PsbModule,
+                NgxDropzoneModule,
+                SimplebarAngularModule,
+                ReactiveFormsModule,
+                RouterTestingModule,
+                UiKitModule,
+            ],
+            providers: [
+                StoreService,
+                StepService,
+                {
+                    provide: FileUploadService,
+                    clients: {
+                        files$: files$$.asObservable(),
+                        errorMessage$: errorMessage$$.asObservable(),
+                        selectFiles: (event: NgxDropzoneChangeEvent) => { },
+                        removeFile: (file: FileUploaded) => { },
+                    },
+                },
+            ],
+        }).compileComponents();
+    }));
 
-  beforeEach(() => {
-    fixture = TestBed.createComponent(CounterpartyContractComponent);
-    component = fixture.componentInstance;
-    router = TestBed.inject(Router);
-    fileUploadService = TestBed.inject(FileUploadService);
+    beforeEach(() => {
+        fixture = TestBed.createComponent(CounterpartyContractComponent);
+        component = fixture.componentInstance;
+        router = TestBed.inject(Router);
+        fileUploadService = TestBed.inject(FileUploadService);
 
-    component.form.reset();
-    fixture.detectChanges();
-  });
+        component.form.reset();
+        fixture.detectChanges();
+    });
 
-  it('При patchValue форма принимает аналогичное значение заданному', () => {
-    component.form.patchValue(initialForm);
+    it('При patchValue форма принимает аналогичное значение заданному', () => {
+        component.form.patchValue(initialForm);
 
-    expect(initialForm).toEqual(component.form.value);
-  });
+        expect(initialForm).toEqual(component.form.value);
+    });
 
-  it('Вызывает selectFiles в fileUploadService при вызове handleSelectFiles', () => {
-    const file = new File([], 'test file.png');
-    const seletFilesEvent = {
-      addedFiles: [file],
-      rejectedFiles: [],
-    } as NgxDropzoneChangeEvent;
+    it('Вызывает selectFiles в fileUploadService при вызове handleSelectFiles', () => {
+        const file = new File([], 'test file.png');
+        const seletFilesEvent = {
+            addedFiles: [file],
+            rejectedFiles: [],
+        } as NgxDropzoneChangeEvent;
 
-    spyOn(fileUploadService, 'selectFiles');
-    component.handleSelectFiles(seletFilesEvent);
+        spyOn(fileUploadService, 'selectFiles');
+        component.handleSelectFiles(seletFilesEvent);
 
-    expect(fileUploadService.selectFiles).toHaveBeenCalledWith(seletFilesEvent);
-  });
+        expect(fileUploadService.selectFiles).toHaveBeenCalledWith(seletFilesEvent);
+    });
 
-  it('Вызывает removeFile в fileUploadService при вызове handleRemoveFile', () => {
-    const file = new File([], 'test file.png');
-    const fileUploaded = {
-      native: file,
-      sizeFormatted: '',
-    } as FileUploaded;
+    it('Вызывает removeFile в fileUploadService при вызове handleRemoveFile', () => {
+        const file = new File([], 'test file.png');
+        const fileUploaded = {
+            native: file,
+            sizeFormatted: '',
+        } as FileUploaded;
 
-    spyOn(fileUploadService, 'removeFile');
-    component.handleRemoveFile(fileUploaded);
+        spyOn(fileUploadService, 'removeFile');
+        component.handleRemoveFile(fileUploaded);
 
-    expect(fileUploadService.removeFile).toHaveBeenCalledWith(fileUploaded);
-  });
+        expect(fileUploadService.removeFile).toHaveBeenCalledWith(fileUploaded);
+    });
 
-  it('Вызывает setVat при клике на кнопку "НДС включён"', () => {
-    spyOn(component, 'setVat');
-    clickVatBtn(fixture);
+    it('Вызывает setVat при клике на кнопку "НДС включён"', () => {
+        spyOn(component, 'setVat');
+        clickVatBtn(fixture);
 
-    expect(component.setVat).toHaveBeenCalled();
-  });
+        expect(component.setVat).toHaveBeenCalled();
+    });
 
-  it('Вызывает unsetVat при клике на кнопку "Без НДС"', () => {
-    spyOn(component, 'unsetVat');
-    clickNoVatBtn(fixture);
-    fixture.detectChanges();
+    it('Вызывает unsetVat при клике на кнопку "Без НДС"', () => {
+        spyOn(component, 'unsetVat');
+        clickNoVatBtn(fixture);
+        fixture.detectChanges();
 
-    expect(component.unsetVat).toHaveBeenCalled();
-  });
+        expect(component.unsetVat).toHaveBeenCalled();
+    });
 
-  it('Вызывает handleSubmit при сабмите формы', () => {
-    spyOn(component, 'handleSubmit');
-    clickSubmitButton(fixture);
+    it('Вызывает handleSubmit при сабмите формы', () => {
+        spyOn(component, 'handleSubmit');
+        clickSubmitButton(fixture);
 
-    expect(component.handleSubmit).toHaveBeenCalled();
-  });
+        expect(component.handleSubmit).toHaveBeenCalled();
+    });
 
-  it('Редиректит к маршруту accreditation period при валидной форме', () => {
-    component.form.patchValue(initialForm);
+    it('Редиректит к маршруту accreditation period при валидной форме', () => {
+        component.form.patchValue(initialForm);
 
-    spyOn(router, 'navigateByUrl');
-    clickSubmitButton(fixture);
+        spyOn(router, 'navigateByUrl');
+        clickSubmitButton(fixture);
 
-    expect(isFormValid(component.form)).toBeTruthy();
-    expect(router.navigateByUrl).toHaveBeenCalledWith(paths[Page.ACCREDITATION_PERIOD]);
-  });
+        expect(isFormValid(component.form)).toBeTruthy();
+        expect(router.navigateByUrl).toHaveBeenCalledWith(paths[Page.ACCREDITATION_PERIOD]);
+    });
 });

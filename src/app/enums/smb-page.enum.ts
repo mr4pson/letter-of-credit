@@ -1,4 +1,5 @@
 export enum SmbPage {
-  MAIN,
-  DOCUMENTS,
+    Main,
+    Documents,
+    CreatePayment,
 }

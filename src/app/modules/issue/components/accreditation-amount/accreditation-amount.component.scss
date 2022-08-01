@@ -1,20 +1,21 @@
 @import "../../../../../assets/colors";
+@import "../../../../../assets/sizes";
 
 .accredit-amount {
 	.submit {
-		margin-top: 10px;
+		margin-top: $size-10;
 	}
 
 	.info {
-		font-size: 16px;
-		line-height: 24px;
-		color: #666;
+		font-size: $font-size-m;
+		line-height: $size-24;
+		color: $bg-grey-dark;
 		margin-bottom: 28px;
 	}
 }
 
 .accredit-sum {
-	margin-top: 24px;
+	margin-top: $size-24;
 
 	.form-field {
 		width: 200px;
@@ -27,8 +28,8 @@
 	align-items: center;
 
 	.sum {
-		margin-left: 8px;
-		font-size: 18px;
+		margin-left: $size-8;
+		font-size: $font-size-l;
 		color: $black-alpha-87;
 	}
 
@@ -47,7 +48,7 @@
 
 	.sum {
 		color: $black-alpha-38;
-		font-size: 16px;
+		font-size: $font-size-m;
 		top: 26px;
 		right: 60px;
 	}

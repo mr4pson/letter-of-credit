@@ -15,16 +15,10 @@
   "paths": {
     "/api/doc/documents/delete": {
       "post": {
-        "tags": [
-          "Documents"
-        ],
+        "tags": ["Documents"],
         "summary": "Удаление документов со статусом \"Новый\"",
         "operationId": "Documents_DeleteDocuments",
-        "produces": [
-          "text/plain",
-          "application/json",
-          "text/json"
-        ],
+        "produces": ["text/plain", "application/json", "text/json"],
         "parameters": [
           {
             "name": "documents",
@@ -56,16 +50,10 @@
     },
     "/api/doc/documents/getSignature": {
       "post": {
-        "tags": [
-          "Documents"
-        ],
+        "tags": ["Documents"],
         "summary": "Получение данных для подписания документов",
         "operationId": "Documents_GetSignatureData",
-        "produces": [
-          "text/plain",
-          "application/json",
-          "text/json"
-        ],
+        "produces": ["text/plain", "application/json", "text/json"],
         "parameters": [
           {
             "name": "documents",
@@ -97,17 +85,11 @@
     },
     "/api/doc/documents/cloudSign": {
       "post": {
-        "tags": [
-          "Documents"
-        ],
+        "tags": ["Documents"],
         "summary": "Подписание документов в облаке",
         "description": "Вызывается, если аутентификация была выполнена по логину и паролю.\nВ ответ приходит код подтвержения, для завершения подписания требуется вызвать\nметод api\\authorization\\sendConfirmation",
         "operationId": "Documents_CloudSignDocuments",
-        "produces": [
-          "text/plain",
-          "application/json",
-          "text/json"
-        ],
+        "produces": ["text/plain", "application/json", "text/json"],
         "parameters": [
           {
             "name": "documents",
@@ -136,17 +118,11 @@
     },
     "/api/doc/documents/sign": {
       "post": {
-        "tags": [
-          "Documents"
-        ],
+        "tags": ["Documents"],
         "summary": "Подписание документов",
         "description": "Вызывается, если аутентификация была выполнена по сертификату.",
         "operationId": "Documents_SignDocuments",
-        "produces": [
-          "text/plain",
-          "application/json",
-          "text/json"
-        ],
+        "produces": ["text/plain", "application/json", "text/json"],
         "parameters": [
           {
             "name": "documents",
@@ -178,16 +154,10 @@
     },
     "/api/doc/documents/unsign": {
       "post": {
-        "tags": [
-          "Documents"
-        ],
+        "tags": ["Documents"],
         "summary": "Снятие подписи с документов",
         "operationId": "Documents_UnsignDocuments",
-        "produces": [
-          "text/plain",
-          "application/json",
-          "text/json"
-        ],
+        "produces": ["text/plain", "application/json", "text/json"],
         "parameters": [
           {
             "name": "documents",
@@ -219,16 +189,10 @@
     },
     "/api/doc/documents/publish": {
       "post": {
-        "tags": [
-          "Documents"
-        ],
+        "tags": ["Documents"],
         "summary": "Отправка документов на исполнение в подразделения. \nЕсли возникает ошиибка в Афине (например, суточный лимит платежа превышен), то возвращается BadRequest, который содержит сообщение (из Афины) для отображения.",
         "operationId": "Documents_PublishDocuments",
-        "produces": [
-          "text/plain",
-          "application/json",
-          "text/json"
-        ],
+        "produces": ["text/plain", "application/json", "text/json"],
         "parameters": [
           {
             "name": "documents",
@@ -260,9 +224,7 @@
     },
     "/api/doc/documents/publish/async": {
       "post": {
-        "tags": [
-          "Documents"
-        ],
+        "tags": ["Documents"],
         "summary": "Отправка документов на исполнение в подразделения в асинхроне (количество не ограничено) \nЕсли возникает ошиибка в Афине (например, суточный лимит платежа превышен), то возвращается BadRequest, который содержит сообщение (из Афины) для отображения.",
         "operationId": "Documents_PublishDocumentsWithSignalR",
         "parameters": [
@@ -293,16 +255,10 @@
     },
     "/api/doc/documents/recall": {
       "post": {
-        "tags": [
-          "Documents"
-        ],
+        "tags": ["Documents"],
         "summary": "Метод удаления любых типов документов в статусе Новый",
         "operationId": "Documents_RecallDocuments",
-        "produces": [
-          "text/plain",
-          "application/json",
-          "text/json"
-        ],
+        "produces": ["text/plain", "application/json", "text/json"],
         "parameters": [
           {
             "name": "documents",
@@ -334,16 +290,10 @@
     },
     "/api/doc/documents/print": {
       "post": {
-        "tags": [
-          "Documents"
-        ],
+        "tags": ["Documents"],
         "summary": "Запрос на представление печатной формы документов одного типа в указанном формате",
         "operationId": "Documents_PrintDocuments",
-        "produces": [
-          "text/plain",
-          "application/json",
-          "text/json"
-        ],
+        "produces": ["text/plain", "application/json", "text/json"],
         "parameters": [
           {
             "name": "request",
@@ -369,16 +319,10 @@
     },
     "/api/doc/links/linkedDocs": {
       "post": {
-        "tags": [
-          "Links"
-        ],
+        "tags": ["Links"],
         "summary": "Получить все связанные документы",
         "operationId": "Links_GetLinkedDocs",
-        "produces": [
-          "text/plain",
-          "application/json",
-          "text/json"
-        ],
+        "produces": ["text/plain", "application/json", "text/json"],
         "parameters": [
           {
             "name": "query",
@@ -406,9 +350,7 @@
   "definitions": {
     "DocumentOperationReport": {
       "type": "object",
-      "required": [
-        "success"
-      ],
+      "required": ["success"],
       "properties": {
         "account": {
           "type": "string"
@@ -517,47 +459,13 @@
         "Undefined"
       ],
       "enum": [
-        0,
-        1,
-        2,
-        3,
-        4,
-        5,
-        6,
-        10,
-        11,
-        12,
-        13,
-        14,
-        15,
-        16,
-        17,
-        18,
-        19,
-        20,
-        21,
-        22,
-        29,
-        31,
-        41,
-        42,
-        43,
-        44,
-        45,
-        46,
-        48,
-        49,
-        52,
-        56,
-        57,
-        57005
+        0, 1, 2, 3, 4, 5, 6, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22,
+        29, 31, 41, 42, 43, 44, 45, 46, 48, 49, 52, 56, 57, 57005
       ]
     },
     "DocumentType": {
       "type": "object",
-      "required": [
-        "id"
-      ],
+      "required": ["id"],
       "properties": {
         "code": {
           "type": "string"
@@ -585,10 +493,7 @@
     },
     "ConfirmationInfo": {
       "type": "object",
-      "required": [
-        "isConfirmDisabled",
-        "messageType"
-      ],
+      "required": ["isConfirmDisabled", "messageType"],
       "properties": {
         "codeNumber": {
           "type": "string"
@@ -613,24 +518,12 @@
     "MessageType": {
       "type": "integer",
       "description": "0 = Sms\n1 = Push\n2 = Disabled\n3 = MyDss",
-      "x-enumNames": [
-        "Sms",
-        "Push",
-        "Disabled",
-        "MyDss"
-      ],
-      "enum": [
-        0,
-        1,
-        2,
-        3
-      ]
+      "x-enumNames": ["Sms", "Push", "Disabled", "MyDss"],
+      "enum": [0, 1, 2, 3]
     },
     "ForSignDocumentEx": {
       "type": "object",
-      "required": [
-        "hasError"
-      ],
+      "required": ["hasError"],
       "properties": {
         "description": {
           "type": "string"
@@ -659,9 +552,7 @@
         },
         {
           "type": "object",
-          "required": [
-            "isBankDocuments"
-          ],
+          "required": ["isBankDocuments"],
           "properties": {
             "isBankDocuments": {
               "type": "boolean"
@@ -677,9 +568,7 @@
         },
         {
           "type": "object",
-          "required": [
-            "format"
-          ],
+          "required": ["format"],
           "properties": {
             "format": {
               "$ref": "#/definitions/DocumentPrintedFormat"
@@ -709,21 +598,7 @@
         "Csv",
         "Undefined"
       ],
-      "enum": [
-        0,
-        1,
-        2,
-        22,
-        23,
-        24,
-        25,
-        26,
-        27,
-        500,
-        501,
-        502,
-        -1
-      ]
+      "enum": [0, 1, 2, 22, 23, 24, 25, 26, 27, 500, 501, 502, -1]
     },
     "DocumentFilterExtended": {
       "allOf": [
@@ -783,9 +658,7 @@
     },
     "PsbAccount": {
       "type": "object",
-      "required": [
-        "budget"
-      ],
+      "required": ["budget"],
       "properties": {
         "budget": {
           "type": "boolean"
@@ -800,10 +673,7 @@
     },
     "BaseDocumentFilter": {
       "type": "object",
-      "required": [
-        "clientId",
-        "maxDocQuantity"
-      ],
+      "required": ["clientId", "maxDocQuantity"],
       "properties": {
         "clientId": {
           "type": "integer",

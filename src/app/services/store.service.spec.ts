@@ -5,29 +5,29 @@ import { DEFAULT_LOC_INSTANCE } from '../modules/issue/constants/constants';
 import { StoreService } from './store.service';
 
 describe('StoreService', () => {
-  let service: StoreService;
+    let service: StoreService;
 
-  beforeEach(() => {
-    TestBed.configureTestingModule({
-      providers: [
-        StoreService,
-      ],
+    beforeEach(() => {
+        TestBed.configureTestingModule({
+            providers: [
+                StoreService,
+            ],
+        });
+
+        service = TestBed.inject(StoreService);
     });
 
-    service = TestBed.inject(StoreService);
-  });
+    it('Восстанавливет дефолтный состояние стора', () => {
+        service.clientEmail = 'test';
+        service.reciverStatus = ReciverStatus.Reliable;
+        service.letterOfCredit.allowUsePartOfLoc = false;
+        service.isIssueVissible = true;
 
-  it('Восстанавливет дефолтный состояние стора', () => {
-    service.clientEmail = 'test';
-    service.reciverStatus = ReciverStatus.Reliable;
-    service.letterOfCredit.allowUsePartOfLoc = false;
-    service.isIssueVissible = true;
+        service.restoreDefaultState();
 
-    service.restoreDefaultState();
-
-    expect(service.clientEmail).toEqual('');
-    expect(service.reciverStatus).toEqual(ReciverStatus.Unknown);
-    expect(service.letterOfCredit).toEqual(DEFAULT_LOC_INSTANCE);
-    expect(service.isIssueVissible).toBeFalsy();
-  });
+        expect(service.clientEmail).toEqual('');
+        expect(service.reciverStatus).toEqual(ReciverStatus.Unknown);
+        expect(service.letterOfCredit).toEqual(DEFAULT_LOC_INSTANCE);
+        expect(service.isIssueVissible).toBeFalsy();
+    });
 });

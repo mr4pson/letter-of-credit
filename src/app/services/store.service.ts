@@ -9,34 +9,34 @@ import { LetterOfCredit } from '../modules/issue/interfaces/letter-of-credit.int
 
 @Injectable()
 export class StoreService {
-  private isIssueVissible$$ = new BehaviorSubject(false);
-  isIssueVissible$ = this.isIssueVissible$$.asObservable();
-  get isIssueVissible(): boolean {
-    return this.isIssueVissible$$.getValue();
-  }
-  set isIssueVissible(visibility: boolean) {
-    this.isIssueVissible$$.next(visibility);
-  }
+    private isIssueVissible$$ = new BehaviorSubject(false);
+    isIssueVissible$ = this.isIssueVissible$$.asObservable();
+    get isIssueVissible(): boolean {
+        return this.isIssueVissible$$.getValue();
+    }
+    set isIssueVissible(visibility: boolean) {
+        this.isIssueVissible$$.next(visibility);
+    }
 
-  private isOrdinalPayment$$ = new BehaviorSubject(false);
-  isOrdinalPayment$ = this.isOrdinalPayment$$.asObservable();
-  get isOrdinalPayment(): boolean {
-    return this.isOrdinalPayment$$.getValue();
-  }
-  set isOrdinalPayment(value: boolean) {
-    this.isOrdinalPayment$$.next(value);
-  }
+    private isOrdinalPayment$$ = new BehaviorSubject(false);
+    isOrdinalPayment$ = this.isOrdinalPayment$$.asObservable();
+    get isOrdinalPayment(): boolean {
+        return this.isOrdinalPayment$$.getValue();
+    }
+    set isOrdinalPayment(value: boolean) {
+        this.isOrdinalPayment$$.next(value);
+    }
 
-  dialog: MatDialog;
-  payment: SmbPayment;
-  reciverStatus: ReciverStatus = ReciverStatus.Unknown;
-  clientEmail = '';
-  letterOfCredit: LetterOfCredit = DEFAULT_LOC_INSTANCE;
+    dialog: MatDialog;
+    payment: SmbPayment;
+    reciverStatus: ReciverStatus = ReciverStatus.Unknown;
+    clientEmail = '';
+    letterOfCredit: LetterOfCredit = DEFAULT_LOC_INSTANCE;
 
-  restoreDefaultState() {
-    this.clientEmail = '';
-    this.reciverStatus = ReciverStatus.Unknown;
-    this.letterOfCredit = DEFAULT_LOC_INSTANCE;
-    this.isIssueVissible = false;
-  }
+    restoreDefaultState() {
+        this.clientEmail = '';
+        this.reciverStatus = ReciverStatus.Unknown;
+        this.letterOfCredit = DEFAULT_LOC_INSTANCE;
+        this.isIssueVissible = false;
+    }
 }

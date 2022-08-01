@@ -10,43 +10,43 @@ import { NgService } from 'src/app/services/ng.service';
 import { StoreService } from 'src/app/services/store.service';
 
 @Component({
-  selector: 'loc-issue',
-  templateUrl: 'issue.component.html',
-  styleUrls: ['issue.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
+    selector: 'loc-issue',
+    templateUrl: 'issue.component.html',
+    styleUrls: ['issue.component.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class IssueComponent extends OnDestroyMixin implements OnInit {
-  ButtonType = ButtonType;
-  steps = this.stepService.steps;
-  currentUrl: string;
+    ButtonType = ButtonType;
+    steps = this.stepService.steps;
+    currentUrl: string;
 
-  constructor(
-    private router: Router,
-    private stepService: StepService,
-    private ngService: NgService,
-    private store: StoreService,
-  ) {
-    super();
-  }
-
-  ngOnInit(): void {
-    this.stepService.currentUrl$.pipe(
-      tap((currentUrl) => {
-        this.currentUrl = currentUrl;
-      }),
-      untilComponentDestroyed(this),
-    ).subscribe();
-  }
-
-  navigateBack(): void {
-    if (this.currentUrl === this.steps[0].url) {
-      this.store.isIssueVissible = false;
-      this.ngService.showSmbDocuments();
-
-      return;
+    constructor(
+        private router: Router,
+        private stepService: StepService,
+        private ngService: NgService,
+        private store: StoreService,
+    ) {
+        super();
     }
 
-    const prevStepUrl = this.stepService.getPrevUrl(this.currentUrl);
-    this.router.navigateByUrl(prevStepUrl);
-  }
+    ngOnInit(): void {
+        this.stepService.currentUrl$.pipe(
+            tap((currentUrl) => {
+                this.currentUrl = currentUrl;
+            }),
+            untilComponentDestroyed(this),
+        ).subscribe();
+    }
+
+    navigateBack(): void {
+        if (this.currentUrl === this.steps[0].url) {
+            this.store.isIssueVissible = false;
+            this.ngService.showSmbDocuments();
+
+            return;
+        }
+
+        const prevStepUrl = this.stepService.getPrevUrl(this.currentUrl);
+        this.router.navigateByUrl(prevStepUrl);
+    }
 }

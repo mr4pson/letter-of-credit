@@ -27,38 +27,38 @@ import { SimplebarAngularModule } from 'simplebar-angular';
 import { AccountService } from 'src/app/services';
 
 @NgModule({
-  declarations: [
-    IssueComponent,
-    ClosingDocComponent,
-    IssueStepsComponent,
-    IssueSuccessComponent,
-    СounterpartyComponent,
-    SendApplicationComponent,
-    AccreditationPeriodComponent,
-    AccreditationAmountComponent,
-    CounterpartyContractComponent,
-  ],
-  imports: [
-    PsbModule,
-    UiKitModule,
-    BrowserModule,
-    HttpClientModule,
-    NgxDropzoneModule,
-    IssueRoutingModule,
-    ReactiveFormsModule,
-    SimplebarAngularModule,
-    BrowserAnimationsModule,
-  ],
-  exports: [
-    IssueComponent,
-  ],
-  providers: [
-    FormService,
-    StepService,
-    AccountService,
-    PartnersService,
-    FileUploadService,
-    ClientAccountService,
-  ],
+    declarations: [
+        IssueComponent,
+        ClosingDocComponent,
+        IssueStepsComponent,
+        IssueSuccessComponent,
+        СounterpartyComponent,
+        SendApplicationComponent,
+        AccreditationPeriodComponent,
+        AccreditationAmountComponent,
+        CounterpartyContractComponent,
+    ],
+    imports: [
+        PsbModule,
+        UiKitModule,
+        BrowserModule,
+        HttpClientModule,
+        NgxDropzoneModule,
+        IssueRoutingModule,
+        ReactiveFormsModule,
+        SimplebarAngularModule,
+        BrowserAnimationsModule,
+    ],
+    exports: [
+        IssueComponent,
+    ],
+    providers: [
+        FormService,
+        StepService,
+        AccountService,
+        PartnersService,
+        FileUploadService,
+        ClientAccountService,
+    ],
 })
-export class IssueModule {}
+export class IssueModule { }

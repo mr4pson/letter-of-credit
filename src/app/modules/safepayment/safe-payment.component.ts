@@ -15,6 +15,7 @@ import { ReliableSign } from 'src/app/modules/safepayment/enums/reliable-sign.en
 import { StoreService } from 'src/app/services/store.service';
 import { RELIABLE_MAP } from './constants/reliable-map.constant';
 import { SafePaymentFormField } from './enums/safe-payment-form-field.enum';
+import { NgService } from 'src/app/services';
 
 @Component({
   selector: 'safe-payment',
@@ -40,6 +41,7 @@ export class SafePaymentComponent {
     private dialogRef: MatDialogRef<BaseModalComponent>,
     private router: Router,
     private formBuilder: FormBuilder,
+    private ngService: NgService,
   ) {
     this.createForm();
   }
@@ -54,8 +56,12 @@ export class SafePaymentComponent {
 
   doSafePay() {
     this.dialogRef.close(SafePaymentButton.DoPay);
+    this.ngService.hideSmbDocuments();
     this.store.isIssueVissible = true;
     this.router.navigateByUrl(paths[Page.ACCREDITATION_AMOUNT]);
+    setTimeout(() => {
+      this.ngService.scrollToTop();
+    }, 200);
   }
 
   closeDialog(payButton: SafePaymentButton = SafePaymentButton.OrdinalPay) {

@@ -7,9 +7,7 @@
   "paths": {
     "/auth/generateToken": {
       "get": {
-        "tags": [
-          "Authorization"
-        ],
+        "tags": ["Authorization"],
         "parameters": [
           {
             "name": "userId",
@@ -45,9 +43,7 @@
     },
     "/api/LC/enableLCOffers/{clientId}": {
       "post": {
-        "tags": [
-          "Letter"
-        ],
+        "tags": ["Letter"],
         "summary": "Метод выключает режим автоматического предложения покрытого аккредитива для конкретного контрагента",
         "parameters": [
           {
@@ -104,9 +100,7 @@
     },
     "/api/LC/isLCOffersEnabled/{clientId}": {
       "get": {
-        "tags": [
-          "Letter"
-        ],
+        "tags": ["Letter"],
         "summary": "Метод проверяет можно или нет показывать всплывающее окно для предложения на покрытый аккредитив конкретному контрагенту",
         "parameters": [
           {
@@ -146,9 +140,7 @@
     },
     "/api/LC/registerOffer/{clientId}": {
       "post": {
-        "tags": [
-          "Letter"
-        ],
+        "tags": ["Letter"],
         "summary": "Метод проверяет можно или нет показывать всплывающее окно для предложения на покрытый аккредитив конкретному контрагенту",
         "parameters": [
           {
@@ -205,9 +197,7 @@
     },
     "/api/LC/documents/{clientId}": {
       "get": {
-        "tags": [
-          "Letter"
-        ],
+        "tags": ["Letter"],
         "summary": "Метод возвращает список поданных заявок на покрытый аккредитив, отобранных в соответствии с заданными параметрами",
         "parameters": [
           {
@@ -309,9 +299,7 @@
     },
     "/api/LC/documents/{clientId}/Create": {
       "post": {
-        "tags": [
-          "Letter"
-        ],
+        "tags": ["Letter"],
         "summary": "Метод создает заявку на покрытый аккредитив",
         "parameters": [
           {
@@ -379,9 +367,7 @@
     },
     "/api/LC/documents/{clientId}/Update": {
       "post": {
-        "tags": [
-          "Letter"
-        ],
+        "tags": ["Letter"],
         "summary": "Метод обновляет заявку на покрытый аккредитив",
         "parameters": [
           {
@@ -459,9 +445,7 @@
     },
     "/api/LC/documents/{clientId}/getInfo": {
       "get": {
-        "tags": [
-          "Letter"
-        ],
+        "tags": ["Letter"],
         "summary": "Метод возвращает полные данные заявления",
         "parameters": [
           {
@@ -519,9 +503,7 @@
     },
     "/api/LC/documents/{clientId}/getContractFromLetter": {
       "get": {
-        "tags": [
-          "Letter"
-        ],
+        "tags": ["Letter"],
         "summary": "Получение содержимого файла в бинарном виде",
         "parameters": [
           {
@@ -572,9 +554,7 @@
     },
     "/api/LC/documents/{clientId}/appendContractToLetter": {
       "post": {
-        "tags": [
-          "Letter"
-        ],
+        "tags": ["Letter"],
         "summary": "Метод позволяет добавить файл договора к заявке",
         "parameters": [
           {
@@ -652,9 +632,7 @@
     },
     "/api/LC/documents/{clientId}/removeContractFromLetter": {
       "post": {
-        "tags": [
-          "Letter"
-        ],
+        "tags": ["Letter"],
         "summary": "Метод удаляет загруженный в заявку файл",
         "parameters": [
           {
@@ -721,9 +699,7 @@
     },
     "/api/LC/calculateCommission": {
       "get": {
-        "tags": [
-          "Letter"
-        ],
+        "tags": ["Letter"],
         "summary": "Метод рассчитывает размер комиссии на выпуск покрытого аккредитива для указанной суммы",
         "parameters": [
           {
@@ -762,9 +738,7 @@
     },
     "/api/LC/documents/{clientId}/State": {
       "get": {
-        "tags": [
-          "Letter"
-        ],
+        "tags": ["Letter"],
         "summary": "Метод возвращает статус рассмотрения заявки на аккредитив",
         "parameters": [
           {
@@ -805,9 +779,7 @@
     },
     "/api/LC/sendDeteiledInformation": {
       "post": {
-        "tags": [
-          "Letter"
-        ],
+        "tags": ["Letter"],
         "summary": "Метод отправляет электронное письмо с подробным описанием услуги на указанный адрес электронной почты",
         "parameters": [
           {
@@ -847,9 +819,7 @@
     },
     "/api/LC/documents/{clientId}/getTemplate": {
       "get": {
-        "tags": [
-          "Letter"
-        ],
+        "tags": ["Letter"],
         "summary": "Метод отправляет в ДБО запрос на генерацию файла заявления",
         "parameters": [
           {
@@ -907,9 +877,7 @@
         "additionalProperties": false
       },
       "LetterClosingDocumentEditModel": {
-        "required": [
-          "documentTitle"
-        ],
+        "required": ["documentTitle"],
         "type": "object",
         "properties": {
           "id": {
@@ -957,9 +925,7 @@
         "additionalProperties": false
       },
       "LetterContractFileModel": {
-        "required": [
-          "fileName"
-        ],
+        "required": ["fileName"],
         "type": "object",
         "properties": {
           "id": {
@@ -1346,7 +1312,7 @@
   },
   "security": [
     {
-      "Bearer": [ ]
+      "Bearer": []
     }
   ]
 }

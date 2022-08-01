@@ -7,14 +7,14 @@ import { StorageService } from '../../../services/storage.service';
 
 @Injectable()
 export class PartnersService {
-  constructor(
-    private http: HttpClient,
-    private storage: StorageService,
-  ) {}
+    constructor(
+        private http: HttpClient,
+        private storage: StorageService,
+    ) { }
 
-  getPartners(): Observable<Partner[]> {
-    const url = `${this.storage.apiDomain}api/EDOWAR/partners/partners?v=${this.storage.apiVersion}`;
+    getPartners(): Observable<Partner[]> {
+        const url = `${this.storage.apiDomain}api/EDOWAR/partners/partners?v=${this.storage.apiVersion}`;
 
-    return this.http.get<Partner[]>(url);
-  }
+        return this.http.get<Partner[]>(url);
+    }
 }

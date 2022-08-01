@@ -1,3 +1,3 @@
 export interface SmbAlertingService {
-  addError: (config: { info: string }) => void;
+    addError: (config: { info: string }) => void;
 }

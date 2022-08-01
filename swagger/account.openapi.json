@@ -7,17 +7,11 @@
     "version": "1.0.1.0"
   },
   "basePath": "/",
-  "produces": [
-    "text/plain",
-    "application/json",
-    "text/json"
-  ],
+  "produces": ["text/plain", "application/json", "text/json"],
   "paths": {
     "/api/Account/Analytics/{account}": {
       "get": {
-        "tags": [
-          "Analytics"
-        ],
+        "tags": ["Analytics"],
         "summary": "Получение суммарных приходов/расходов по счету, входящего остатка на начало периода, исходящего на конец",
         "operationId": "Analytics_GetAccountTotals",
         "parameters": [
@@ -74,9 +68,7 @@
     },
     "/api/Account/Analytics/{account}/turnovers": {
       "get": {
-        "tags": [
-          "Analytics"
-        ],
+        "tags": ["Analytics"],
         "summary": "Получение исходящих остатоков, приходов, расходов на конец каждого дня/месяца за период",
         "operationId": "Analytics_GetAccountTurnovers",
         "parameters": [
@@ -137,9 +129,7 @@
     },
     "/api/Account/Analytics/{account}/contractors/top/{topNumber}": {
       "get": {
-        "tags": [
-          "Analytics"
-        ],
+        "tags": ["Analytics"],
         "summary": "Получение информации по приходам и расходам для самых больших контрагентов",
         "operationId": "Analytics_GetTopContractorsTurnovers",
         "parameters": [
@@ -210,9 +200,7 @@
     },
     "/api/Account/Analytics/mobile/contractors/top": {
       "post": {
-        "tags": [
-          "Analytics"
-        ],
+        "tags": ["Analytics"],
         "summary": "Получение информации по приходам и расходам для самых больших контрагентов. (And/IOS)",
         "operationId": "Analytics_GetMobileTopContractors",
         "consumes": [
@@ -248,9 +236,7 @@
     },
     "/api/Account/Analytics/mobile/turnovers": {
       "post": {
-        "tags": [
-          "Analytics"
-        ],
+        "tags": ["Analytics"],
         "summary": "Получить остаток и оборот по счёту за определенный период. (And/IOS)",
         "operationId": "Analytics_GetMobileAccountTurnovers",
         "consumes": [
@@ -329,11 +315,7 @@
     "AccountTurnover": {
       "type": "object",
       "description": "Элемент выписки по счету за интревал времени",
-      "required": [
-        "debit",
-        "credit",
-        "outBalance"
-      ],
+      "required": ["debit", "credit", "outBalance"],
       "properties": {
         "debit": {
           "type": "number",
@@ -360,10 +342,7 @@
     "AccountContractorTurnover": {
       "type": "object",
       "description": "Суммарный оборот контрагента (приход или расход)",
-      "required": [
-        "turnover",
-        "isCredit"
-      ],
+      "required": ["turnover", "isCredit"],
       "properties": {
         "turnover": {
           "type": "number",
@@ -382,9 +361,7 @@
     },
     "GetMobileTopContractorsQuery": {
       "type": "object",
-      "required": [
-        "topNumber"
-      ],
+      "required": ["topNumber"],
       "properties": {
         "period": {
           "$ref": "#/definitions/PeriodParams"
@@ -404,10 +381,7 @@
     "PeriodParams": {
       "type": "object",
       "description": "Параметры диапазона дат",
-      "required": [
-        "startDate",
-        "endDate"
-      ],
+      "required": ["startDate", "endDate"],
       "properties": {
         "startDate": {
           "type": "string",
@@ -423,9 +397,7 @@
     },
     "GetMobileAccountTurnoversQuery": {
       "type": "object",
-      "required": [
-        "step"
-      ],
+      "required": ["step"],
       "properties": {
         "period": {
           "$ref": "#/definitions/PeriodParams"
@@ -444,14 +416,8 @@
     "DatePeriod": {
       "type": "integer",
       "description": "0 = Day\n1 = Month",
-      "x-enumNames": [
-        "Day",
-        "Month"
-      ],
-      "enum": [
-        0,
-        1
-      ]
+      "x-enumNames": ["Day", "Month"],
+      "enum": [0, 1]
     }
   },
   "securityDefinitions": {

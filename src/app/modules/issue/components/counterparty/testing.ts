@@ -4,7 +4,7 @@ import { СounterpartyComponent } from "./counterparty.component";
 
 
 export const clickSubmitButton = (fixture: ComponentFixture<СounterpartyComponent>) => {
-  const submitButton = fixture.debugElement.query(By.css('.counterparty .submit button'));
-  submitButton.nativeElement.click();
-  fixture.detectChanges();
+    const submitButton = fixture.debugElement.query(By.css('.counterparty .submit button'));
+    submitButton.nativeElement.click();
+    fixture.detectChanges();
 }

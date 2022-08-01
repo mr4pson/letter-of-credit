@@ -7,39 +7,39 @@ import { STEPS } from '../constants/constants';
 
 @Injectable()
 export class StepService {
-  steps = STEPS;
+    steps = STEPS;
 
-  currentUrl$ = this.router.events.pipe(
-    filter(event => event instanceof NavigationStart),
-    map(({ url }: NavigationStart) => {
-      const noSlashUrl = url.substring(1, url.length);
-      if (!noSlashUrl) {
-        return paths[Page.ACCREDITATION_AMOUNT];
-      }
+    currentUrl$ = this.router.events.pipe(
+        filter(event => event instanceof NavigationStart),
+        map(({ url }: NavigationStart) => {
+            const noSlashUrl = url.substring(1, url.length);
+            if (!noSlashUrl) {
+                return paths[Page.ACCREDITATION_AMOUNT];
+            }
 
-      return noSlashUrl;
-    }),
-  );
+            return noSlashUrl;
+        }),
+    );
 
-  constructor(
-    private router: Router,
-  ) {}
+    constructor(
+        private router: Router,
+    ) { }
 
-  getPrevUrl(currentUrl: string): string {
-    const currentStepIndex = this.steps.findIndex(step => step.url === currentUrl);
-    return this.steps[currentStepIndex - 1]?.url;
-  }
-
-  getCurrentStepNumber(currentUrl: string): number {
-    const currentStepIndex = this.steps.findIndex(step => step.url === currentUrl);
-    return currentStepIndex + 1;
-  }
-
-  setStepDescription(url: string, description: string): void {
-    const curStep = this.steps.find(step => step.url === url);
-
-    if (curStep) {
-      curStep.description = description;
+    getPrevUrl(currentUrl: string): string {
+        const currentStepIndex = this.steps.findIndex(step => step.url === currentUrl);
+        return this.steps[currentStepIndex - 1]?.url;
     }
-  }
+
+    getCurrentStepNumber(currentUrl: string): number {
+        const currentStepIndex = this.steps.findIndex(step => step.url === currentUrl);
+        return currentStepIndex + 1;
+    }
+
+    setStepDescription(url: string, description: string): void {
+        const curStep = this.steps.find(step => step.url === url);
+
+        if (curStep) {
+            curStep.description = description;
+        }
+    }
 }
