@@ -6,7 +6,6 @@ import { EMPTY, forkJoin, from, fromEvent, merge, Observable, of } from 'rxjs';
 import { catchError, debounceTime, delay, filter, map, pairwise, switchMap, takeUntil, tap } from 'rxjs/operators';
 
 import {
-    GET_ACCREDITIVE_INFO_ERROR_MESSAGE,
     GET_COUNTERPARTY_INFO_ERROR_MESSAGE,
     NEW_LOC_BUTTON_CLASS_LIST,
     NEW_LOC_BUTTON_STYLES,
@@ -43,7 +42,21 @@ export class AppComponent extends OnDestroyMixin {
         super();
 
         this.ngService.setRenderer(this.renderer);
-        this.initSmbApp();
+
+        this.detectIfSmbAppInitialized();
+    }
+
+    detectIfSmbAppInitialized() {
+        const smbApp = this.ngService.getSmbAppComponent();
+
+        if (smbApp === undefined) {
+            setTimeout(() => {
+                this.detectIfSmbAppInitialized();
+            }, 500);
+            return;
+        }
+
+        this.connectToSmbApp();
     }
 
     handleOpenIssue(): void {
@@ -56,7 +69,7 @@ export class AppComponent extends OnDestroyMixin {
         this.router.navigateByUrl(paths[Page.ACCREDITATION_AMOUNT]);
     }
 
-    private initSmbApp(): void {
+    private connectToSmbApp(): void {
         const smbApp = this.ngService.getSmbAppComponent();
 
         if (!smbApp) {
@@ -102,7 +115,7 @@ export class AppComponent extends OnDestroyMixin {
                 return of(true);
             }),
             catchError((error) => {
-                this.initSmbApp();
+                this.connectToSmbApp();
 
                 return of(EMPTY);
             }),

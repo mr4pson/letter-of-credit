@@ -83,7 +83,7 @@ export class NgService {
         this.window.scroll(0, 0);
     }
 
-    private getComponent<T>(selector: string): T | null {
+    private getComponent<T>(selector: string): T | null | undefined {
         let element: Element;
 
         try {
@@ -98,6 +98,10 @@ export class NgService {
 
         const component = this.instance.getComponent
             <T & Pick<SmbComponentInterface, 'destroyed$' | 'ngOnDestroy'>>(element);
+
+        if (!component) {
+            return undefined;
+        }
 
         component.destroyed$ = new ReplaySubject(1);
 
