@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { OnDestroyMixin } from '@w11k/ngx-componentdestroyed';
-import { catchError, map, switchMap, tap } from 'rxjs/operators';
+import { catchError, filter, map, switchMap, tap } from 'rxjs/operators';
 import { Observable, of } from 'rxjs';
 import { Router } from '@angular/router';
 
@@ -27,7 +27,9 @@ export class AccreditationAmountComponent extends OnDestroyMixin implements OnIn
     form = this.formService.createForm();
     AccreditationAmountFormField = AccreditationAmountFormField;
     commission$: Observable<number>;
-    accounts$ = this.clientAccountService.getClientAccounts().pipe(
+    accounts$ = this.store.isIssueVissible$.pipe(
+        filter(value => value),
+        switchMap(() => this.clientAccountService.getClientAccounts()),
         tap((accounts) => {
             if (accounts.length > 0) {
                 this.form.controls[AccreditationAmountFormField.SelectedAccount].setValue(
