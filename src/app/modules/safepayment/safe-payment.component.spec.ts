@@ -1,7 +1,6 @@
 import { CommonModule } from '@angular/common';
 import '@angular/common/locales/global/ru';
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
-import { MatDialogRef } from '@angular/material/dialog';
 import { RouterTestingModule } from '@angular/router/testing';
 import { ReactiveFormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -21,13 +20,14 @@ import { SafePaymentButton } from 'src/app/enums/safe-payment-button.enum';
 import { ReciverStatus } from 'src/app/enums/reciver-status.enum';
 import { clickEmailLink, clickNthPaymentBtn, setPartlyReliableReciverStatus, setReliableReciverStatus, setUnreliableReciverStatus } from './testing';
 import { NotificationService } from '../ui-kit/components/notification/notification.service';
+import { DialogRefService } from '@psb/fe-ui-kit';
 
 describe('SafePaymentComponent', () => {
     let component: SafePaymentComponent;
     let fixture: ComponentFixture<SafePaymentComponent>;
     let store: StoreService;
     let safePaymentStateManager: SafePaymentStateManagerService;
-    let dialogRef: MatDialogRef<any>;
+    let dialogRef: DialogRefService<SafePaymentButton>;
     let router: Router;
 
     beforeEach(waitForAsync(() => {
@@ -51,7 +51,7 @@ describe('SafePaymentComponent', () => {
                 NotificationService,
                 ErrorHandlerService,
                 {
-                    provide: MatDialogRef,
+                    provide: DialogRefService,
                     useValue: {
                         close: (value) => { },
                     },
@@ -65,7 +65,7 @@ describe('SafePaymentComponent', () => {
         component = fixture.componentInstance;
         store = TestBed.inject(StoreService);
         safePaymentStateManager = TestBed.inject(SafePaymentStateManagerService);
-        dialogRef = TestBed.inject(MatDialogRef);
+        dialogRef = TestBed.inject(DialogRefService);
         router = TestBed.inject(Router);
         store.reciverStatus = ReciverStatus.Unknown;
 

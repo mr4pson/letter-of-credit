@@ -1,0 +1,86 @@
+<div class="success-modal">
+    <div class="success-modal-header">
+        <div
+            (click)="close(false)"
+            class="icon-close"
+        >
+            <psb-icon [path]="'Close2_24.svg'"></psb-icon>
+        </div>
+    </div>
+    <div class="success-modal-main">
+        <div class="status-icon">
+            <span>
+                <svg
+                    width="80"
+                    height="80"
+                    viewBox="0 0 80 80"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                >
+                    <circle
+                        opacity="0.1"
+                        cx="40"
+                        cy="40"
+                        r="40"
+                        fill="#41B665"
+                    ></circle>
+                    <circle
+                        opacity="0.3"
+                        cx="39.9998"
+                        cy="40"
+                        r="31.1111"
+                        fill="#41B665"
+                    ></circle>
+                    <path
+                        d="M36.7651 52.4287L56.6474 32.5888L52.7431 28.6421L36.7651 44.5777L28.6169 36.4507L24.6914 40.3763L36.7651 52.4287Z"
+                        fill="#41B665"
+                    ></path>
+                </svg>
+            </span>
+        </div>
+        <div class="success-modal-title">
+            <psb-heading type="4">{{data.title}}</psb-heading>
+        </div>
+        <psb-scroll-bar
+            class="main-content"
+            [isContentIndent]="true"
+            [psbScrollBarAutoHeight]="content"
+            [xOverflowDisabled]="true"
+            [contentChangingDebounceTime]="contentChangingDebounceTime"
+        >
+            <div #content>
+                Отлично! Ваше заявление сформировано и направлено в банк. В ближайшее время сотрудники банка обработают вашу заявку и выпустят покрытый аккредитив для безопасного платежа вашему контрагенту.
+                <br>
+                О статусе заявки можно узнать в разделе Документы
+            </div>
+        </psb-scroll-bar>
+        <div class="actions">
+            <psb-button
+                class="success-button"
+                [size]="buttonSize.Medium"
+                (buttonClick)="close(true)"
+                [disabled]="data.successButtonDisabled"
+            >
+                {{data.successButtonText}}
+            </psb-button>
+            <psb-button
+                *ngIf="data.rejectButtonText"
+                [size]="buttonSize.Medium"
+                (buttonClick)="close(false)"
+            >
+                {{data.rejectButtonText}}
+            </psb-button>
+        </div>
+        <div
+            class="modal-banner"
+            *ngIf="data.bannerData"
+        >
+            <psb-banner
+                [title]="data.bannerData.title"
+                [description]="data.bannerData.description"
+                [image]="data.bannerData.image"
+                (bannerClick)="bannerClick()"
+            ></psb-banner>
+        </div>
+    </div>
+</div>

@@ -1,8 +1,7 @@
 import { ChangeDetectionStrategy, Component, Renderer2 } from '@angular/core';
-import { MatDialog } from '@angular/material/dialog';
 import { NavigationEnd, Router } from '@angular/router';
 import { OnDestroyMixin, untilComponentDestroyed } from '@w11k/ngx-componentdestroyed';
-import { EMPTY, forkJoin, from, fromEvent, merge, Observable, of } from 'rxjs';
+import { EMPTY, forkJoin, from, merge, Observable, of } from 'rxjs';
 import { catchError, debounceTime, delay, filter, map, pairwise, switchMap, takeUntil, tap } from 'rxjs/operators';
 
 import {
@@ -19,7 +18,7 @@ import { Page, paths } from './modules/issue/constants/routes';
 import { AccountService, ErrorHandlerService, NgService, StoreService } from './services';
 import { SmbPaymentFormComponent } from './interfaces';
 
-import { BaseModalComponent } from '@psb/fe-ui-kit';
+import { DialogService, DialogSize, IBaseDialogData, SimpleDialogComponent } from '@psb/fe-ui-kit';
 
 @Component({
     selector: 'loc-inner',
@@ -32,12 +31,12 @@ export class AppComponent extends OnDestroyMixin {
 
     constructor(
         private store: StoreService,
-        private dialog: MatDialog,
         private ngService: NgService,
         private renderer: Renderer2,
         private accountService: AccountService,
         private router: Router,
         private errorHandler: ErrorHandlerService,
+        private dialogService: DialogService,
     ) {
         super();
 
@@ -199,36 +198,41 @@ export class AppComponent extends OnDestroyMixin {
     }
 
     private openSafePaymentDialog(smbPaymentForm: SmbPaymentFormComponent): void {
-        const dialogData = {
+        const dialogData: IBaseDialogData = {
             title: 'Рекомендуем безопасный платёж',
             component: SafePaymentComponent,
+            contentData: {
+                width: '100px',
+            }
         };
 
-        const safePaymentDialog = this.dialog.open(BaseModalComponent, {
-            data: {
-                ...dialogData,
-            },
-            panelClass: ['loc-overlay', 'loc-payment'],
-            backdropClass: 'loc-backdrop',
+        const dialogRef = this.dialogService.open<
+            IBaseDialogData,
+            any,
+            SimpleDialogComponent<SafePaymentButton>
+        >(SimpleDialogComponent, dialogData, {
+            size: DialogSize.Medium
         });
 
-        safePaymentDialog.afterClosed().pipe(
-            tap((result) => {
-                switch (result) {
-                    case SafePaymentButton.RefusePay:
-                        this.store.isOrdinalPayment = false;
-                        smbPaymentForm.popupService.dialogService.closeAll();
+        dialogRef.afterClosed
+            .pipe(
+                tap((result) => {
+                    switch (result) {
+                        case SafePaymentButton.RefusePay:
+                            this.store.isOrdinalPayment = false;
+                            smbPaymentForm.popupService.dialogService.closeAll();
 
-                        break;
-                    case false:
-                    case SafePaymentButton.OrdinalPay:
-                        // this.doOrdinalPay();
-                        this.store.isOrdinalPayment = true;
-                        this.router.navigateByUrl(paths[SmbPage.CreatePayment]);
-                }
-            }),
-            untilComponentDestroyed(this),
-        ).subscribe();
+                            break;
+                        case false:
+                        case SafePaymentButton.OrdinalPay:
+                            // this.doOrdinalPay();
+                            this.store.isOrdinalPayment = true;
+                            this.router.navigateByUrl(paths[SmbPage.CreatePayment]);
+                    }
+                }),
+                untilComponentDestroyed(this)
+            )
+            .subscribe();
     }
 
     private createNewLocButton(newPaymentButton: Element): void {

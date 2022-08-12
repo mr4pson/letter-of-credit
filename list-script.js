@@ -7,11 +7,11 @@ const appendLetterOfCreditApp = () => {
         container.appendChild(document.createElement("loc-inner"));
 
         const scripts = [
-            "http://localhost:5500/runtime.js",
-            "http://localhost:5500/polyfills.js",
-            "http://localhost:5500/styles.js",
-            "http://localhost:5500/vendor.js",
-            "http://localhost:5500/main.js",
+            "http://localhost:4200/runtime.js",
+            "http://localhost:4200/polyfills.js",
+            "http://localhost:4200/styles.js",
+            "http://localhost:4200/vendor.js",
+            "http://localhost:4200/main.js",
             // "http://localhost/runtime.js",
             // "http://localhost/polyfills.js",
             // "http://localhost/styles.js",

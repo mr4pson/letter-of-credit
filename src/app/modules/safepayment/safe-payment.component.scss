@@ -28,14 +28,15 @@
     display: flex;
     justify-content: space-between;
     margin: 40px 0 30px 0;
-
-    .payment-btn {
-        padding: 16px 20px !important;
-    }
+    gap: 10px;
 }
 
 .email-link {
     cursor: pointer;
     color: $main-blue;
     white-space: nowrap;
+}
+
+.payment-btn button {
+    padding: 16px 20px !important;
 }

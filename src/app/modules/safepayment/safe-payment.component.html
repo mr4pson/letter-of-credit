@@ -26,11 +26,9 @@
             ></path>
         </svg>
 
-
         <span class="title">
             {{ letterOfCredit.reciverName }} имеет {{ getReliableText() }} рейтинг
         </span>
-
 
         <div class="info-icon">
             <psb-tooltip
@@ -41,15 +39,12 @@
         </div>
     </div>
 
-
     <p>
         Для снижения риска сделки используйте инструмент «Покрытый аккредитив». Деньги надёжно хранятся в банке до момента поставки или оказания услуг и будут перечислены поставщику после выполнения условий аккредитива.
     </p>
 
-
     <ng-container *ngIf="this.stateManager.state === SafePayStates.ShowAgenda">
         <safe-payment-agenda></safe-payment-agenda>
-
 
         <p>
             Узнать больше можно, пройдя по
@@ -70,19 +65,16 @@
         </p>
     </ng-container>
 
-
     <ng-container *ngIf="this.stateManager.state === SafePayStates.ShowEmail">
         <safe-payment-email
             #safePaymentEmail
             (takeValidEmail)="takeEmail($event)"
         ></safe-payment-email>
 
-
         <p>
             При нажатии на кнопку "Получить" вы соглашаетесь на однократную демонстрацию вам рекламных материалов.
         </p>
     </ng-container>
-
 
     <div class="actions">
         <psb-button
@@ -110,7 +102,6 @@
             Отправить обычный платёж
         </psb-button>
     </div>
-
 
     <div>
         <psb-checkbox

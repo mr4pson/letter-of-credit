@@ -1,6 +1,6 @@
-import { Inject, Injectable, Optional, Renderer2 } from '@angular/core';
-import { ReplaySubject } from 'rxjs';
-import { DOCUMENT } from '@angular/common';
+import { Inject, Injectable, Optional, Renderer2 } from "@angular/core";
+import { ReplaySubject } from "rxjs";
+import { DOCUMENT } from "@angular/common";
 
 import {
     Ng,
@@ -12,10 +12,9 @@ import {
     SmbPaymentFormComponent,
     SmbReceiverAutocompleteComponent,
     SmbSavePublishBlockComponent,
-} from '../interfaces';
-import { ErrorHandlerService } from './error-handler.service';
-import { SmbSelector } from '../enums/smb-selector.enum';
-
+} from "../interfaces";
+import { ErrorHandlerService } from "./error-handler.service";
+import { SmbSelector } from "../enums/smb-selector.enum";
 
 @Injectable()
 export class NgService {
@@ -31,7 +30,7 @@ export class NgService {
         this.instance = this.window.ng;
         this.ngDevMode = !!this.window.ngDevMode;
         if (!this.ngDevMode) {
-            throw Error('Приложение в режиме prod. Ng сущность не инициализирована');
+            throw Error("Приложение в режиме prod. Ng сущность не инициализирована");
         }
     }
 
@@ -40,7 +39,9 @@ export class NgService {
     }
 
     getSmbPaymentFormComponent(): SmbPaymentFormComponent {
-        return this.getComponent<SmbPaymentFormComponent>(SmbSelector.RublePaymentForm);
+        return this.getComponent<SmbPaymentFormComponent>(
+            SmbSelector.RublePaymentForm,
+        );
     }
 
     getSmbAccountComponent(): SmbAccountComponent {
@@ -52,27 +53,35 @@ export class NgService {
     }
 
     getSmbSavePublishBlockComponent(): SmbSavePublishBlockComponent {
-        return this.getComponent<SmbSavePublishBlockComponent>(SmbSelector.SavePublishBlock);
+        return this.getComponent<SmbSavePublishBlockComponent>(
+            SmbSelector.SavePublishBlock,
+        );
     }
 
     getSmbDocumentsFilterComponent(): SmbDocumentFilterComponent {
-        return this.getComponent<SmbDocumentFilterComponent>(SmbSelector.DocumentFilter);
+        return this.getComponent<SmbDocumentFilterComponent>(
+            SmbSelector.DocumentFilter,
+        );
     }
 
     getSmbReceiverAutocompleteComponent(): SmbReceiverAutocompleteComponent {
-        return this.getComponent<SmbReceiverAutocompleteComponent>(SmbSelector.ReceiverAutocomplete);
+        return this.getComponent<SmbReceiverAutocompleteComponent>(
+            SmbSelector.ReceiverAutocomplete,
+        );
     }
 
     getDocumentsNewPaymentButtonElement(): HTMLElement {
-        return this.renderer.selectRootElement(SmbSelector.DocumentsNewPaymentButton, true);
+        return this.getRootElement(SmbSelector.DocumentsNewPaymentButton);
     }
 
     hideSmbDocuments() {
-        this.renderer.selectRootElement(SmbSelector.Documents, true).classList.add('hidden');
+        const documents = this.getRootElement(SmbSelector.Documents);
+        documents?.classList.add("hidden");
     }
 
     showSmbDocuments() {
-        this.renderer.selectRootElement(SmbSelector.Documents, true).classList.remove('hidden');
+        const documents = this.getRootElement(SmbSelector.Documents);
+        documents?.classList.remove("hidden");
     }
 
     setRenderer(renderer: Renderer2): void {
@@ -83,21 +92,30 @@ export class NgService {
         this.window.scroll(0, 0);
     }
 
-    private getComponent<T>(selector: string): T | null | undefined {
-        let element: Element;
+    private getRootElement(selector: string): HTMLElement | null {
+        let element: HTMLElement;
 
         try {
             element = this.renderer.selectRootElement(selector, true);
         } catch (error) {
-            this.errorHandler.showErrorMessage(`Невозможно найти селектор ${selector} в DOM дереве`);
+            this.errorHandler.showErrorMessage(
+                `Невозможно найти селектор ${selector} в DOM дереве`
+            );
         }
+
+        return element;
+    }
+
+    private getComponent<T>(selector: string): T | null | undefined {
+        const element = this.getRootElement(selector);
 
         if (!element) {
             return null;
         }
 
-        const component = this.instance.getComponent
-            <T & Pick<SmbComponentInterface, 'destroyed$' | 'ngOnDestroy'>>(element);
+        const component = this.instance.getComponent<
+            T & Pick<SmbComponentInterface, "destroyed$" | "ngOnDestroy">
+        >(element);
 
         if (!component) {
             return undefined;

@@ -1,0 +1,67 @@
+@-webkit-keyframes fadeIn {
+  0% {
+    opacity: 0
+  }
+
+  to {
+    opacity: 1
+  }
+}
+
+@keyframes fadeIn {
+  0% {
+    opacity: 0
+  }
+
+  to {
+    opacity: 1
+  }
+}
+
+.success-modal {
+  height: 100%;
+  width: 548px;
+  background: #fff;
+  border-radius: 12px;
+  padding: 20px;
+}
+
+.success-modal>.success-modal-header {
+  height: 24px;
+  width: 100%
+}
+
+.success-modal>.success-modal-header>.icon-close {
+  color: rgba(0, 0, 0, .54);
+  cursor: pointer;
+  float: right
+}
+
+.success-modal>.success-modal-main {
+  display: flex;
+  flex-direction: column;
+  height: calc(100% - 24px);
+  padding: 0 24px 24px
+}
+
+.success-modal>.success-modal-main>.success-modal-title {
+  padding: 16px 0
+}
+
+.success-modal>.success-modal-main>.main-content {
+  display: block;
+  overflow: hidden
+}
+
+.success-modal>.success-modal-main>.modal-banner {
+  margin-top: 48px
+}
+
+.success-modal>.success-modal-main>.actions {
+  display: flex;
+  margin-top: 20px
+}
+
+.success-modal>.success-modal-main>.actions :not(:first-child) {
+  margin-left: 16px
+}

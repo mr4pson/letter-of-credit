@@ -1,5 +1,4 @@
 import { ChangeDetectionStrategy, Component, ViewChild } from '@angular/core';
-import { MatDialogRef } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 
 import { Page, paths } from '../issue/constants/routes';
@@ -7,7 +6,7 @@ import { SafePayStates } from './enums/safe-payment.enum';
 import { SafePaymentEmailComponent } from './components/safe-payment-email/safe-payment-email.component';
 import { SafePaymentStateManagerService } from './services/safe-payment-state-manager.service';
 
-import { BaseModalComponent } from '@psb/fe-ui-kit';
+import { DialogRefService } from '@psb/fe-ui-kit';
 import { ButtonSize, ButtonType } from '@psb/fe-ui-kit/src/components/button';
 import { SafePaymentButton } from 'src/app/enums/safe-payment-button.enum';
 import { ReliableSign } from 'src/app/modules/safepayment/enums/reliable-sign.enum';
@@ -26,7 +25,6 @@ import { SafePaymentFormService } from './safe-payment-form.service';
 export class SafePaymentComponent {
     @ViewChild(SafePaymentEmailComponent) emailComponent: HTMLElement;
 
-    safePaymentDialog: MatDialogRef<BaseModalComponent, any>;
     SafePaymentButton = SafePaymentButton;
     ButtonType = ButtonType;
     ButtonSize = ButtonSize;
@@ -38,7 +36,7 @@ export class SafePaymentComponent {
     constructor(
         public stateManager: SafePaymentStateManagerService,
         private store: StoreService,
-        private dialogRef: MatDialogRef<BaseModalComponent>,
+        private dialogRef: DialogRefService<SafePaymentButton>,
         private router: Router,
         private formService: SafePaymentFormService,
         private ngService: NgService,

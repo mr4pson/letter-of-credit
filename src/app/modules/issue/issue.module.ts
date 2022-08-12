@@ -29,6 +29,7 @@ import { UiKitModule } from '../ui-kit/ui-kit.module';
 
 import { SimplebarAngularModule } from 'simplebar-angular';
 import { AccountService } from 'src/app/services';
+import { SuccessModalComponent } from './components/success-modal/success-modal.component';
 
 @NgModule({
     declarations: [
@@ -41,6 +42,7 @@ import { AccountService } from 'src/app/services';
         AccreditationPeriodComponent,
         AccreditationAmountComponent,
         CounterpartyContractComponent,
+        SuccessModalComponent,
     ],
     imports: [
         PsbModule,

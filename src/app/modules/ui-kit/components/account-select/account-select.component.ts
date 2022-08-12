@@ -60,7 +60,7 @@ export class AccountSelectComponent extends CustomControlAccessorDirective imple
     }
 
     private initSelectedOption(initAccount: ClientAccount) {
-        if (initAccount && this.accounts.length) {
+        if (initAccount && this.accounts?.length) {
             this.selectedAccount = this.accounts.find(account => (
                 account.accountCode === initAccount.accountCode
             )) ?? null;

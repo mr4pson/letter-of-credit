@@ -1,11 +1,10 @@
-import { Injectable } from '@angular/core';
-import { MatDialog } from '@angular/material/dialog';
-import { BehaviorSubject } from 'rxjs';
+import { Injectable } from "@angular/core";
+import { BehaviorSubject } from "rxjs";
 
-import { ReciverStatus } from '../enums/reciver-status.enum';
-import { SmbPayment } from '../interfaces/smb/smb-payment.interface';
-import { DEFAULT_LOC_INSTANCE } from '../modules/issue/constants/constants';
-import { LetterOfCredit } from '../modules/issue/interfaces/letter-of-credit.interface';
+import { ReciverStatus } from "../enums/reciver-status.enum";
+import { SmbPayment } from "../interfaces/smb/smb-payment.interface";
+import { DEFAULT_LOC_INSTANCE } from "../modules/issue/constants/constants";
+import { LetterOfCredit } from "../modules/issue/interfaces/letter-of-credit.interface";
 
 @Injectable()
 export class StoreService {
@@ -27,14 +26,13 @@ export class StoreService {
         this.isOrdinalPayment$$.next(value);
     }
 
-    dialog: MatDialog;
     payment: SmbPayment;
     reciverStatus: ReciverStatus = ReciverStatus.Unknown;
-    clientEmail = '';
+    clientEmail = "";
     letterOfCredit: LetterOfCredit = DEFAULT_LOC_INSTANCE;
 
     restoreDefaultState() {
-        this.clientEmail = '';
+        this.clientEmail = "";
         this.reciverStatus = ReciverStatus.Unknown;
         this.letterOfCredit = DEFAULT_LOC_INSTANCE;
         this.isIssueVissible = false;

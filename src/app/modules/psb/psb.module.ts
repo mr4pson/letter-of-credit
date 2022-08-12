@@ -3,6 +3,7 @@ import { NgModule } from '@angular/core';
 import { FormatMoneyPipe, SecurePipe } from './pipes';
 
 import {
+    BannerModule,
     BaseModalModule,
     ButtonModule,
     CheckboxModule,
@@ -16,6 +17,7 @@ import {
     NotificationModule,
     NumberInputModule,
     PhoneInputModule,
+    ScrollBarModule,
     SpinnerIconModule,
     TemplateTypeModule,
     TextInputModule,
@@ -32,6 +34,8 @@ import {
         TooltipModule,
         CheckboxModule,
         ButtonModule,
+        BannerModule,
+        ScrollBarModule,
         TextInputModule,
         TextModule,
         HeadingModule,
@@ -52,6 +56,8 @@ import {
         TooltipModule,
         CheckboxModule,
         ButtonModule,
+        BannerModule,
+        ScrollBarModule,
         TextInputModule,
         TextModule,
         HeadingModule,
