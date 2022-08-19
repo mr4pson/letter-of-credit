@@ -5,6 +5,7 @@ import { EMPTY, forkJoin, from, merge, Observable, of } from 'rxjs';
 import { catchError, debounceTime, delay, filter, map, pairwise, switchMap, takeUntil, tap } from 'rxjs/operators';
 
 import {
+    GET_ACCREDITIVE_INFO_ERROR_MESSAGE,
     GET_COUNTERPARTY_INFO_ERROR_MESSAGE,
     NEW_LOC_BUTTON_CLASS_LIST,
     NEW_LOC_BUTTON_STYLES,
@@ -19,6 +20,7 @@ import { AccountService, ErrorHandlerService, NgService, StoreService } from './
 import { SmbPaymentFormComponent } from './interfaces';
 
 import { DialogService, DialogSize, IBaseDialogData, SimpleDialogComponent } from '@psb/fe-ui-kit';
+import { SafePaymentStateManagerService } from './modules/safepayment/services/safe-payment-state-manager.service';
 
 @Component({
     selector: 'loc-inner',
@@ -37,6 +39,7 @@ export class AppComponent extends OnDestroyMixin {
         private router: Router,
         private errorHandler: ErrorHandlerService,
         private dialogService: DialogService,
+        public stateManager: SafePaymentStateManagerService,
     ) {
         super();
 
@@ -101,6 +104,8 @@ export class AppComponent extends OnDestroyMixin {
                     if (!smbSavePublishBlock.form.valid) {
                         return;
                     }
+
+                    console.log(this.store.payment);
 
                     this.store.payment = smbPaymentForm.payment;
                     smbPaymentForm.popupService.dialogService.closeAll();
@@ -171,13 +176,13 @@ export class AppComponent extends OnDestroyMixin {
                 smbPaymentForm.spinnerService.start(smbPaymentForm.paymentFormContext);
             }),
             switchMap(() => forkJoin([
-                // this.accountService.getAllowLoC(receiverAutocomplete.receiverFormGroup.value.inn).pipe(
-                //   catchError(() => {
-                //     this.errorHandler.showErrorMessage(GET_ACCREDITIVE_INFO_ERROR_MESSAGE);
+                this.accountService.getAllowLoC(receiverAutocomplete.receiverFormGroup.value.inn).pipe(
+                    catchError(() => {
+                        this.errorHandler.showErrorMessage(GET_ACCREDITIVE_INFO_ERROR_MESSAGE);
 
-                //     return of(false);
-                //   }),
-                // ),
+                        return of(false);
+                    }),
+                ),
                 this.accountService.getIsBadReliability(receiverAutocomplete.receiverFormGroup.value.inn).pipe(
                     catchError(() => {
                         this.errorHandler.showErrorMessage(GET_COUNTERPARTY_INFO_ERROR_MESSAGE);
@@ -186,13 +191,10 @@ export class AppComponent extends OnDestroyMixin {
                     }),
                 ),
             ])),
-            map(([isLoCAllowed
-                // , isBadReliability
-            ]) => {
+            map(([isLoCAllowed, isBadReliability]) => {
                 smbPaymentForm.spinnerService.stop(smbPaymentForm.paymentFormContext);
 
-                return isLoCAllowed
-                //  && isBadReliability;
+                return isBadReliability && isLoCAllowed;
             }),
         );
     }
@@ -228,6 +230,7 @@ export class AppComponent extends OnDestroyMixin {
                             // this.doOrdinalPay();
                             this.store.isOrdinalPayment = true;
                             this.router.navigateByUrl(paths[SmbPage.CreatePayment]);
+                            smbPaymentForm.popupService.dialogService.closeAll();
                     }
                 }),
                 untilComponentDestroyed(this)

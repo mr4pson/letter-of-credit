@@ -19,6 +19,9 @@ import { StoreService } from "src/app/services/store.service";
 import { NgService } from "src/app/services/ng.service";
 import { isFormValid } from "src/app/utils";
 import { SuccessModalComponent } from "../success-modal/success-modal.component";
+import { Router } from "@angular/router";
+import { smbPaths } from '../../../../constants/smp-paths.constant';
+import { SmbPage } from "src/app/enums/smb-page.enum";
 
 @Component({
     selector: "send-application",
@@ -37,6 +40,7 @@ export class SendApplicationComponent extends OnDestroyMixin implements OnInit {
         private ngService: NgService,
         private formService: SendApplicationFormService,
         private dialogService: DialogService,
+        private router: Router,
     ) {
         super();
     }
@@ -93,6 +97,7 @@ export class SendApplicationComponent extends OnDestroyMixin implements OnInit {
                 tap(() => {
                     this.store.isIssueVissible = false;
                     this.ngService.showSmbDocuments();
+                    this.router.navigateByUrl(smbPaths[SmbPage.Documents]);
                 }),
                 untilComponentDestroyed(this)
             )

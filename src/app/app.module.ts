@@ -20,6 +20,7 @@ import { NgService } from './services/ng.service';
 import { SafePaymentModule } from './modules/safepayment/safe-payment.module';
 import { UiKitModule } from './modules/ui-kit/ui-kit.module';
 import { MaterialModule } from './modules/material/material-module';
+import { SafePaymentStateManagerService } from './modules/safepayment/services/safe-payment-state-manager.service';
 
 registerLocaleData(ru);
 @NgModule({
@@ -44,6 +45,7 @@ registerLocaleData(ru);
         AccountService,
         ErrorHandlerService,
         NgService,
+        SafePaymentStateManagerService,
     ],
     bootstrap: [AppComponent],
 })

@@ -7,6 +7,7 @@ import { ButtonSize, ButtonType } from '@psb/fe-ui-kit/src/components/button';
 import { getRequiredFormControlValidator } from '@psb/validations/required';
 import { getEmailFormControlValidator } from '@psb/validations/email';
 import { StoreService } from 'src/app/services/store.service';
+import { SafePaymentService } from '../../services/safe-payment.service';
 
 @Component({
     selector: 'safe-payment-email',
@@ -19,12 +20,16 @@ export class SafePaymentEmailComponent {
 
     ButtonType = ButtonType;
     ButtonSize = ButtonSize;
+    emailLoading$ = this.safePaymentService.loading$;
     emailFormControl = new FormControl(this.store.clientEmail, [
         getRequiredFormControlValidator(SET_EMAIL_CONTROL_MESSAGE),
         getEmailFormControlValidator(SET_VALID_EMAIL_CONTROL_MESSAGE),
     ]);
 
-    constructor(private store: StoreService) { }
+    constructor(
+        private store: StoreService,
+        private safePaymentService: SafePaymentService
+    ) { }
 
     takeEmail(): void {
         this.emailFormControl.markAllAsTouched();

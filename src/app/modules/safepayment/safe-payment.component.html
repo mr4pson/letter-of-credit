@@ -43,12 +43,13 @@
         Для снижения риска сделки используйте инструмент «Покрытый аккредитив». Деньги надёжно хранятся в банке до момента поставки или оказания услуг и будут перечислены поставщику после выполнения условий аккредитива.
     </p>
 
-    <ng-container *ngIf="this.stateManager.state === SafePayStates.ShowAgenda">
+    <ng-container *ngIf="stateManager.state === SafePayStates.ShowAgenda">
         <safe-payment-agenda></safe-payment-agenda>
 
         <p>
             Узнать больше можно, пройдя по
             <a
+                class="doc-link"
                 href="https://www.psbank.ru/MediumBusiness/CashService/RKO/Documentary"
                 target="_blank"
             >
@@ -65,7 +66,7 @@
         </p>
     </ng-container>
 
-    <ng-container *ngIf="this.stateManager.state === SafePayStates.ShowEmail">
+    <ng-container *ngIf="stateManager.state === SafePayStates.ShowEmail">
         <safe-payment-email
             #safePaymentEmail
             (takeValidEmail)="takeEmail($event)"

@@ -38,11 +38,11 @@ export class AccountService {
 
     getIsBadReliability(reciverINN: string): Observable<boolean> {
         const url =
-            `${this.storage.apiDomain}api/Document/reliability/${reciverINN}?v=${this.storage.apiVersion}`;
+            `/api/Document/reliability/${reciverINN}?v=${this.storage.apiVersion}`;
 
         return this.http.get(url).pipe(
             map((reliability: ReliabilityResult) => {
-                this.setReciverStatus(reciverINN, reliability);
+                this.setReciverStatus(reliability);
 
                 return (
                     reliability.yellow ||
@@ -54,17 +54,14 @@ export class AccountService {
     }
 
     private setReciverStatus(
-        reciverINN: string,
         reliability: ReliabilityResult,
     ): void {
-        if (this.store.letterOfCredit.reciverInn === reciverINN) {
-            if (reliability.red) {
-                this.store.reciverStatus = ReciverStatus.Unreliable;
-            } else if (reliability.yellow) {
-                this.store.reciverStatus = ReciverStatus.PartlyReliable;
-            } else {
-                this.store.reciverStatus = ReciverStatus.Reliable;
-            }
+        if (reliability.red) {
+            this.store.reciverStatus = ReciverStatus.Unreliable;
+        } else if (reliability.yellow) {
+            this.store.reciverStatus = ReciverStatus.PartlyReliable;
+        } else {
+            this.store.reciverStatus = ReciverStatus.Reliable;
         }
     }
 
@@ -83,8 +80,12 @@ export class AccountService {
     }
 
     getAccountList(): Observable<Account[]> {
+        const selectedAccountId = this.storage.getAccountID();
+        const defaultAccountId = this.storage.getDefaultAccountID();
+        const accountId = selectedAccountId && selectedAccountId != 'null' ? selectedAccountId : defaultAccountId;
+
         const url =
-            `${this.storage.apiDomain}api/Account/clients/${this.storage.getClientID()}?branchId=${this.storage.getBranchID()}&account=${this.storage.getAccountID()}&v=${this.storage.apiVersion
+            `/api/Account/clients/${this.storage.getClientID()}?branchId=${this.storage.getBranchID()}&account=${accountId}&v=${this.storage.apiVersion
             }`;
 
         return this.http.get<AccountResponse>(url).pipe(
@@ -105,14 +106,14 @@ export class AccountService {
     }
 
     searchClientByInn(inn: string): Observable<Client[]> {
-        const url = `${this.storage.apiDomain}api/Document/clients/searchByInn/${inn}?v=${this.storage.apiVersion}`;
+        const url = `/api/Document/clients/searchByInn/${inn}?v=${this.storage.apiVersion}`;
 
         return this.http.get<Client[]>(url);
     }
 
     searchBankByBik(bik: string): Observable<BankSearch> {
         const url =
-            `${this.storage.apiDomain}api/Document/getReceiverBanks/${bik}?v=${this.storage.apiVersion}`;
+            `/api/Document/getReceiverBanks/${bik}?v=${this.storage.apiVersion}`;
 
         return this.http.get<BankSearch[]>(url).pipe(
             map((response) => {

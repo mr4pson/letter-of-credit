@@ -13,7 +13,7 @@ export class PartnersService {
     ) { }
 
     getPartners(): Observable<Partner[]> {
-        const url = `${this.storage.apiDomain}api/EDOWAR/partners/partners?v=${this.storage.apiVersion}`;
+        const url = `/api/EDOWAR/partners/partners?v=${this.storage.apiVersion}`;
 
         return this.http.get<Partner[]>(url);
     }

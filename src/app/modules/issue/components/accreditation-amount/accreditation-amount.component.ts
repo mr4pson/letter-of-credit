@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
-import { OnDestroyMixin } from '@w11k/ngx-componentdestroyed';
+import { OnDestroyMixin, untilComponentDestroyed } from '@w11k/ngx-componentdestroyed';
 import { catchError, filter, map, switchMap, tap } from 'rxjs/operators';
 import { Observable, of } from 'rxjs';
 import { Router } from '@angular/router';
@@ -73,9 +73,13 @@ export class AccreditationAmountComponent extends OnDestroyMixin implements OnIn
     }
 
     ngOnInit(): void {
-        if (this.store.letterOfCredit.paymentSum > 0) {
-            this.form.controls[AccreditationAmountFormField.IssueSum].setValue(this.store.letterOfCredit.paymentSum);
-        }
+        this.store.isIssueVissible$.pipe(
+            filter(isIssueVissible => isIssueVissible),
+            tap(() => {
+                this.form.controls[AccreditationAmountFormField.IssueSum].patchValue(this.store.payment?.summa);
+            }),
+            untilComponentDestroyed(this)
+        ).subscribe();
     }
 
     handleSubmit(): void {

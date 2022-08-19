@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 
 @Injectable()
 export class StorageService {
-    readonly apiDomain = 'https://psb.aiwoo.info/';
+    readonly apiDomain = '/api/';
     readonly apiVersion = '1.51.0';
 
     getAccessToken(): string {
@@ -13,6 +13,9 @@ export class StorageService {
     }
     getAccountID(): string {
         return sessionStorage.getItem('client.selectedAccountId');
+    }
+    getDefaultAccountID(): string {
+        return sessionStorage.getItem('client.defaultAccount');
     }
     getBranchID(): string {
         return sessionStorage.getItem('cert.defaultBranchId');

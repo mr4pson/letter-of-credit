@@ -1,28 +1,38 @@
-import { ChangeDetectionStrategy, Component, ViewChild } from '@angular/core';
-import { Router } from '@angular/router';
+import {
+    ChangeDetectionStrategy,
+    Component,
+    ViewChild,
+} from "@angular/core";
+import { Router } from "@angular/router";
 
-import { Page, paths } from '../issue/constants/routes';
-import { SafePayStates } from './enums/safe-payment.enum';
-import { SafePaymentEmailComponent } from './components/safe-payment-email/safe-payment-email.component';
-import { SafePaymentStateManagerService } from './services/safe-payment-state-manager.service';
+import { Page, paths } from "../issue/constants/routes";
+import { SafePayStates } from "./enums/safe-payment.enum";
+import { SafePaymentEmailComponent } from "./components/safe-payment-email/safe-payment-email.component";
+import { SafePaymentStateManagerService } from "./services/safe-payment-state-manager.service";
 
-import { DialogRefService } from '@psb/fe-ui-kit';
-import { ButtonSize, ButtonType } from '@psb/fe-ui-kit/src/components/button';
-import { SafePaymentButton } from 'src/app/enums/safe-payment-button.enum';
-import { ReliableSign } from 'src/app/modules/safepayment/enums/reliable-sign.enum';
-import { StoreService } from 'src/app/services/store.service';
-import { RELIABLE_MAP } from './constants/reliable-map.constant';
-import { SafePaymentFormField } from './enums/safe-payment-form-field.enum';
-import { NgService } from 'src/app/services';
-import { SafePaymentFormService } from './safe-payment-form.service';
+import { DialogRefService } from "@psb/fe-ui-kit";
+import { ButtonSize, ButtonType } from "@psb/fe-ui-kit/src/components/button";
+import { SafePaymentButton } from "src/app/enums/safe-payment-button.enum";
+import { ReliableSign } from "src/app/modules/safepayment/enums/reliable-sign.enum";
+import { StoreService } from "src/app/services/store.service";
+import { RELIABLE_MAP } from "./constants/reliable-map.constant";
+import { SafePaymentFormField } from "./enums/safe-payment-form-field.enum";
+import { NgService } from "src/app/services";
+import { SafePaymentFormService } from "./safe-payment-form.service";
+import { SafePaymentService } from "./services/safe-payment.service";
+import {
+    OnDestroyMixin,
+    untilComponentDestroyed,
+} from "@w11k/ngx-componentdestroyed";
+import { tap } from "rxjs/operators";
 
 @Component({
-    selector: 'safe-payment',
-    templateUrl: 'safe-payment.component.html',
-    styleUrls: ['safe-payment.component.scss'],
+    selector: "safe-payment",
+    templateUrl: "safe-payment.component.html",
+    styleUrls: ["safe-payment.component.scss"],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class SafePaymentComponent {
+export class SafePaymentComponent extends OnDestroyMixin {
     @ViewChild(SafePaymentEmailComponent) emailComponent: HTMLElement;
 
     SafePaymentButton = SafePaymentButton;
@@ -40,14 +50,23 @@ export class SafePaymentComponent {
         private router: Router,
         private formService: SafePaymentFormService,
         private ngService: NgService,
-    ) { }
+        private safePaymentService: SafePaymentService
+    ) {
+        super();
+        this.stateManager.state = SafePayStates.ShowAgenda;
+    }
 
     getReliableColor(): string {
-        return RELIABLE_MAP.color[this.store.reciverStatus] ?? ReliableSign.reliableGray;
+        return (
+            RELIABLE_MAP.color[this.store.reciverStatus] ?? ReliableSign.reliableGray
+        );
     }
 
     getReliableText(): string {
-        return RELIABLE_MAP.text[this.store.reciverStatus] ?? ReliableSign.reliableGrayText;
+        return (
+            RELIABLE_MAP.text[this.store.reciverStatus] ??
+            ReliableSign.reliableGrayText
+        );
     }
 
     doSafePay() {
@@ -65,16 +84,26 @@ export class SafePaymentComponent {
     }
 
     takeEmail(email: string): void {
-        if (email.trim() === '') {
+        if (email.trim() === "") {
             return;
         }
 
         this.store.clientEmail = email;
         this.stateManager.state = SafePayStates.ShowAgenda;
+        this.safePaymentService.loading = true;
+
+        this.safePaymentService
+            .getMaterials(email)
+            .pipe(
+                tap((resp) => {
+                    this.safePaymentService.loading = false;
+                }),
+                untilComponentDestroyed(this)
+            )
+            .subscribe();
     }
 
     showEmail() {
         this.stateManager.state = SafePayStates.ShowEmail;
     }
-
 }

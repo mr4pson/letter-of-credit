@@ -49,6 +49,10 @@ export class AccreditationPeriodComponent extends OnDestroyMixin implements OnIn
             endLocDate: initialEndLocDate ? moment(initialEndLocDate) : moment(getTomorrowDate()),
         });
 
+        setTimeout(() => {
+            this.form.markAllAsTouched();
+        }, 200);
+
         this.formService.endLocDateControl.valueChanges.pipe(
             filter(endLocDate => endLocDate && endLocDate.getTime() > 0),
             untilComponentDestroyed(this),
