@@ -31,6 +31,7 @@
         <loc-account-select
             [formControlName]="AccreditationAmountFormField.SelectedAccount"
             [accounts]="accountsObject.value"
+            (accountSelect)="handleAccountSelect($event)"
         ></loc-account-select>
         <psb-tooltip
             class="tooltip"
@@ -54,6 +55,7 @@
 		вам на расчётный счёт на следующий день.
     </p>
     <psb-button
+        [disabled]="!!(commission$ | async) && comissionLoading"
         class="submit"
         [isSubmit]="true"
         [type]="ButtonType.Primary"

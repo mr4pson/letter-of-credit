@@ -10,11 +10,14 @@ export class LetterOfCredit {
     contract: string;
     contractInfo: string;
     endLocDate: Date;
+    locDaysNumber: number;
     closingDocs: ClosingDoc[];
     isDocumentDigital: boolean;
     allowUsePartOfLoc: boolean;
     contactPerson: string;
     contactPhone: string;
     paymentSum: number;
+    payerAccount: string;
+    nds: string;
 }
 

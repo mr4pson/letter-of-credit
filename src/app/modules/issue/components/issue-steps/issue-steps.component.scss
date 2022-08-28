@@ -22,7 +22,9 @@
         font-size: $font-size-xs;
         line-height: 36px;
         letter-spacing: 1.5px;
-        margin-bottom: $size-8;
+        margin-bottom: 2px;
+        font-family: 'Roboto', sans-serif;
+        color: $bg-grey-light-dark;
     }
 }
 
@@ -64,12 +66,13 @@
 
     .title {
         font-size: $font-size-s;
+        font-family: 'Roboto', sans-serif;
     }
 
     .description {
         white-space: nowrap;
         overflow: hidden;
-        font-size: $font-size-xs;
+        font-size: $font-size-s;
         display: none;
         max-width: 247px;
         text-overflow: ellipsis;

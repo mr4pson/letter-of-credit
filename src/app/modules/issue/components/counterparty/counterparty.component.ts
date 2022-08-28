@@ -157,7 +157,7 @@ export class СounterpartyComponent extends OnDestroyMixin implements OnInit {
         if (isFormValid(this.form)) {
             this.stepService.setStepDescription(
                 paths[Page.COUNTERPARTY],
-                this.store.letterOfCredit.reciverName,
+                this.store.letterOfCredit.reciverBankName,
             );
             this.router.navigateByUrl(paths[Page.COUNTERPARTY_CONTRACT]);
         }

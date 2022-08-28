@@ -55,6 +55,7 @@ export class CounterpartyContractComponent extends OnDestroyMixin implements OnI
                         (ndsItem: SelectedItem) => ndsItem.label === title,
                     );
                     this.selectedNds = selectedNds?.value;
+                    this.store.letterOfCredit.nds = selectedNds?.value.toString();
                 }),
             ),
             this.formService.contractDateControl.valueChanges.pipe(
@@ -114,10 +115,12 @@ export class CounterpartyContractComponent extends OnDestroyMixin implements OnI
 
     handleSubmit(): void {
         if (isFormValid(this.form)) {
-            const stepDescription = this.formService.contractDateControl.value.toLocaleDateString(
+            const date = this.formService.contractDateControl.value.toLocaleDateString(
                 'ru-RU',
                 { year: 'numeric', month: 'long', day: 'numeric' },
             );
+
+            const stepDescription = `№${this.store.letterOfCredit.contract} до ${date}`;
 
             this.stepService.setStepDescription(
                 paths[Page.COUNTERPARTY_CONTRACT],

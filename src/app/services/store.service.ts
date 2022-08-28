@@ -35,6 +35,7 @@ export class StoreService {
         this.clientEmail = "";
         this.reciverStatus = ReciverStatus.Unknown;
         this.letterOfCredit = DEFAULT_LOC_INSTANCE;
+        this.payment = null;
         this.isIssueVissible = false;
     }
 }

@@ -62,9 +62,7 @@ export class AppComponent extends OnDestroyMixin {
     }
 
     handleOpenIssue(): void {
-        if (!this.store.payment) {
-            this.store.restoreDefaultState();
-        }
+        this.store.restoreDefaultState();
 
         this.ngService.hideSmbDocuments();
         this.store.isIssueVissible = true;
@@ -104,8 +102,6 @@ export class AppComponent extends OnDestroyMixin {
                     if (!smbSavePublishBlock.form.valid) {
                         return;
                     }
-
-                    console.log(this.store.payment);
 
                     this.store.payment = smbPaymentForm.payment;
                     smbPaymentForm.popupService.dialogService.closeAll();
@@ -176,13 +172,13 @@ export class AppComponent extends OnDestroyMixin {
                 smbPaymentForm.spinnerService.start(smbPaymentForm.paymentFormContext);
             }),
             switchMap(() => forkJoin([
-                this.accountService.getAllowLoC(receiverAutocomplete.receiverFormGroup.value.inn).pipe(
-                    catchError(() => {
-                        this.errorHandler.showErrorMessage(GET_ACCREDITIVE_INFO_ERROR_MESSAGE);
+                // this.accountService.getAllowLoC(receiverAutocomplete.receiverFormGroup.value.inn).pipe(
+                //     catchError(() => {
+                //         this.errorHandler.showErrorMessage(GET_ACCREDITIVE_INFO_ERROR_MESSAGE);
 
-                        return of(false);
-                    }),
-                ),
+                //         return of(false);
+                //     }),
+                // ),
                 this.accountService.getIsBadReliability(receiverAutocomplete.receiverFormGroup.value.inn).pipe(
                     catchError(() => {
                         this.errorHandler.showErrorMessage(GET_COUNTERPARTY_INFO_ERROR_MESSAGE);
@@ -191,10 +187,13 @@ export class AppComponent extends OnDestroyMixin {
                     }),
                 ),
             ])),
-            map(([isLoCAllowed, isBadReliability]) => {
+            map(([
+                // isLoCAllowed, 
+                isBadReliability]) => {
                 smbPaymentForm.spinnerService.stop(smbPaymentForm.paymentFormContext);
 
-                return isBadReliability && isLoCAllowed;
+                return isBadReliability
+                // && isLoCAllowed;
             }),
         );
     }

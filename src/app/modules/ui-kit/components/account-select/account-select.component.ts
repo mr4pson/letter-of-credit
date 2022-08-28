@@ -55,12 +55,12 @@ export class AccountSelectComponent extends CustomControlAccessorDirective imple
         this.dropped = false;
         this.selectedAccount = account;
 
-        this.formControl.setValue(this.selectedAccount);
+        this.formControl.setValue(account);
         this.accountSelect.emit(account);
     }
 
     private initSelectedOption(initAccount: ClientAccount) {
-        if (initAccount && this.accounts?.length) {
+        if (initAccount && !this.selectedAccount$$.getValue() && this.accounts?.length) {
             this.selectedAccount = this.accounts.find(account => (
                 account.accountCode === initAccount.accountCode
             )) ?? null;

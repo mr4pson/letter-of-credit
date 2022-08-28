@@ -118,6 +118,7 @@ export class AccreditationPeriodComponent extends OnDestroyMixin implements OnIn
     }
 
     private setLocDateOnDaysNumberChange(locDaysNumber): void {
+        this.store.letterOfCredit.locDaysNumber = locDaysNumber;
         const newEndLocDate = getSummedDateDays(this.currentDate, Number(locDaysNumber));
 
         if (newEndLocDate === this.formService.endLocDateControl.value) {

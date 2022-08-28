@@ -26,10 +26,12 @@ import { ClientAccountService } from './services/client-accounts.service';
 import { IssueRoutingModule } from './issue-routing.module';
 import { StepService } from './services/step.service';
 import { UiKitModule } from '../ui-kit/ui-kit.module';
+import { SuccessModalComponent } from './components/success-modal/success-modal.component';
+import { FormatMoneyPipe } from '../psb/pipes';
+import { SendApplicationService } from './components/send-application/send-application.service';
 
 import { SimplebarAngularModule } from 'simplebar-angular';
 import { AccountService } from 'src/app/services';
-import { SuccessModalComponent } from './components/success-modal/success-modal.component';
 
 @NgModule({
     declarations: [
@@ -61,9 +63,11 @@ import { SuccessModalComponent } from './components/success-modal/success-modal.
     providers: [
         StepService,
         AccountService,
+        FormatMoneyPipe,
         PartnersService,
         FileUploadService,
         ClientAccountService,
+        SendApplicationService,
         CounterpartyFormService,
         SendApplicationFormService,
         AccreditationAmountFormService,

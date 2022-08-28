@@ -1,6 +1,8 @@
 @import "assets/colors";
 @import "assets/sizes";
 
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap');
+
 body,
 * {
     font-family: 'Inter', sans-serif;
@@ -134,4 +136,10 @@ loc-inner {
 .psb-input {
     position: relative;
     z-index: 100;
+}
+
+psb-datepicker {
+    .icon-wrapper {
+        z-index: 100;
+    }
 }

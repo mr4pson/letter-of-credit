@@ -26,12 +26,15 @@ export const DEFAULT_LOC_INSTANCE = {
     contract: '',
     contractInfo: '',
     endLocDate: null,
+    locDaysNumber: 0,
     closingDocs: [],
     isDocumentDigital: true,
     allowUsePartOfLoc: true,
     contactPerson: '',
     contactPhone: '',
     paymentSum: 0,
+    payerAccount: '',
+    nds: '',
 } as LetterOfCredit;
 
 export const STEPS: Step[] = [
