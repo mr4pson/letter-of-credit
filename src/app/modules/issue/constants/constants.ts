@@ -34,7 +34,7 @@ export const DEFAULT_LOC_INSTANCE = {
     contactPhone: '',
     paymentSum: 0,
     payerAccount: '',
-    nds: '',
+    nds: NDS_LIST[2].value,
 } as LetterOfCredit;
 
 export const STEPS: Step[] = [

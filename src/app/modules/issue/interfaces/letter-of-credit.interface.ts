@@ -18,6 +18,6 @@ export class LetterOfCredit {
     contactPhone: string;
     paymentSum: number;
     payerAccount: string;
-    nds: string;
+    nds: number;
 }
 

@@ -1,5 +1,6 @@
-@import "../../../../../assets/colors";
 @import "../../../../../assets/sizes";
+@import "../../../../../assets/colors";
+@import "../../../../../assets/fonts";
 
 :host {
     position: relative;
@@ -18,13 +19,13 @@
     position: relative;
     z-index: 1;
 
-    .title {
+    >.title {
         font-size: $font-size-xs;
         line-height: 36px;
         letter-spacing: 1.5px;
-        margin-bottom: 2px;
-        font-family: 'Roboto', sans-serif;
+        font-family: $roboto;
         color: $bg-grey-light-dark;
+        margin-bottom: 10px;
     }
 }
 
@@ -66,16 +67,21 @@
 
     .title {
         font-size: $font-size-s;
-        font-family: 'Roboto', sans-serif;
+        font-family: $roboto;
+        line-height: 36px;
+        margin-bottom: -2px;
+        color: $bg-grey-light-dark;
     }
 
     .description {
+        font-family: $roboto;
         white-space: nowrap;
         overflow: hidden;
-        font-size: $font-size-s;
+        font-size: $font-size-xs;
         display: none;
         max-width: 247px;
         text-overflow: ellipsis;
+        color: $black-alpha-50;
     }
 
 

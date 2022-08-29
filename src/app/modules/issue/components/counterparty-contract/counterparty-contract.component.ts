@@ -47,7 +47,6 @@ export class CounterpartyContractComponent extends OnDestroyMixin implements OnI
 
     ngOnInit(): void {
         this.form.patchValue(this.store.letterOfCredit);
-
         merge(
             this.formService.selectedNdsControl.valueChanges.pipe(
                 tap((title: string) => {
@@ -55,7 +54,7 @@ export class CounterpartyContractComponent extends OnDestroyMixin implements OnI
                         (ndsItem: SelectedItem) => ndsItem.label === title,
                     );
                     this.selectedNds = selectedNds?.value;
-                    this.store.letterOfCredit.nds = selectedNds?.value.toString();
+                    this.store.letterOfCredit.nds = selectedNds?.value;
                 }),
             ),
             this.formService.contractDateControl.valueChanges.pipe(

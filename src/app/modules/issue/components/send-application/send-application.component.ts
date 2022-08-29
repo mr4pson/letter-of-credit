@@ -3,8 +3,8 @@ import {
     OnDestroyMixin,
     untilComponentDestroyed,
 } from "@w11k/ngx-componentdestroyed";
-import { from, merge } from "rxjs";
-import { switchMap, tap } from "rxjs/operators";
+import { EMPTY, from, merge } from "rxjs";
+import { catchError, switchMap, tap } from "rxjs/operators";
 
 import { IssueSuccessComponent } from "../issue-success/issue-success.component";
 import { SendApplicationFormField } from "../../enums/send-application-form-field.enum";
@@ -21,13 +21,12 @@ import { isFormValid } from "src/app/utils";
 import { SuccessModalComponent } from "../success-modal/success-modal.component";
 import { smbPaths } from '../../../../constants/smp-paths.constant';
 import { SmbPage } from "src/app/enums/smb-page.enum";
-import { SendApplicationService } from "./send-application.service";
-import { Application } from "../../interfaces/application.interface";
-import { StorageService } from "src/app/services";
+import { ErrorHandlerService, StorageService } from "src/app/services";
 import { LetterService } from "src/api/services";
 import moment from "moment";
 import { FileUploadService } from "../../services/file-upload.service";
 import { toBase64 } from "src/app/utils/to-base64";
+import { getNdsSum } from "./helpers";
 
 @Component({
     selector: "send-application",
@@ -37,9 +36,9 @@ import { toBase64 } from "src/app/utils/to-base64";
 })
 export class SendApplicationComponent extends OnDestroyMixin implements OnInit {
     form = this.formService.createForm();
-
     ButtonType = ButtonType;
     SendApplicationFormField = SendApplicationFormField;
+    loading = false;
 
     constructor(
         private store: StoreService,
@@ -47,9 +46,9 @@ export class SendApplicationComponent extends OnDestroyMixin implements OnInit {
         private ngService: NgService,
         private formService: SendApplicationFormService,
         private dialogService: DialogService,
-        private sendApplicationService: SendApplicationService,
         private letterService: LetterService,
-        private fileUploadService: FileUploadService
+        private fileUploadService: FileUploadService,
+        private errorHandlerService: ErrorHandlerService,
     ) {
         super();
     }
@@ -83,6 +82,7 @@ export class SendApplicationComponent extends OnDestroyMixin implements OnInit {
         if (isFormValid(this.form)) {
             const clientId = this.storageService.getClientID();
             const branchId = this.storageService.getBranchID();
+            this.loading = true;
 
             from(this.getFiles()).pipe(
                 switchMap((files) => {
@@ -94,14 +94,14 @@ export class SendApplicationComponent extends OnDestroyMixin implements OnInit {
                             contractorINN: this.store.payment?.sender.inn,
                             bic: this.store.letterOfCredit.reciverBankBik,
                             contractorAccount: this.store.letterOfCredit.payerAccount,
-                            contractDate: moment(this.store.letterOfCredit.contractDate).format('DD.MM.YYYY'),
-                            ndsValue: Number(this.store.letterOfCredit.nds),
-                            ndsSum: Number(this.store.letterOfCredit.nds) * this.store.payment?.summa / 100,
+                            contractDate: moment(this.store.letterOfCredit.contractDate).format('YYYY-MM-DD'),
+                            ndsValue: this.store.letterOfCredit.nds,
+                            ndsSum: getNdsSum(this.store.letterOfCredit.nds, this.store.payment?.summa),
                             contractTitleAndNumber: this.store.letterOfCredit.contract,
                             contractSubject: this.store.letterOfCredit.contractInfo,
                             contractFiles: files,
-                            lcEndDate: moment(this.store.letterOfCredit.endLocDate).format('DD.MM.YYYY'),
-                            lcDuration: this.store.letterOfCredit.locDaysNumber,
+                            lcEndDate: moment(this.store.letterOfCredit.endLocDate).format('YYYY-MM-DD'),
+                            lcDuration: Number(this.store.letterOfCredit.locDaysNumber),
                             closingDocuments: this.store.letterOfCredit.closingDocs.map(doc => ({
                                 additionalRequirements: doc.additionalRequirements,
                                 documentsCount: Number(doc.amount),
@@ -117,31 +117,16 @@ export class SendApplicationComponent extends OnDestroyMixin implements OnInit {
                         }
                     })
                 }),
-                switchMap(() => {
-                    const payload: Application = {
-                        cloc_BIK: this.store.letterOfCredit.reciverBankBik,
-                        cloc_TransferAccount: this.store.letterOfCredit.reciverAccount,
-                        cloc_NameClient: this.store.letterOfCredit.reciverName,
-                        cloc_Address: '',
-                        cloc_INN: this.store.letterOfCredit.reciverInn,
-                        cloc_Account: this.store.letterOfCredit.payerAccount,
-                        cloc_PayerNameClient: this.store.payment?.sender.fullName,
-                        cloc_PayerINN: this.store.payment?.sender.inn,
-                        cloc_PayerAccount: this.store.payment?.sender.account.code,
-                        cloc_Amount: this.store.letterOfCredit.paymentSum.toString(),
-                        cloc_NDS: this.store.letterOfCredit.nds,
-                        cloc_ValidityPeriod: this.store.letterOfCredit.locDaysNumber.toString(),
-                        cloc_PayerBank: this.store.payment?.sender.bankInfo.fullName,
-                        cloc_PayerBIK: this.store.payment?.sender.bankInfo.bik,
-                        cloc_Purpose: this.store.letterOfCredit.contractInfo,
-                        cloc_NumberDateContract: this.store.letterOfCredit.contract,
-                        cloc_DocList: ''
-                    };
-                    return this.sendApplicationService.sendApplication(clientId, payload).pipe(
-                        tap(() => {
-                            this.openSuccessDialog();
-                        }),
-                    )
+                catchError((error) => {
+                    this.loading = false;
+                    try {
+                        const errorResponse = error.error ? JSON.parse(error.error) : '';
+                        this.errorHandlerService.showErrorMessage(errorResponse?.message);
+                    } catch (error) {
+                        this.errorHandlerService.showErrorMessage('Невозможно загрузить документ');
+                    }
+
+                    return EMPTY;
                 }),
                 untilComponentDestroyed(this)
             ).subscribe()

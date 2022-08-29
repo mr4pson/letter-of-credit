@@ -92,7 +92,7 @@ export class AccreditationPeriodComponent extends OnDestroyMixin implements OnIn
     handleSubmit(): void {
         if (isFormValid(this.form)) {
             const endLocDate = new Date(this.store.letterOfCredit.endLocDate.toString());
-            const stepDescription = `до ${endLocDate.toLocaleDateString(
+            const stepDescription = `До ${endLocDate.toLocaleDateString(
                 'ru-RU',
                 { year: 'numeric', month: 'long', day: 'numeric' },
             )}`;
