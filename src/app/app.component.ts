@@ -108,6 +108,11 @@ export class AppComponent extends OnDestroyMixin {
                     this.openSafePaymentDialog(smbPaymentForm);
                 };
 
+                this.store.buttonsOldConfig = {
+                    send: smbSavePublishBlock.send,
+                    save: smbSavePublishBlock.save,
+                    sign: smbSavePublishBlock.sign,
+                }
                 smbSavePublishBlock.send = handleSubmit.bind(smbSavePublishBlock);
                 smbSavePublishBlock.save = handleSubmit.bind(smbSavePublishBlock);
                 smbSavePublishBlock.sign = handleSubmit.bind(smbSavePublishBlock);
@@ -226,10 +231,12 @@ export class AppComponent extends OnDestroyMixin {
                             break;
                         case false:
                         case SafePaymentButton.OrdinalPay:
-                            // this.doOrdinalPay();
                             this.store.isOrdinalPayment = true;
-                            this.router.navigateByUrl(paths[SmbPage.CreatePayment]);
-                            smbPaymentForm.popupService.dialogService.closeAll();
+                            const smbSavePublishBlock = this.ngService.getSmbSavePublishBlockComponent();
+                            smbSavePublishBlock.send = this.store.buttonsOldConfig.send;
+                            smbSavePublishBlock.save = this.store.buttonsOldConfig.save;
+                            smbSavePublishBlock.sign = this.store.buttonsOldConfig.sign;
+                            break;
                     }
                 }),
                 untilComponentDestroyed(this)

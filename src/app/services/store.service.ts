@@ -30,6 +30,11 @@ export class StoreService {
     reciverStatus: ReciverStatus = ReciverStatus.Unknown;
     clientEmail = "";
     letterOfCredit: LetterOfCredit = DEFAULT_LOC_INSTANCE;
+    buttonsOldConfig: {
+        send: () => void;
+        sign: () => void;
+        save: () => void;
+    }
 
     restoreDefaultState() {
         this.clientEmail = "";

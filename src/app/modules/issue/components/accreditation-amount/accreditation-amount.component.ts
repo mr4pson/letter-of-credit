@@ -36,13 +36,6 @@ export class AccreditationAmountComponent extends OnDestroyMixin {
             this.form.controls[AccreditationAmountFormField.IssueSum].patchValue(this.store.payment?.summa.toString());
             return this.clientAccountService.getClientAccounts();
         }),
-        tap((accounts) => {
-            if (accounts.length > 0) {
-                this.form.controls[AccreditationAmountFormField.SelectedAccount].setValue(
-                    accounts[0],
-                );
-            }
-        }),
         catchError(() => {
             this.errorHandlerService.showErrorMessage(GET_ACCOUNTS_ERROR_MESSAGE);
 

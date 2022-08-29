@@ -126,7 +126,12 @@ export class AccreditationPeriodComponent extends OnDestroyMixin implements OnIn
             return;
         }
 
+
         const days: number = Number(locDaysNumber);
+
+        if (!locDaysNumber) {
+            return;
+        }
 
         if (days < 1 || days > 365) {
             this.formService.locDaysNumberControl.setValue('');

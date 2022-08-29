@@ -117,6 +117,10 @@ export class SendApplicationComponent extends OnDestroyMixin implements OnInit {
                         }
                     })
                 }),
+                tap(() => {
+                    this.loading = false;
+                    this.openSuccessDialog();
+                }),
                 catchError((error) => {
                     this.loading = false;
                     try {
