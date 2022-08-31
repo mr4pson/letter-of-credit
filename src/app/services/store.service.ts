@@ -29,7 +29,7 @@ export class StoreService {
     payment: SmbPayment;
     reciverStatus: ReciverStatus = ReciverStatus.Unknown;
     clientEmail = "";
-    letterOfCredit: LetterOfCredit = DEFAULT_LOC_INSTANCE;
+    letterOfCredit: LetterOfCredit = { ...DEFAULT_LOC_INSTANCE };
     buttonsOldConfig: {
         send: () => void;
         sign: () => void;
@@ -39,7 +39,7 @@ export class StoreService {
     restoreDefaultState() {
         this.clientEmail = "";
         this.reciverStatus = ReciverStatus.Unknown;
-        this.letterOfCredit = DEFAULT_LOC_INSTANCE;
+        this.letterOfCredit = { ...DEFAULT_LOC_INSTANCE };
         this.payment = null;
         this.isIssueVissible = false;
     }

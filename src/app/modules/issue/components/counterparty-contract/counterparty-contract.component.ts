@@ -19,6 +19,8 @@ import { StoreService } from 'src/app/services/store.service';
 import { isFormValid } from 'src/app/utils';
 import { CounterpartyContractFormService } from './counterparty-contract-form.service';
 
+const docPreviewSrc = require('./doc-preview.png').default;
+
 @Component({
     selector: 'counterparty-contract',
     templateUrl: 'counterparty-contract.component.html',
@@ -34,6 +36,7 @@ export class CounterpartyContractComponent extends OnDestroyMixin implements OnI
     maxContractDate = new Date();
     selectedNds = 20;
     CounterpartyContractFormField = CounterpartyContractFormField;
+    docPreviewSrc = docPreviewSrc;
 
     constructor(
         private store: StoreService,

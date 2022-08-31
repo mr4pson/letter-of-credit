@@ -88,15 +88,15 @@ export class SendApplicationComponent extends OnDestroyMixin implements OnInit {
                 switchMap((files) => {
                     return this.letterService.apiLcDocumentsClientIdCreatePost$Plain({
                         clientId, branchId, body: {
-                            total: this.store.payment?.summa,
+                            total: this.store.letterOfCredit.paymentSum,
                             account: this.store.letterOfCredit.payerAccount,
-                            contractorTitle: this.store.payment?.sender.fullName,
-                            contractorINN: this.store.payment?.sender.inn,
+                            contractorTitle: this.store.letterOfCredit.reciverName,
+                            contractorINN: this.store.letterOfCredit.reciverInn,
                             bic: this.store.letterOfCredit.reciverBankBik,
                             contractorAccount: this.store.letterOfCredit.payerAccount,
                             contractDate: moment(this.store.letterOfCredit.contractDate).format('YYYY-MM-DD'),
                             ndsValue: this.store.letterOfCredit.nds,
-                            ndsSum: getNdsSum(this.store.letterOfCredit.nds, this.store.payment?.summa),
+                            ndsSum: getNdsSum(this.store.letterOfCredit.nds, this.store.letterOfCredit.paymentSum),
                             contractTitleAndNumber: this.store.letterOfCredit.contract,
                             contractSubject: this.store.letterOfCredit.contractInfo,
                             contractFiles: files,
@@ -119,6 +119,8 @@ export class SendApplicationComponent extends OnDestroyMixin implements OnInit {
                 }),
                 tap(() => {
                     this.loading = false;
+                    this.store.restoreDefaultState();
+                    this.fileUploadService.files = [];
                     this.openSuccessDialog();
                 }),
                 catchError((error) => {

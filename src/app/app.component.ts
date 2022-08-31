@@ -139,7 +139,7 @@ export class AppComponent extends OnDestroyMixin {
             const branchId = smbApp.clientInfoService.getDefaultBranchId();
 
             return from(smbApp.accountAuxService.loadAccounts(clientId, branchId)).pipe(
-                delay(100),
+                delay(200),
                 switchMap(() => {
                     const documentsNewPaymentButton = this.ngService.getDocumentsNewPaymentButtonElement();
                     this.createNewLocButton(documentsNewPaymentButton);
