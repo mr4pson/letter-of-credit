@@ -8,7 +8,6 @@ import { NotificationService } from '../modules/ui-kit/components/notification/n
 @Injectable()
 export class ErrorHandlerService implements ErrorHandler {
     alertingService: SmbAlertingService | NotificationService = this.notificationService;
-    private errorMsg = '';
 
     constructor(
         private notificationService: NotificationService,

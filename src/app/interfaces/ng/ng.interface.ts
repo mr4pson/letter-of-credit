@@ -1,6 +1,7 @@
 import { Injector } from '@angular/core';
-
-import { ComponentDebugMetadata, DirectiveDebugMetadata, Listener } from '..';
+import { ComponentDebugMetadata } from './component-debug-metadata.interface';
+import { DirectiveDebugMetadata } from './directive-debug-metadata.interface';
+import { Listener } from './listener.interface';
 
 export interface Ng {
     applyChanges: (component: {}) => void;

@@ -5,18 +5,14 @@ const appendLetterOfCreditApp = () => {
         console.log("Log: On app start");
 
         container.appendChild(document.createElement("loc-inner"));
+        const domainName = 'http://localhost:4200';
 
         const scripts = [
-            "http://localhost:5500/runtime.js",
-            "http://localhost:5500/polyfills.js",
-            "http://localhost:5500/styles.js",
-            "http://localhost:5500/vendor.js",
-            "http://localhost:5500/main.js",
-            // "http://localhost/runtime.js",
-            // "http://localhost/polyfills.js",
-            // "http://localhost/styles.js",
-            // "http://localhost/vendor.js",
-            // "http://localhost/main.js"
+            `${domainName}/runtime.js`,
+            `${domainName}/polyfills.js`,
+            `${domainName}/styles.js`,
+            `${domainName}/vendor.js`,
+            `${domainName}/main.js`,
         ];
 
         scripts.forEach((element) => {

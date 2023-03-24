@@ -11,12 +11,4 @@ import { AGENDA_ITEMS } from './constants';
 })
 export class SafePaymentAgendaComponent {
     agendaItems: Agenda[] = AGENDA_ITEMS;
-
-    getAgendaItemNumber(index: number): number {
-        return index + 1;
-    }
-
-    checkItemHasDelimiter(index: number) {
-        return index < this.agendaItems.length - 1;
-    }
 }

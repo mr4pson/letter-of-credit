@@ -1,6 +1,5 @@
-import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
-import { OnDestroyMixin, untilComponentDestroyed } from '@w11k/ngx-componentdestroyed';
-import { catchError, filter, map, switchMap, tap } from 'rxjs/operators';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { catchError, filter, map, startWith, switchMap } from 'rxjs/operators';
 import { Observable, of } from 'rxjs';
 import { Router } from '@angular/router';
 
@@ -14,8 +13,8 @@ import { AccountService, ErrorHandlerService, StoreService } from 'src/app/servi
 import { isFormValid } from 'src/app/utils';
 import { GET_ACCOUNTS_ERROR_MESSAGE, GET_COMMISSION_ERROR_MESSAGE } from './constants';
 import { AccreditationAmountFormService } from './accreditation-amount-form.service';
-import { FormatMoneyPipe } from 'src/app/modules/psb/pipes';
 import { ClientAccount } from '../../interfaces/client-account.interface';
+import { MoneyAmountPipe } from '@psb/angular-tools';
 
 @Component({
     selector: 'accreditation-amount',
@@ -23,25 +22,14 @@ import { ClientAccount } from '../../interfaces/client-account.interface';
     styleUrls: ['accreditation-amount.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class AccreditationAmountComponent extends OnDestroyMixin {
+export class AccreditationAmountComponent {
     commission = 0;
     ButtonType = ButtonType;
     form = this.formService.createForm();
     AccreditationAmountFormField = AccreditationAmountFormField;
     commission$: Observable<number>;
     comissionLoading = false;
-    accounts$ = this.store.isIssueVissible$.pipe(
-        filter(isIssueVisible => isIssueVisible),
-        switchMap(() => {
-            this.form.controls[AccreditationAmountFormField.IssueSum].patchValue(this.store.payment?.summa.toString());
-            return this.clientAccountService.getClientAccounts();
-        }),
-        catchError(() => {
-            this.errorHandlerService.showErrorMessage(GET_ACCOUNTS_ERROR_MESSAGE);
-
-            return of([]);
-        }),
-    )
+    accounts$: Observable<ClientAccount[]>;
 
     constructor(
         private store: StoreService,
@@ -51,9 +39,24 @@ export class AccreditationAmountComponent extends OnDestroyMixin {
         private stepService: StepService,
         private router: Router,
         private formService: AccreditationAmountFormService,
-        private formatMoney: FormatMoneyPipe,
+        private formatMoney: MoneyAmountPipe,
     ) {
-        super();
+        this.initObservables();
+    }
+
+    private initObservables(): void {
+        this.accounts$ = this.store.isIssueVissible$.pipe(
+            filter(isIssueVisible => isIssueVisible),
+            switchMap(() => {
+                this.form.get(AccreditationAmountFormField.IssueSum).patchValue(this.store.payment?.summa.toString());
+                return this.clientAccountService.getClientAccounts();
+            }),
+            catchError(() => {
+                this.errorHandlerService.showErrorMessage(GET_ACCOUNTS_ERROR_MESSAGE);
+
+                return of([]);
+            }),
+        );
         this.commission$ = this.form.get(AccreditationAmountFormField.IssueSum).valueChanges.pipe(
             switchMap(issueSum => {
                 const summa = issueSum ? Number(issueSum) : 0;
@@ -86,7 +89,7 @@ export class AccreditationAmountComponent extends OnDestroyMixin {
 
             this.stepService.setStepDescription(
                 paths[Page.ACCREDITATION_AMOUNT],
-                `${this.formatMoney.transform((Number(this.formService.issueSum) + this.commission))}`,
+                `${this.formatMoney.transform((Number(this.formService.issueSum) + this.commission), '₽')}`,
             );
             this.router.navigateByUrl(paths[Page.COUNTERPARTY]);
         }

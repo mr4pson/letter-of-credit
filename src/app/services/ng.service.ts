@@ -74,12 +74,12 @@ export class NgService {
         return this.getRootElement(SmbSelector.DocumentsNewPaymentButton);
     }
 
-    hideSmbDocuments() {
+    hideSmbDocuments(): void {
         const documents = this.getRootElement(SmbSelector.Documents);
         documents?.classList.add("hidden");
     }
 
-    showSmbDocuments() {
+    showSmbDocuments(): void {
         const documents = this.getRootElement(SmbSelector.Documents);
         documents?.classList.remove("hidden");
     }

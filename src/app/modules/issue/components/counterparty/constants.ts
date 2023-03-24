@@ -6,4 +6,4 @@ export const SET_INN_CONTROL_MESSAGE = 'Укажите ИНН контраген
 export const SET_INN_VALID_LENGTH_CONTROL_MESSAGE = 'Укажите ИНН 10 или 12 цифр';
 export const SET_RECEIVER_BIK_CONTROL_MESSAGE = 'Укажите БИК банка получателя';
 export const SET_RECEIVER_ACCOUNT_CONTROL_MESSAGE = 'Укажите счет получателя';
-export const INVALID_RECIVER_ACCOUNT_CONTROL_MESSAGE = 'Некорректный счёт получателя';
+export const INVALID_RECEIVER_ACCOUNT_CONTROL_MESSAGE = 'Некорректный счёт получателя';

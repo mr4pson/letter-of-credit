@@ -7,7 +7,7 @@ import { AccountResponse } from '../interfaces/api/account-response.interface';
 import { Account } from '../interfaces/api/account.interface';
 import { BankSearch } from '../interfaces/api/bank-search.interface';
 import { Client } from '../modules/issue/interfaces/client.interface';
-import { ReciverStatus } from '../enums/reciver-status.enum';
+import { ReceiverStatus } from '../enums/receiver-status.enum';
 import { StorageService } from './storage.service';
 import { ReliabilityResult } from '../interfaces/api/reliability-result.interface';
 import { StoreService } from './store.service';
@@ -23,11 +23,11 @@ export class AccountService {
         private letterService: LetterService,
     ) { }
 
-    getAllowLoC(reciverINN: string): Observable<boolean> {
+    getAllowLoC(receiverINN: string): Observable<boolean> {
         return this.letterService.apiLcIsLcOffersEnabledClientIdGet$Response({
             clientId: this.storage.getClientID(),
             branchId: this.storage.getBranchID(),
-            contractor: reciverINN,
+            contractor: receiverINN,
         }).pipe(
             map((response: any) => JSON.parse(response.body)),
             map((response: { canShowOffer }) => {
@@ -36,13 +36,13 @@ export class AccountService {
         );
     }
 
-    getIsBadReliability(reciverINN: string): Observable<boolean> {
+    getIsBadReliability(receiverINN: string): Observable<boolean> {
         const url =
-            `/api/Document/reliability/${reciverINN}?v=${this.storage.apiVersion}`;
+            `/api/Document/reliability/${receiverINN}?v=${this.storage.apiVersion}`;
 
         return this.http.get(url).pipe(
             map((reliability: ReliabilityResult) => {
-                this.setReciverStatus(reliability);
+                this.setReceiverStatus(reliability);
 
                 return (
                     reliability.yellow ||
@@ -53,23 +53,23 @@ export class AccountService {
         );
     }
 
-    private setReciverStatus(
+    private setReceiverStatus(
         reliability: ReliabilityResult,
     ): void {
         if (reliability.red) {
-            this.store.reciverStatus = ReciverStatus.Unreliable;
+            this.store.receiverStatus = ReceiverStatus.Unreliable;
         } else if (reliability.yellow) {
-            this.store.reciverStatus = ReciverStatus.PartlyReliable;
+            this.store.receiverStatus = ReceiverStatus.PartlyReliable;
         } else {
-            this.store.reciverStatus = ReciverStatus.Reliable;
+            this.store.receiverStatus = ReceiverStatus.Reliable;
         }
     }
 
-    setDisableLoCOffers(reciverINN: string): Observable<boolean> {
+    setDisableLoCOffers(receiverINN: string): Observable<boolean> {
         return this.letterService.apiLcEnableLcOffersClientIdPost$Json({
             clientId: this.storage.getClientID(),
             branchId: this.storage.getBranchID(),
-            contractor: reciverINN,
+            contractor: receiverINN,
         }).pipe(
             map((response) => {
                 if (!response && response.success) {

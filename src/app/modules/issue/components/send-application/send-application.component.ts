@@ -1,8 +1,4 @@
 import { ChangeDetectionStrategy, Component, OnInit } from "@angular/core";
-import {
-    OnDestroyMixin,
-    untilComponentDestroyed,
-} from "@w11k/ngx-componentdestroyed";
 import { EMPTY, from, merge } from "rxjs";
 import { catchError, switchMap, tap } from "rxjs/operators";
 
@@ -27,6 +23,8 @@ import moment from "moment";
 import { FileUploadService } from "../../services/file-upload.service";
 import { toBase64 } from "src/app/utils/to-base64";
 import { getNdsSum } from "./helpers";
+import { takeUntilDestroyed, UntilDestroy } from "@psb/angular-tools";
+import { ApplicationFile } from "../../interfaces/application-file.inteface";
 
 @Component({
     selector: "send-application",
@@ -34,7 +32,8 @@ import { getNdsSum } from "./helpers";
     styleUrls: ["send-application.component.scss"],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class SendApplicationComponent extends OnDestroyMixin implements OnInit {
+@UntilDestroy()
+export class SendApplicationComponent implements OnInit {
     form = this.formService.createForm();
     ButtonType = ButtonType;
     SendApplicationFormField = SendApplicationFormField;
@@ -49,36 +48,36 @@ export class SendApplicationComponent extends OnDestroyMixin implements OnInit {
         private letterService: LetterService,
         private fileUploadService: FileUploadService,
         private errorHandlerService: ErrorHandlerService,
-    ) {
-        super();
-    }
+    ) { }
 
     ngOnInit(): void {
+        this.subscribeOnFormFieldsChanges();
+
+        this.form.patchValue(this.store.letterOfCredit);
+    }
+
+    private subscribeOnFormFieldsChanges(): void {
         merge(
             this.formService.contactPerson.valueChanges.pipe(
                 tap((contactPerson) => {
-                    this.store.letterOfCredit.contactPerson = this.form.controls
-                        .contactPerson.valid
+                    this.store.letterOfCredit.contactPerson = this.form.get(SendApplicationFormField.ContactPerson).valid
                         ? contactPerson
                         : "";
                 })
             ),
             this.formService.contactPhone.valueChanges.pipe(
                 tap((contactPhone) => {
-                    this.store.letterOfCredit.contactPhone = this.form.controls
-                        .contactPhone.valid
+                    this.store.letterOfCredit.contactPhone = this.form.get(SendApplicationFormField.ContactPhone).valid
                         ? contactPhone
                         : "";
                 })
             )
         )
-            .pipe(untilComponentDestroyed(this))
+            .pipe(takeUntilDestroyed(this))
             .subscribe();
-
-        this.form.patchValue(this.store.letterOfCredit);
     }
 
-    async handleSubmit() {
+    async handleSubmit(): Promise<void> {
         if (isFormValid(this.form)) {
             const clientId = this.storageService.getClientID();
             const branchId = this.storageService.getBranchID();
@@ -87,34 +86,9 @@ export class SendApplicationComponent extends OnDestroyMixin implements OnInit {
             from(this.getFiles()).pipe(
                 switchMap((files) => {
                     return this.letterService.apiLcDocumentsClientIdCreatePost$Plain({
-                        clientId, branchId, body: {
-                            total: this.store.letterOfCredit.paymentSum,
-                            account: this.store.letterOfCredit.payerAccount,
-                            contractorTitle: this.store.letterOfCredit.reciverName,
-                            contractorINN: this.store.letterOfCredit.reciverInn,
-                            bic: this.store.letterOfCredit.reciverBankBik,
-                            contractorAccount: this.store.letterOfCredit.payerAccount,
-                            contractDate: moment(this.store.letterOfCredit.contractDate).format('YYYY-MM-DD'),
-                            ndsValue: this.store.letterOfCredit.nds,
-                            ndsSum: getNdsSum(this.store.letterOfCredit.nds, this.store.letterOfCredit.paymentSum),
-                            contractTitleAndNumber: this.store.letterOfCredit.contract,
-                            contractSubject: this.store.letterOfCredit.contractInfo,
-                            contractFiles: files,
-                            lcEndDate: moment(this.store.letterOfCredit.endLocDate).format('YYYY-MM-DD'),
-                            lcDuration: Number(this.store.letterOfCredit.locDaysNumber),
-                            closingDocuments: this.store.letterOfCredit.closingDocs.map(doc => ({
-                                additionalRequirements: doc.additionalRequirements,
-                                documentsCount: Number(doc.amount),
-                                documentTitle: doc.document,
-                                originalOnly: doc.onlyOriginalDocument
-                            })),
-                            electronicSubmission: true,
-                            partialPayment: true,
-                            agreement: true,
-                            addToTemplates: true,
-                            contactPerson: this.store.letterOfCredit.contactPerson,
-                            contactPhone: this.store.letterOfCredit.contactPhone
-                        }
+                        clientId,
+                        branchId,
+                        body: this.store.getLcDocumentsClientIdCreatePayload(files)
                     })
                 }),
                 tap(() => {
@@ -134,13 +108,13 @@ export class SendApplicationComponent extends OnDestroyMixin implements OnInit {
 
                     return EMPTY;
                 }),
-                untilComponentDestroyed(this)
+                takeUntilDestroyed(this)
             ).subscribe()
         }
     }
 
-    private async getFiles() {
-        const files = [];
+    private async getFiles(): Promise<ApplicationFile[]> {
+        const files: ApplicationFile[] = [];
 
         for (const file of this.fileUploadService.files) {
             files.push({
@@ -161,7 +135,6 @@ export class SendApplicationComponent extends OnDestroyMixin implements OnInit {
                 component: IssueSuccessComponent,
             }
         };
-
         const dialogRef = this.dialogService.open<
             IBaseDialogData,
             any,
@@ -179,7 +152,7 @@ export class SendApplicationComponent extends OnDestroyMixin implements OnInit {
                         smbApp.router.navigateByUrl(smbPaths[SmbPage.Documents]);
                     }
                 }),
-                untilComponentDestroyed(this)
+                takeUntilDestroyed(this)
             )
             .subscribe();
     }

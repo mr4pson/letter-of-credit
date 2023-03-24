@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 
-import { FormatMoneyPipe, SecurePipe } from './pipes';
+import { SecurePipe } from './pipes';
 
 import {
     BannerModule,
@@ -17,6 +17,7 @@ import {
     NotificationModule,
     NumberInputModule,
     PhoneInputModule,
+    PictureModule,
     ScrollBarModule,
     SpinnerIconModule,
     TemplateTypeModule,
@@ -24,10 +25,10 @@ import {
     TextModule,
     TooltipModule,
 } from '@psb/fe-ui-kit';
+import { MoneyAmountModule } from '@psb/angular-tools';
 
 @NgModule({
     declarations: [
-        FormatMoneyPipe,
         SecurePipe,
     ],
     imports: [
@@ -51,6 +52,8 @@ import {
         BaseModalModule,
         PhoneInputModule,
         NotificationModule,
+        PictureModule,
+        MoneyAmountModule
     ],
     exports: [
         TooltipModule,
@@ -73,8 +76,9 @@ import {
         BaseModalModule,
         PhoneInputModule,
         NotificationModule,
-        FormatMoneyPipe,
         SecurePipe,
+        PictureModule,
+        MoneyAmountModule,
     ],
 })
 export class PsbModule { }

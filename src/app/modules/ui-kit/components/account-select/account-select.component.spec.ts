@@ -9,7 +9,7 @@ import { AccountSelectComponent } from './account-select.component';
 import { PsbModule } from 'src/app/modules/psb/psb.module';
 import { ClientAccount } from 'src/app/modules/issue/interfaces/client-account.interface';
 import { ClickOutsideModule } from '@psb/angular-tools';
-import { clickHeader, clickOutside, getItemsWrapper } from './testing';
+import { clickHeader, clickOutside, getItemsWrapper } from './testing.utils';
 
 enum AccountSelectFormField {
     Account = "account"

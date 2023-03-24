@@ -31,9 +31,9 @@ export class ClosingDocComponent implements ControlValueAccessor, OnInit {
         this.delete.emit();
     }
 
-    onChange = (index: number) => { };
+    onChange = (index: number): void => { };
 
-    onTouched = () => { };
+    onTouched = (): void => { };
 
     writeValue(index: number): void {
         this.onChange(index);

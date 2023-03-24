@@ -4,9 +4,9 @@
         class="agenda-item"
     >
         <div class="header">
-            <div class="number">{{ getAgendaItemNumber(i) }}</div>
+            <div class="number">{{ i + 1 }}</div>
             <div
-                *ngIf="checkItemHasDelimiter(i)"
+                *ngIf="i < agendaItems.length - 1"
                 class="delimiter"
             ></div>
         </div>

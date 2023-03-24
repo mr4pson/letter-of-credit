@@ -23,3 +23,4 @@ export * from './smb/smb-payment.interface';
 export * from './smb/smb-receiver-autocomplete-component.interface';
 export * from './smb/smb-save-publish-block-component.interface';
 export * from './smb/smb-spinner-service.interface';
+export * from './smb/smb-bank-info.interface';

@@ -20,11 +20,8 @@ import { SafePaymentFormField } from "./enums/safe-payment-form-field.enum";
 import { NgService } from "src/app/services";
 import { SafePaymentFormService } from "./safe-payment-form.service";
 import { SafePaymentService } from "./services/safe-payment.service";
-import {
-    OnDestroyMixin,
-    untilComponentDestroyed,
-} from "@w11k/ngx-componentdestroyed";
 import { tap } from "rxjs/operators";
+import { takeUntilDestroyed, UntilDestroy } from "@psb/angular-tools";
 
 @Component({
     selector: "safe-payment",
@@ -32,7 +29,8 @@ import { tap } from "rxjs/operators";
     styleUrls: ["safe-payment.component.scss"],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class SafePaymentComponent extends OnDestroyMixin {
+@UntilDestroy()
+export class SafePaymentComponent {
     @ViewChild(SafePaymentEmailComponent) emailComponent: HTMLElement;
 
     SafePaymentButton = SafePaymentButton;
@@ -45,31 +43,30 @@ export class SafePaymentComponent extends OnDestroyMixin {
 
     constructor(
         public stateManager: SafePaymentStateManagerService,
-        private store: StoreService,
+        public store: StoreService,
         private dialogRef: DialogRefService<SafePaymentButton>,
         private router: Router,
         private formService: SafePaymentFormService,
         private ngService: NgService,
         private safePaymentService: SafePaymentService
     ) {
-        super();
         this.stateManager.state = SafePayStates.ShowAgenda;
     }
 
     getReliableColor(): string {
         return (
-            RELIABLE_MAP.color[this.store.reciverStatus] ?? ReliableSign.reliableGray
+            RELIABLE_MAP.color[this.store.receiverStatus] ?? ReliableSign.reliableGray
         );
     }
 
     getReliableText(): string {
         return (
-            RELIABLE_MAP.text[this.store.reciverStatus] ??
+            RELIABLE_MAP.text[this.store.receiverStatus] ??
             ReliableSign.reliableGrayText
         );
     }
 
-    doSafePay() {
+    doSafePay(): void {
         this.dialogRef.close(SafePaymentButton.DoPay);
         this.ngService.hideSmbDocuments();
         this.store.isIssueVissible = true;
@@ -79,7 +76,7 @@ export class SafePaymentComponent extends OnDestroyMixin {
         }, 200);
     }
 
-    closeDialog(payButton: SafePaymentButton = SafePaymentButton.OrdinalPay) {
+    closeDialog(payButton: SafePaymentButton = SafePaymentButton.OrdinalPay): void {
         this.dialogRef.close(payButton);
     }
 
@@ -98,12 +95,12 @@ export class SafePaymentComponent extends OnDestroyMixin {
                 tap((resp) => {
                     this.safePaymentService.loading = false;
                 }),
-                untilComponentDestroyed(this)
+                takeUntilDestroyed(this)
             )
             .subscribe();
     }
 
-    showEmail() {
+    showEmail(): void {
         this.stateManager.state = SafePayStates.ShowEmail;
     }
 }

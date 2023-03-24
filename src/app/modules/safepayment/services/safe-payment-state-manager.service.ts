@@ -5,7 +5,7 @@ import { SafePayStates } from '../enums/safe-payment.enum';
 @Injectable()
 export class SafePaymentStateManagerService {
     private currentState: SafePayStates = SafePayStates.ShowAgenda;
-    get state() {
+    get state(): SafePayStates {
         return this.currentState;
     }
     set state(state: SafePayStates) {

@@ -8,10 +8,13 @@ import { AccountSelectComponent } from './components/account-select/account-sele
 import { NotificationModule } from './components/notification/notification.module';
 
 import { ClickOutsideModule } from '@psb/angular-tools';
+import { FormErrorPipe } from './pipes/form-error.pipe';
 
 @NgModule({
     declarations: [
         AccountSelectComponent,
+
+        FormErrorPipe,
     ],
     imports: [
         BrowserAnimationsModule,

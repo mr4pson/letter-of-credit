@@ -21,6 +21,5 @@ export const isFormValid = (formGroup: FormGroup): boolean => {
         }
 
         return accum && control.valid;
-        // tslint:disable-next-line: align
     }, true);
 };

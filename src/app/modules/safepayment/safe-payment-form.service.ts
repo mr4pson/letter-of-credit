@@ -1,5 +1,6 @@
 import { Injectable } from "@angular/core";
 import { FormBuilder, FormGroup } from "@angular/forms";
+import { SafePaymentFormField } from "./enums/safe-payment-form-field.enum";
 
 @Injectable()
 export class SafePaymentFormService {
@@ -9,9 +10,9 @@ export class SafePaymentFormService {
         private formBuilder: FormBuilder,
     ) { }
 
-    createForm() {
+    createForm(): FormGroup {
         this.form = this.formBuilder.group({
-            dontWantSafePayment: [false],
+            [SafePaymentFormField.DontWantSafePayment]: [false],
         });
 
         return this.form;

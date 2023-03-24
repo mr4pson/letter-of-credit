@@ -1,12 +1,12 @@
 import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
-import { BehaviorSubject } from "rxjs";
+import { BehaviorSubject, Observable } from "rxjs";
 
 @Injectable()
 export class SafePaymentService {
     private loading$$ = new BehaviorSubject(false);
     loading$ = this.loading$$.asObservable();
-    get loading() {
+    get loading(): boolean {
         return this.loading$$.getValue();
     }
     set loading(value) {
@@ -14,7 +14,8 @@ export class SafePaymentService {
     }
 
     constructor(private http: HttpClient) { }
-    getMaterials(email: string) {
+
+    getMaterials(email: string): Observable<Object> {
         return this.http.post(`/api/LC/sendDeteiledInformation?email=${email}`, {});
     }
 }

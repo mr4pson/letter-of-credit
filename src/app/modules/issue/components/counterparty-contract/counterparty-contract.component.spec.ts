@@ -14,7 +14,7 @@ import { FileUploadService } from '../../services/file-upload.service';
 import { FileUploaded } from '../../interfaces/file-uploaded.interface';
 import { NDS_LIST } from '../../constants/constants';
 import { CounterpartyContractFormService } from './counterparty-contract-form.service';
-import { clickNoVatBtn, clickSubmitButton, clickVatBtn } from './testing';
+import { clickNoVatBtn, clickSubmitButton, clickVatBtn } from './testing.utils';
 
 import { PsbModule } from 'src/app/modules/psb/psb.module';
 import { UiKitModule } from 'src/app/modules/ui-kit/ui-kit.module';

@@ -15,7 +15,7 @@
         <div class="commission">
             <span>Комиссия за выпуск аккредитива:</span>
             <span class="sum">
-                {{ (commission$ | async) | formatMoney }}
+                {{ (commission$ | async) | psbMoneyAmount:'₽' }}
             </span>
             <psb-tooltip
                 class="tooltip"

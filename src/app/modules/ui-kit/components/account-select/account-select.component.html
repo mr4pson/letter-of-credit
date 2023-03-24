@@ -32,7 +32,7 @@
                         </div>
                         <div class="content-col">
                             <ng-container *ngIf="selectedAccountObject.value?.balance !== null">
-                                {{ selectedAccountObject.value?.balance | formatMoney }}
+                                {{ selectedAccountObject.value?.balance | psbMoneyAmount:'₽' }}
                             </ng-container>
                         </div>
                     </div>
@@ -72,7 +72,7 @@
         </div>
     </div>
     <psb-hint
-        *ngIf="error || description"
+        *ngIf="formControl | formError as error"
         [error]="!!error"
     >
         {{ error || description }}

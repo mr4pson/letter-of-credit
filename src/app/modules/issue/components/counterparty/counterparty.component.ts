@@ -1,5 +1,4 @@
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
-import { OnDestroyMixin, untilComponentDestroyed } from '@w11k/ngx-componentdestroyed';
 import { catchError, filter, map, switchMap, tap } from 'rxjs/operators';
 import { EMPTY, merge, Observable, of } from 'rxjs';
 import { Router } from '@angular/router';
@@ -24,6 +23,7 @@ import {
     GET_CLIENT_LIST_ERROR_MESSAGE,
     GET_PARTER_LIST_ERROR_MESSAGE
 } from './constants';
+import { takeUntilDestroyed, UntilDestroy } from '@psb/angular-tools';
 
 @Component({
     selector: 'counterparty',
@@ -31,22 +31,16 @@ import {
     styleUrls: ['counterparty.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class СounterpartyComponent extends OnDestroyMixin implements OnInit {
-    clientCompanyName = this.store.letterOfCredit.reciverName;
-    reciverBankName = this.store.letterOfCredit.reciverBankName;
+@UntilDestroy()
+export class СounterpartyComponent implements OnInit {
+    clientCompanyName = this.store.letterOfCredit.receiverName;
+    receiverBankName = this.store.letterOfCredit.receiverBankName;
     ButtonType = ButtonType;
     form = this.formService.createForm();
     CounterpartyFormField = CounterpartyFormField;
-
     clients$: Observable<Client[]>;
 
-    private partners$: Observable<Partner[]> = this.partnersService.getPartners().pipe(
-        catchError(() => {
-            this.errorHandlerService.showErrorMessage(GET_PARTER_LIST_ERROR_MESSAGE);
-
-            return of<Partner[]>([]);
-        }),
-    );
+    private partners$: Observable<Partner[]>;
 
     constructor(
         private store: StoreService,
@@ -57,7 +51,27 @@ export class СounterpartyComponent extends OnDestroyMixin implements OnInit {
         private router: Router,
         private formService: CounterpartyFormService,
     ) {
-        super();
+        this.initObservables();
+    }
+
+    ngOnInit(): void {
+        this.form.patchValue({
+            inn: this.store.letterOfCredit.receiverInn,
+            bik: this.store.letterOfCredit.receiverBankBik,
+            account: this.store.letterOfCredit.receiverAccount,
+        });
+
+        this.subscribeOnFormFieldsChanges();
+    }
+
+    private initObservables(): void {
+        this.partners$ = this.partnersService.getPartners().pipe(
+            catchError(() => {
+                this.errorHandlerService.showErrorMessage(GET_PARTER_LIST_ERROR_MESSAGE);
+
+                return of<Partner[]>([]);
+            }),
+        );
         this.clients$ = this.formService.innControl.valueChanges.pipe(
             filter((inn: string) => inn?.length === 10 || inn?.length === 12),
             switchMap((inn: string) => (
@@ -70,22 +84,20 @@ export class СounterpartyComponent extends OnDestroyMixin implements OnInit {
                 )
             )),
             map(clients => (
-                clients.map(client => ({
-                    ...client,
-                    innFound: client.inn.substring(0, this.formService.innControl.value.length),
-                    innTail: client.inn.substring(this.formService.innControl.value.length),
-                }))
+                clients.map(client => {
+                    const length = this.formService.innControl.value.length;
+
+                    return {
+                        ...client,
+                        innFound: client.inn.substring(0, length),
+                        innTail: client.inn.substring(length),
+                    };
+                })
             )),
         );
     }
 
-    ngOnInit() {
-        this.form.patchValue({
-            inn: this.store.letterOfCredit.reciverInn,
-            bik: this.store.letterOfCredit.reciverBankBik,
-            account: this.store.letterOfCredit.reciverAccount,
-        });
-
+    private subscribeOnFormFieldsChanges(): void {
         merge(
             this.formService.bikControl.valueChanges.pipe(
                 switchMap(() => {
@@ -95,23 +107,23 @@ export class СounterpartyComponent extends OnDestroyMixin implements OnInit {
                         return this.accountService.searchBankByBik(this.formService.bikControl.value);
                     }
 
-                    this.store.letterOfCredit.reciverBankName = '';
-                    this.reciverBankName = '';
+                    this.store.letterOfCredit.receiverBankName = '';
+                    this.receiverBankName = '';
                     return of<BankSearch>(null);
                 }),
                 tap((bank) => {
                     if (!bank) {
                         this.formService.bikControl.setErrors({ incorrect: BANK_NOT_DEFINED_CONTROL_MESSAGE });
                         this.formService.bikControl.markAsTouched();
-                        this.store.letterOfCredit.reciverBankName = '';
-                        this.reciverBankName = '';
+                        this.store.letterOfCredit.receiverBankName = '';
+                        this.receiverBankName = '';
 
                         return;
                     }
 
-                    this.store.letterOfCredit.reciverBankName = bank.fullName;
-                    this.reciverBankName = bank.fullName;
-                    this.store.letterOfCredit.reciverBankBik = this.formService.bikControl.value;
+                    this.store.letterOfCredit.receiverBankName = bank.fullName;
+                    this.receiverBankName = bank.fullName;
+                    this.store.letterOfCredit.receiverBankBik = this.formService.bikControl.value;
                 }),
                 catchError(() => {
                     this.errorHandlerService.showErrorMessage(GET_BANK_INFO_ERROR_MESSAGE);
@@ -121,34 +133,34 @@ export class СounterpartyComponent extends OnDestroyMixin implements OnInit {
             ),
             this.formService.accountControl.valueChanges.pipe(
                 tap(() => {
-                    this.store.letterOfCredit.reciverAccount = this.formService.accountControl.valid ?
+                    this.store.letterOfCredit.receiverAccount = this.formService.accountControl.valid ?
                         this.formService.accountControl.value : '';
                 }),
             ),
         ).pipe(
-            untilComponentDestroyed(this),
+            takeUntilDestroyed(this),
         ).subscribe();
     }
 
-    selectClient(client: Client) {
+    selectClient(client: Client): void {
         this.clientCompanyName = '';
 
         if (client) {
             this.formService.innControl.setValue(client.inn);
             this.clientCompanyName = client.shortName;
-            this.store.letterOfCredit.reciverInn = client.inn;
-            this.store.letterOfCredit.reciverName = client.shortName;
+            this.store.letterOfCredit.receiverInn = client.inn;
+            this.store.letterOfCredit.receiverName = client.shortName;
 
             this.partners$.pipe(
                 filter(partners => !!partners?.length),
                 tap((partners) => {
-                    const curPartner: Partner = partners.find(partner => partner.inn === this.store.letterOfCredit.reciverInn);
+                    const curPartner: Partner = partners.find(partner => partner.inn === this.store.letterOfCredit.receiverInn);
                     if (curPartner?.banks && curPartner?.banks.length > 0) {
                         this.formService.bikControl.setValue(curPartner.banks[0].bik);
                         this.formService.accountControl.setValue(curPartner.banks[0].acc);
                     }
                 }),
-                untilComponentDestroyed(this),
+                takeUntilDestroyed(this),
             ).subscribe();
         }
     }
@@ -157,7 +169,7 @@ export class СounterpartyComponent extends OnDestroyMixin implements OnInit {
         if (isFormValid(this.form)) {
             this.stepService.setStepDescription(
                 paths[Page.COUNTERPARTY],
-                this.store.letterOfCredit.reciverBankName,
+                this.store.letterOfCredit.receiverBankName,
             );
             this.router.navigateByUrl(paths[Page.COUNTERPARTY_CONTRACT]);
         }

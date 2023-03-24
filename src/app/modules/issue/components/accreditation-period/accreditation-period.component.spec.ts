@@ -11,7 +11,7 @@ import { ClosingDocComponent } from './closing-doc/closing-doc.component';
 import { Page, paths } from '../../constants/routes';
 import { AccreditationPeriodFormField } from '../../enums/accreditation-period-form-field.enum';
 import { AccreditationPeriodFormService } from './accreditation-period-form.service';
-import { clickAddDocBtn, clickRemoveBtn, clickSubmitButton, getClosingDocs } from './testing';
+import { clickAddDocBtn, clickRemoveBtn, clickSubmitButton, getClosingDocs } from './testing.utils';
 
 import { StoreService } from 'src/app/services';
 import { PsbModule } from 'src/app/modules/psb/psb.module';
@@ -87,17 +87,17 @@ describe('AccreditationPeriodComponent', () => {
     });
 
     it('При задании даты окончания аккредитива как 12/20/2022 срок действия аккредитива в днях до 221', () => {
-        component.form.controls[AccreditationPeriodFormField.EndLocDate].patchValue(new Date('12/20/2022'));
+        component.form.get(AccreditationPeriodFormField.EndLocDate).patchValue(new Date('12/20/2022'));
         fixture.detectChanges();
 
-        expect(component.form.controls[AccreditationPeriodFormField.LocDaysNumber].value).toEqual('221');
+        expect(component.form.get(AccreditationPeriodFormField.LocDaysNumber).value).toEqual('221');
     });
 
     it('При задании срока действия аккредитива в днях как 221 задает дату окончания аккредитива как 12/20/2022', () => {
-        component.form.controls[AccreditationPeriodFormField.LocDaysNumber].patchValue('221');
+        component.form.get(AccreditationPeriodFormField.LocDaysNumber).patchValue('221');
         fixture.detectChanges();
 
-        expect(component.form.controls[AccreditationPeriodFormField.EndLocDate].value).toEqual(new Date('12/20/2022'));
+        expect(component.form.get(AccreditationPeriodFormField.EndLocDate).value).toEqual(new Date('12/20/2022'));
     });
 
     it('При patchValue форма принимает аналогичное значение заданному', () => {

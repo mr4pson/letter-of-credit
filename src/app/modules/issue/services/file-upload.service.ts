@@ -18,7 +18,7 @@ export class FileUploadService {
         }),
     );
 
-    get errorMessage() {
+    get errorMessage(): string {
         return this.errorMessage$$.getValue();
     }
 
@@ -29,7 +29,7 @@ export class FileUploadService {
     private files$$ = new BehaviorSubject<FileUploaded[]>([]);
     files$ = this.files$$.asObservable();
 
-    get files() {
+    get files(): FileUploaded[] {
         return this.files$$.getValue();
     }
 

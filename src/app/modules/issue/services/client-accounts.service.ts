@@ -4,12 +4,13 @@ import { map } from 'rxjs/operators';
 import { ClientAccount } from '../interfaces/client-account.interface';
 
 import { AccountService } from 'src/app/services';
+import { Observable } from 'rxjs';
 
 @Injectable()
 export class ClientAccountService {
     constructor(private accountService: AccountService) { }
 
-    getClientAccounts() {
+    getClientAccounts(): Observable<ClientAccount[]> {
         return this.accountService.getAccountList().pipe(
             map(accounts => (
                 accounts.map<ClientAccount>(account => ({

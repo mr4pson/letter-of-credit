@@ -43,6 +43,7 @@ export abstract class CustomControlAccessorDirective implements ControlValueAcce
     ngOnInit(): void {
         if (this.ngControl instanceof FormControlName) {
             const formGroupDirective = this.ngControl.formDirective as FormGroupDirective;
+
             if (formGroupDirective) {
                 this.formControl = formGroupDirective.form.controls[this.ngControl.name] as FormControl;
             }
@@ -50,6 +51,7 @@ export abstract class CustomControlAccessorDirective implements ControlValueAcce
             this.formControl = this.ngControl.control;
         } else if (this.ngControl instanceof NgModel) {
             this.formControl = this.ngControl.control;
+
             this.formControl.valueChanges.pipe(
                 tap(x => this.ngControl.viewToModelUpdate(this.formControl.value)),
                 takeUntil(this.destroyed$$),

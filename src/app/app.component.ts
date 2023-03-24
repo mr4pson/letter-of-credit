@@ -1,6 +1,5 @@
 import { ChangeDetectionStrategy, Component, Renderer2 } from '@angular/core';
 import { NavigationEnd, Router } from '@angular/router';
-import { OnDestroyMixin, untilComponentDestroyed } from '@w11k/ngx-componentdestroyed';
 import { EMPTY, forkJoin, from, merge, Observable, of } from 'rxjs';
 import { catchError, debounceTime, delay, filter, map, pairwise, switchMap, takeUntil, tap } from 'rxjs/operators';
 
@@ -21,6 +20,7 @@ import { SmbPaymentFormComponent } from './interfaces';
 
 import { DialogService, DialogSize, IBaseDialogData, SimpleDialogComponent } from '@psb/fe-ui-kit';
 import { SafePaymentStateManagerService } from './modules/safepayment/services/safe-payment-state-manager.service';
+import { takeUntilDestroyed, UntilDestroy } from '@psb/angular-tools';
 
 @Component({
     selector: 'loc-inner',
@@ -28,7 +28,8 @@ import { SafePaymentStateManagerService } from './modules/safepayment/services/s
     styleUrls: ['app.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class AppComponent extends OnDestroyMixin {
+@UntilDestroy()
+export class AppComponent {
     isIssueVissible$ = this.store.isIssueVissible$;
 
     constructor(
@@ -41,20 +42,21 @@ export class AppComponent extends OnDestroyMixin {
         private dialogService: DialogService,
         public stateManager: SafePaymentStateManagerService,
     ) {
-        super();
 
         this.ngService.setRenderer(this.renderer);
 
         this.detectIfSmbAppInitialized();
+        // this.openSafePaymentDialog({} as any);
     }
 
-    detectIfSmbAppInitialized() {
+    detectIfSmbAppInitialized(): void {
         const smbApp = this.ngService.getSmbAppComponent();
 
         if (smbApp === undefined) {
             setTimeout(() => {
                 this.detectIfSmbAppInitialized();
             }, 500);
+
             return;
         }
 
@@ -63,9 +65,10 @@ export class AppComponent extends OnDestroyMixin {
 
     handleOpenIssue(): void {
         this.store.restoreDefaultState();
-
         this.ngService.hideSmbDocuments();
+
         this.store.isIssueVissible = true;
+
         this.router.navigateByUrl(paths[Page.ACCREDITATION_AMOUNT]);
     }
 
@@ -104,6 +107,7 @@ export class AppComponent extends OnDestroyMixin {
                     }
 
                     this.store.payment = smbPaymentForm.payment;
+
                     smbPaymentForm.popupService.dialogService.closeAll();
                     this.openSafePaymentDialog(smbPaymentForm);
                 };
@@ -113,6 +117,7 @@ export class AppComponent extends OnDestroyMixin {
                     save: smbSavePublishBlock.save,
                     sign: smbSavePublishBlock.sign,
                 }
+
                 smbSavePublishBlock.send = handleSubmit.bind(smbSavePublishBlock);
                 smbSavePublishBlock.save = handleSubmit.bind(smbSavePublishBlock);
                 smbSavePublishBlock.sign = handleSubmit.bind(smbSavePublishBlock);
@@ -128,7 +133,7 @@ export class AppComponent extends OnDestroyMixin {
         ).subscribe();
     }
 
-    private navigationChangeObservable = (event: NavigationEnd | Router): Observable<any> => {
+    private navigationChangeObservable = (event: NavigationEnd | Router): Observable<boolean> => {
         this.store.isIssueVissible = false;
         this.store.isOrdinalPayment = false;
 
@@ -239,7 +244,7 @@ export class AppComponent extends OnDestroyMixin {
                             break;
                     }
                 }),
-                untilComponentDestroyed(this)
+                takeUntilDestroyed(this)
             )
             .subscribe();
     }

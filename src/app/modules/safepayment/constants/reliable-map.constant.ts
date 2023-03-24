@@ -1,14 +1,14 @@
 import { ReliableSign } from '../enums/reliable-sign.enum';
 
-import { ReciverStatus } from 'src/app/enums/reciver-status.enum';
+import { ReceiverStatus } from 'src/app/enums/receiver-status.enum';
 
 export const RELIABLE_MAP = {
     text: {
-        [ReciverStatus.Unreliable]: ReliableSign.reliableRedText,
-        [ReciverStatus.PartlyReliable]: ReliableSign.reliableYellowText,
+        [ReceiverStatus.Unreliable]: ReliableSign.reliableRedText,
+        [ReceiverStatus.PartlyReliable]: ReliableSign.reliableYellowText,
     },
     color: {
-        [ReciverStatus.Unreliable]: ReliableSign.reliableRed,
-        [ReciverStatus.PartlyReliable]: ReliableSign.reliableYellow,
+        [ReceiverStatus.Unreliable]: ReliableSign.reliableRed,
+        [ReceiverStatus.PartlyReliable]: ReliableSign.reliableYellow,
     },
 };

@@ -11,18 +11,17 @@ export class AccreditationAmountFormService {
     form: FormGroup;
 
     get issueSum(): number {
-        return Number(this.form.controls[AccreditationAmountFormField.IssueSum].value);
+        return Number(this.form.get(AccreditationAmountFormField.IssueSum).value);
     }
 
     constructor(
         private formBuilder: FormBuilder,
     ) { }
 
-    createForm() {
+    createForm(): FormGroup {
         this.form = this.formBuilder.group({
-            issueSum: [null, {
+            [AccreditationAmountFormField.IssueSum]: [null, {
                 validators: [
-                    Validators.required,
                     getRequiredFormControlValidator(ACCREDIT_SUM_CONTROL_MESSAGE),
                     getMinMaxFormControlValidator({
                         min: 1,
@@ -33,8 +32,7 @@ export class AccreditationAmountFormService {
                 updateOn: 'blur',
             }
             ],
-            selectedAccount: [null, [
-                Validators.required,
+            [AccreditationAmountFormField.SelectedAccount]: [null, [
                 getRequiredFormControlValidator(SELECT_ACCOUNT_CONTROL_MESSAGE)
             ]
             ],

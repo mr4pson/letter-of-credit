@@ -11,12 +11,13 @@ import { AccreditationAmountComponent } from './accreditation-amount.component';
 import { ClientAccountService } from '../../services/client-accounts.service';
 import { Page, paths } from '../../constants/routes';
 import { AccreditationAmountFormService } from './accreditation-amount-form.service';
-import { clickSubmitButton } from './testIng';
+import { clickSubmitButton } from './testIng.utils';
 
 import { AccountService, ErrorHandlerService, StoreService } from 'src/app/services';
 import { PsbModule } from 'src/app/modules/psb/psb.module';
 import { UiKitModule } from 'src/app/modules/ui-kit/ui-kit.module';
 import { isFormValid } from 'src/app/utils';
+import { AccreditationAmountFormField } from '../../enums/accreditation-amount-form-field.enum';
 
 describe('AccreditationAmountComponent', () => {
     let component: AccreditationAmountComponent;
@@ -102,7 +103,7 @@ describe('AccreditationAmountComponent', () => {
     it('При задании суммы комиссии как 100 изменяет значение комиссии до 10', fakeAsync(() => {
         const commissionValue = 10;
         commission$$.next(commissionValue);
-        component.form.controls.issueSum.patchValue('100');
+        component.form.get(AccreditationAmountFormField.IssueSum).patchValue('100');
         fixture.detectChanges();
         tick();
 
@@ -113,7 +114,7 @@ describe('AccreditationAmountComponent', () => {
         accounts$$.next(accounts);
         tick();
 
-        expect(component.form.controls.selectedAccount.value).toEqual(accounts[0]);
+        expect(component.form.get(AccreditationAmountFormField.SelectedAccount).value).toEqual(accounts[0]);
     }));
 
     it('Вызывает handleSubmit при сабмите формы', () => {

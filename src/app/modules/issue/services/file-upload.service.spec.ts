@@ -62,7 +62,6 @@ describe('FileUploadService', () => {
             rejectedFiles: [],
         } as NgxDropzoneChangeEvent;
 
-        // service.selectFiles(seletFilesEvent);
         service.selectFiles(seletFilesEvent);
         service.errorMessage$.subscribe();
         tick(1000);

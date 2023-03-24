@@ -60,7 +60,8 @@
         display: flex;
         flex-direction: column;
 
-        span {
+        .title,
+        .description {
             line-height: 18px;
         }
     }

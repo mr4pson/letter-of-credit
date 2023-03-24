@@ -3,6 +3,7 @@ import { Page, paths } from './routes';
 import { Step } from '../interfaces/step.interface';
 
 import { SelectedItem } from '@psb/fe-ui-kit';
+import { LocaleDateConfig } from '../interfaces/locale-date-config.inteface';
 
 export const NDS_LIST: Array<SelectedItem<number>> = [
     { id: 1, label: '0%', value: 0 },
@@ -17,11 +18,11 @@ export enum FileError {
 }
 
 export const DEFAULT_LOC_INSTANCE = {
-    reciverInn: '',
-    reciverName: '',
-    reciverBankBik: '',
-    reciverBankName: '',
-    reciverAccount: '',
+    receiverInn: '',
+    receiverName: '',
+    receiverBankBik: '',
+    receiverBankName: '',
+    receiverAccount: '',
     contractDate: null,
     contract: '',
     contractInfo: '',
@@ -59,3 +60,8 @@ export const STEPS: Step[] = [
         url: paths[Page.SEND_APPLICATION],
     },
 ];
+
+export const ruLocaleDateConfig: LocaleDateConfig = {
+    locale: 'ru-RU',
+    config: { year: 'numeric', month: 'long', day: 'numeric' }
+};

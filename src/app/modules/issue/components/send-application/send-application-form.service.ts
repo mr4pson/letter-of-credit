@@ -1,33 +1,34 @@
 import { Injectable } from "@angular/core";
-import { FormBuilder, FormGroup } from "@angular/forms";
+import { AbstractControl, FormBuilder, FormGroup } from "@angular/forms";
 import { getRequiredFormControlValidator } from "@psb/validations/required";
+import { SendApplicationFormField } from "../../enums/send-application-form-field.enum";
 import { SET_PHONE_NUMBER_CONTROL_MESSAGE, SET_USER_INFO_CONTROL_MESSAGE } from "./constants";
 
 @Injectable()
 export class SendApplicationFormService {
     form: FormGroup;
 
-    get contactPerson() {
-        return this.form.controls.contactPerson;
+    get contactPerson(): AbstractControl {
+        return this.form.get(SendApplicationFormField.ContactPerson)
     }
 
-    get contactPhone() {
-        return this.form.controls.contactPhone;
+    get contactPhone(): AbstractControl {
+        return this.form.get(SendApplicationFormField.ContactPhone)
     }
 
     constructor(
         private formBuilder: FormBuilder,
     ) { }
 
-    createForm() {
+    createForm(): FormGroup {
         this.form = this.formBuilder.group({
-            agreeWithTerms: [true],
-            createLocTemplate: [true],
-            contactPerson: ['', [
+            [SendApplicationFormField.AgreeWithTerms]: [true],
+            [SendApplicationFormField.CreateLocTemplate]: [true],
+            [SendApplicationFormField.ContactPerson]: ['', [
                 getRequiredFormControlValidator(SET_USER_INFO_CONTROL_MESSAGE),
             ]
             ],
-            contactPhone: ['', [
+            [SendApplicationFormField.ContactPhone]: ['', [
                 getRequiredFormControlValidator(SET_PHONE_NUMBER_CONTROL_MESSAGE),
             ]
             ],

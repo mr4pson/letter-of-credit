@@ -1,6 +1,5 @@
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { OnDestroyMixin, untilComponentDestroyed } from '@w11k/ngx-componentdestroyed';
 import { tap } from 'rxjs/operators';
 
 import { StepService } from './services/step.service';
@@ -8,6 +7,7 @@ import { StepService } from './services/step.service';
 import { ButtonType } from '@psb/fe-ui-kit/src/components/button';
 import { NgService } from 'src/app/services/ng.service';
 import { StoreService } from 'src/app/services/store.service';
+import { takeUntilDestroyed, UntilDestroy } from '@psb/angular-tools';
 
 @Component({
     selector: 'loc-issue',
@@ -15,7 +15,8 @@ import { StoreService } from 'src/app/services/store.service';
     styleUrls: ['issue.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class IssueComponent extends OnDestroyMixin implements OnInit {
+@UntilDestroy()
+export class IssueComponent implements OnInit {
     ButtonType = ButtonType;
     steps = this.stepService.steps;
     currentUrl: string;
@@ -25,16 +26,14 @@ export class IssueComponent extends OnDestroyMixin implements OnInit {
         private stepService: StepService,
         private ngService: NgService,
         private store: StoreService,
-    ) {
-        super();
-    }
+    ) { }
 
     ngOnInit(): void {
         this.stepService.currentUrl$.pipe(
             tap((currentUrl) => {
                 this.currentUrl = currentUrl;
             }),
-            untilComponentDestroyed(this),
+            takeUntilDestroyed(this),
         ).subscribe();
     }
 

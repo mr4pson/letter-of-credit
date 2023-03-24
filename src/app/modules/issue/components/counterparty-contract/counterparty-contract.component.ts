@@ -1,11 +1,10 @@
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { tap } from 'rxjs/operators';
 import { merge } from 'rxjs';
-import { OnDestroyMixin, untilComponentDestroyed } from '@w11k/ngx-componentdestroyed';
 import { NgxDropzoneChangeEvent } from 'ngx-dropzone';
 import { Router } from '@angular/router';
 
-import { NDS_LIST } from '../../constants/constants';
+import { NDS_LIST, ruLocaleDateConfig } from '../../constants/constants';
 import { FileUploadService } from '../../services/file-upload.service';
 import { FileUploaded } from '../../interfaces/file-uploaded.interface';
 import { Page, paths } from '../../constants/routes';
@@ -18,6 +17,7 @@ import { SimplebarAngularComponent } from 'simplebar-angular/lib/simplebar-angul
 import { StoreService } from 'src/app/services/store.service';
 import { isFormValid } from 'src/app/utils';
 import { CounterpartyContractFormService } from './counterparty-contract-form.service';
+import { takeUntilDestroyed } from '@psb/angular-tools';
 
 const docPreviewSrc = require('./doc-preview.png').default;
 
@@ -27,7 +27,7 @@ const docPreviewSrc = require('./doc-preview.png').default;
     styleUrls: ['counterparty-contract.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class CounterpartyContractComponent extends OnDestroyMixin implements OnInit {
+export class CounterpartyContractComponent implements OnInit {
     files$ = this.fileUploadService.files$;
     errorMessage$ = this.fileUploadService.errorMessage$;
     form = this.formService.createForm();
@@ -44,12 +44,15 @@ export class CounterpartyContractComponent extends OnDestroyMixin implements OnI
         private router: Router,
         private stepService: StepService,
         private formService: CounterpartyContractFormService,
-    ) {
-        super();
-    }
+    ) { }
 
     ngOnInit(): void {
         this.form.patchValue(this.store.letterOfCredit);
+
+        this.subscribeOnFormFieldsChanges();
+    }
+
+    private subscribeOnFormFieldsChanges(): void {
         merge(
             this.formService.selectedNdsControl.valueChanges.pipe(
                 tap((title: string) => {
@@ -82,7 +85,7 @@ export class CounterpartyContractComponent extends OnDestroyMixin implements OnI
                 }),
             ),
         ).pipe(
-            untilComponentDestroyed(this),
+            takeUntilDestroyed(this),
         ).subscribe();
     }
 
@@ -118,8 +121,8 @@ export class CounterpartyContractComponent extends OnDestroyMixin implements OnI
     handleSubmit(): void {
         if (isFormValid(this.form)) {
             const date = this.formService.contractDateControl.value.toLocaleDateString(
-                'ru-RU',
-                { year: 'numeric', month: 'long', day: 'numeric' },
+                ruLocaleDateConfig.locale,
+                ruLocaleDateConfig.config
             );
 
             const stepDescription = `№${this.store.letterOfCredit.contract} до ${date}`;

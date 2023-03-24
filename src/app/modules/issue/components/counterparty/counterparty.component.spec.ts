@@ -11,12 +11,13 @@ import { СounterpartyComponent } from './counterparty.component';
 import { PartnersService } from '../../services/partners.service';
 import { CounterpartyFormService } from './counterparty-form.service';
 import { Page, paths } from '../../constants/routes';
-import { clickSubmitButton } from './testing';
+import { clickSubmitButton } from './testing.utils';
 
 import { PsbModule } from 'src/app/modules/psb/psb.module';
 import { UiKitModule } from 'src/app/modules/ui-kit/ui-kit.module';
 import { AccountService, ErrorHandlerService, StoreService } from 'src/app/services';
 import { isFormValid } from 'src/app/utils';
+import { CounterpartyFormField } from '../../enums/counterparty-form-field.enum';
 
 describe('CounterpartyComponent', () => {
     let component: СounterpartyComponent;
@@ -135,7 +136,7 @@ describe('CounterpartyComponent', () => {
             done();
         });
 
-        component.form.controls.inn.patchValue('000000000003');
+        component.form.get(CounterpartyFormField.Inn).patchValue('000000000003');
 
         clients$$.next([client]);
     });

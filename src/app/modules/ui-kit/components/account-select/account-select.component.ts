@@ -21,7 +21,7 @@ export class AccountSelectComponent extends CustomControlAccessorDirective imple
 
     selectedAccount$$ = new BehaviorSubject<ClientAccount>(null);
     selectedAccount$ = this.selectedAccount$$.asObservable();
-    private get selectedAccount() {
+    private get selectedAccount(): ClientAccount {
         return this.selectedAccount$$.getValue();
     }
     private set selectedAccount(value) {
@@ -30,17 +30,11 @@ export class AccountSelectComponent extends CustomControlAccessorDirective imple
 
     private dropped$$ = new BehaviorSubject(false);
     dropped$ = this.dropped$$.asObservable();
-    private get dropped() {
+    private get dropped(): boolean {
         return this.dropped$$.getValue();
     }
     private set dropped(value) {
         this.dropped$$.next(value);
-    }
-
-    get error() {
-        return this.formControl.touched
-            && this.formControl.errors
-            && Object.values(this.formControl.errors)[0];
     }
 
     handleHeaderClick(): void {
@@ -59,7 +53,7 @@ export class AccountSelectComponent extends CustomControlAccessorDirective imple
         this.accountSelect.emit(account);
     }
 
-    private initSelectedOption(initAccount: ClientAccount) {
+    private initSelectedOption(initAccount: ClientAccount): void {
         if (initAccount && !this.selectedAccount$$.getValue() && this.accounts?.length) {
             this.selectedAccount = this.accounts.find(account => (
                 account.accountCode === initAccount.accountCode
@@ -68,7 +62,7 @@ export class AccountSelectComponent extends CustomControlAccessorDirective imple
         }
     }
 
-    writeValue(initAccount: ClientAccount) {
+    writeValue(initAccount: ClientAccount): void {
         this.initSelectedOption(initAccount);
     }
 }

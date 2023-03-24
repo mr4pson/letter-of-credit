@@ -10,12 +10,16 @@ import { SafePaymentAgendaComponent } from "./components/safe-paymet-agenda/safe
 import { SafePaymentStateManagerService } from "./services/safe-payment-state-manager.service";
 import { SafePaymentFormService } from "./safe-payment-form.service";
 import { SafePaymentService } from "./services/safe-payment.service";
+import { ReliableColorPipe, ReliableTextPipe } from "./pipes";
 
 @NgModule({
     declarations: [
         SafePaymentComponent,
         SafePaymentAgendaComponent,
         SafePaymentEmailComponent,
+
+        ReliableColorPipe,
+        ReliableTextPipe,
     ],
     imports: [
         BrowserModule,

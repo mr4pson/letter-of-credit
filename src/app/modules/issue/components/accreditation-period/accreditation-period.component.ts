@@ -1,7 +1,6 @@
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { FormArray } from '@angular/forms';
 
-import { OnDestroyMixin, untilComponentDestroyed } from '@w11k/ngx-componentdestroyed';
 import { filter } from 'rxjs/operators';
 import { Router } from '@angular/router';
 
@@ -16,6 +15,8 @@ import { StoreService } from 'src/app/services/store.service';
 import { getSubstractDatesDays, getSummedDateDays, getTomorrowDate } from 'src/app/utils/utils';
 import moment from 'moment';
 import { isFormValid } from 'src/app/utils';
+import { takeUntilDestroyed, UntilDestroy } from '@psb/angular-tools';
+import { ruLocaleDateConfig } from '../../constants/constants';
 
 @Component({
     selector: 'accreditation-period',
@@ -23,7 +24,8 @@ import { isFormValid } from 'src/app/utils';
     styleUrls: ['accreditation-period.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class AccreditationPeriodComponent extends OnDestroyMixin implements OnInit {
+@UntilDestroy()
+export class AccreditationPeriodComponent implements OnInit {
     form = this.formService.createForm();
     ButtonType = ButtonType;
     minEndLocDate = getTomorrowDate();
@@ -37,7 +39,6 @@ export class AccreditationPeriodComponent extends OnDestroyMixin implements OnIn
         private stepService: StepService,
         private formService: AccreditationPeriodFormService,
     ) {
-        super();
         this.closingDocsControl = this.formService.closingDocsControl;
     }
 
@@ -49,29 +50,30 @@ export class AccreditationPeriodComponent extends OnDestroyMixin implements OnIn
             endLocDate: initialEndLocDate ? moment(initialEndLocDate) : moment(getTomorrowDate()),
         });
 
-        setTimeout(() => {
-            this.form.markAllAsTouched();
-        }, 200);
+        this.form.markAllAsTouched();
+        this.subscribeOnFormFieldsChanges();
+    }
 
+    private subscribeOnFormFieldsChanges(): void {
         this.formService.endLocDateControl.valueChanges.pipe(
             filter(endLocDate => endLocDate && endLocDate.getTime() > 0),
-            untilComponentDestroyed(this),
+            takeUntilDestroyed(this),
         ).subscribe(this.setStoreEndLocDate.bind(this));
 
         this.formService.locDaysNumberControl.valueChanges.pipe(
-            untilComponentDestroyed(this),
+            takeUntilDestroyed(this),
         ).subscribe(this.setLocDateOnDaysNumberChange.bind(this));
 
         this.formService.isDocumentDigitalControl.valueChanges.pipe(
-            untilComponentDestroyed(this),
+            takeUntilDestroyed(this),
         ).subscribe(this.setStoreIsDocumentDigital.bind(this));
 
         this.formService.allowUsePartOfLocControl.valueChanges.pipe(
-            untilComponentDestroyed(this),
+            takeUntilDestroyed(this),
         ).subscribe(this.setStoreAllowUsePartOfLoc.bind(this));
 
         this.closingDocsControl.valueChanges.pipe(
-            untilComponentDestroyed(this),
+            takeUntilDestroyed(this),
         ).subscribe(this.setStoreClosingDocs.bind(this));
 
         if (this.store.letterOfCredit.closingDocs) {
@@ -93,8 +95,8 @@ export class AccreditationPeriodComponent extends OnDestroyMixin implements OnIn
         if (isFormValid(this.form)) {
             const endLocDate = new Date(this.store.letterOfCredit.endLocDate.toString());
             const stepDescription = `До ${endLocDate.toLocaleDateString(
-                'ru-RU',
-                { year: 'numeric', month: 'long', day: 'numeric' },
+                ruLocaleDateConfig.locale,
+                ruLocaleDateConfig.config
             )}`;
 
             this.stepService.setStepDescription(

@@ -1,46 +1,47 @@
 import { Injectable } from "@angular/core";
-import { FormBuilder, FormGroup } from "@angular/forms";
+import { AbstractControl, FormBuilder, FormGroup } from "@angular/forms";
 import { getRequiredFormControlValidator } from "@psb/validations/required";
 
 import { NDS_LIST } from "../../constants/constants";
+import { CounterpartyContractFormField } from "../../enums/counterparty-contract-form-field.enum";
 import { SET_AGREEMENT_NUMBER_CONTROL_MESSAGE, SET_AGREEMEN_SUBJECT_CONTROL_MESSAGE, SET_DATE_CONTROL_MESSAGE } from "./constants";
 
 @Injectable()
 export class CounterpartyContractFormService {
     form: FormGroup;
 
-    get contractDateControl() {
-        return this.form.controls.contractDate;
+    get contractDateControl(): AbstractControl {
+        return this.form.get(CounterpartyContractFormField.ContractDate)
     }
 
-    get selectedNdsControl() {
-        return this.form.controls.selectedNds;
+    get selectedNdsControl(): AbstractControl {
+        return this.form.get(CounterpartyContractFormField.SelectedNds)
     }
 
-    get contractControl() {
-        return this.form.controls.contract;
+    get contractControl(): AbstractControl {
+        return this.form.get(CounterpartyContractFormField.Contract)
     }
 
-    get contractInfoControl() {
-        return this.form.controls.contractInfo;
+    get contractInfoControl(): AbstractControl {
+        return this.form.get(CounterpartyContractFormField.ContractInfo)
     }
 
     constructor(
         private formBuilder: FormBuilder,
     ) { }
 
-    createForm() {
+    createForm(): FormGroup {
         this.form = this.formBuilder.group({
-            contractDate: ['', [
+            [CounterpartyContractFormField.ContractDate]: ['', [
                 getRequiredFormControlValidator(SET_DATE_CONTROL_MESSAGE),
             ]
             ],
-            selectedNds: [NDS_LIST[2].label],
-            contract: ['', [
+            [CounterpartyContractFormField.SelectedNds]: [NDS_LIST[2].label],
+            [CounterpartyContractFormField.Contract]: ['', [
                 getRequiredFormControlValidator(SET_AGREEMENT_NUMBER_CONTROL_MESSAGE),
             ]
             ],
-            contractInfo: ['', [
+            [CounterpartyContractFormField.ContractInfo]: ['', [
                 getRequiredFormControlValidator(SET_AGREEMEN_SUBJECT_CONTROL_MESSAGE),
             ]
             ],

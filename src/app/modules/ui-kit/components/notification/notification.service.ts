@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, Observable } from 'rxjs';
 import { tap } from 'rxjs/operators';
 
 import { Notification } from './notification.interface';
@@ -10,21 +10,25 @@ import { NotificationType } from '@psb/fe-ui-kit';
 @Injectable()
 export class NotificationService {
     private notifications$$ = new BehaviorSubject<Notification[]>([]);
-    notifications$ = this.notifications$$.asObservable().pipe(
-        tap((notifications) => {
-            if (notifications.length > 0) {
-                setTimeout(this.removeNotification.bind(this), 3000);
-            }
-        }),
-    );
-    get notifications() {
+    notifications$: Observable<Notification[]>;
+    private get notifications(): Notification[] {
         return this.notifications$$.getValue();
     }
-    set notifications(list) {
+    private set notifications(list) {
         this.notifications$$.next(list);
     }
 
     private lastNotificationId = 0;
+
+    constructor() {
+        this.notifications$ = this.notifications$$.asObservable().pipe(
+            tap((notifications) => {
+                if (notifications.length > 0) {
+                    setTimeout(this.removeNotification.bind(this), 3000);
+                }
+            }),
+        );
+    }
 
     addError(config: { info: string }): void {
         const notification: Notification = {

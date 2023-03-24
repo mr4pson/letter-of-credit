@@ -27,11 +27,12 @@ import { IssueRoutingModule } from './issue-routing.module';
 import { StepService } from './services/step.service';
 import { UiKitModule } from '../ui-kit/ui-kit.module';
 import { SuccessModalComponent } from './components/success-modal/success-modal.component';
-import { FormatMoneyPipe } from '../psb/pipes';
 import { SendApplicationService } from './components/send-application/send-application.service';
 
 import { SimplebarAngularModule } from 'simplebar-angular';
 import { AccountService } from 'src/app/services';
+import { CurrentStepNumberPipe } from './pipes/current-step-number.pipe';
+import { MoneyAmountPipe } from '@psb/angular-tools';
 
 @NgModule({
     declarations: [
@@ -45,6 +46,8 @@ import { AccountService } from 'src/app/services';
         AccreditationAmountComponent,
         CounterpartyContractComponent,
         SuccessModalComponent,
+
+        CurrentStepNumberPipe,
     ],
     imports: [
         PsbModule,
@@ -63,7 +66,7 @@ import { AccountService } from 'src/app/services';
     providers: [
         StepService,
         AccountService,
-        FormatMoneyPipe,
+        MoneyAmountPipe,
         PartnersService,
         FileUploadService,
         ClientAccountService,

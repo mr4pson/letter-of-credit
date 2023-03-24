@@ -6,7 +6,7 @@ import { NotificationModule } from './notification.module';
 import { NotificationService } from './notification.service';
 
 import { NotificationType } from '@psb/fe-ui-kit';
-import { getNotificationsWrapper } from './testing';
+import { getNotificationsWrapper } from './testing.utils';
 
 describe('NotificationComponent', () => {
     let component: NotificationComponent;

@@ -11,6 +11,12 @@ export class SuccessModalComponent implements OnInit {
     buttonType = ButtonType;
     successModalType = SuccessModalType;
     contentChangingDebounceTime = 100;
+    successIconSettings = {
+        img: {
+            src: 'assets/icons/success-status.svg',
+            alt: 'sdfsdfsdfsf'
+        }
+    } as any;
 
     constructor(
         private dialogRef: DialogRefService<SuccessModalComponent>,
@@ -18,7 +24,7 @@ export class SuccessModalComponent implements OnInit {
     ) {
     }
 
-    close(result) {
+    close(result): void {
         let dialogResult = result;
 
         if (dialogResult && this.data.successDialogResult !== undefined) {
@@ -28,8 +34,9 @@ export class SuccessModalComponent implements OnInit {
         this.dialogRef.close(dialogResult);
     }
 
-    bannerClick() {
+    bannerClick(): void {
         const { bannerData } = this.data;
+
         if (bannerData.bannerClick) {
             bannerData.bannerClick();
         }

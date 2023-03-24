@@ -1,11 +1,11 @@
 import { ClosingDoc } from './closing-doc.interface';
 
-export class LetterOfCredit {
-    reciverInn: string;
-    reciverName: string;
-    reciverBankBik: string;
-    reciverBankName: string;
-    reciverAccount: string;
+export interface LetterOfCredit {
+    receiverInn: string;
+    receiverName: string;
+    receiverBankBik: string;
+    receiverBankName: string;
+    receiverAccount: string;
     contractDate: Date;
     contract: string;
     contractInfo: string;
