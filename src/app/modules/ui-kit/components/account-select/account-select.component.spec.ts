@@ -10,6 +10,7 @@ import { PsbModule } from 'src/app/modules/psb/psb.module';
 import { ClientAccount } from 'src/app/modules/issue/interfaces/client-account.interface';
 import { ClickOutsideModule } from '@psb/angular-tools';
 import { clickHeader, clickOutside, getItemsWrapper } from './testing.utils';
+import { FormErrorPipe } from '../../pipes/form-error.pipe';
 
 enum AccountSelectFormField {
     Account = "account"
@@ -61,6 +62,7 @@ describe('AccountSelectComponent', () => {
             declarations: [
                 AccountSelectComponent,
                 WrapperComponent,
+                FormErrorPipe
             ],
             imports: [
                 ReactiveFormsModule,

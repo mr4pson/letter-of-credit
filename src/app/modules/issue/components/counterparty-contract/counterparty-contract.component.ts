@@ -17,9 +17,7 @@ import { SimplebarAngularComponent } from 'simplebar-angular/lib/simplebar-angul
 import { StoreService } from 'src/app/services/store.service';
 import { isFormValid } from 'src/app/utils';
 import { CounterpartyContractFormService } from './counterparty-contract-form.service';
-import { takeUntilDestroyed } from '@psb/angular-tools';
-
-const docPreviewSrc = require('./doc-preview.png').default;
+import { takeUntilDestroyed, UntilDestroy } from '@psb/angular-tools';
 
 @Component({
     selector: 'counterparty-contract',
@@ -27,6 +25,7 @@ const docPreviewSrc = require('./doc-preview.png').default;
     styleUrls: ['counterparty-contract.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
+@UntilDestroy()
 export class CounterpartyContractComponent implements OnInit {
     files$ = this.fileUploadService.files$;
     errorMessage$ = this.fileUploadService.errorMessage$;
@@ -36,7 +35,12 @@ export class CounterpartyContractComponent implements OnInit {
     maxContractDate = new Date();
     selectedNds = 20;
     CounterpartyContractFormField = CounterpartyContractFormField;
-    docPreviewSrc = docPreviewSrc;
+    docPreview = {
+        img: {
+            src: 'assets/images/doc-preview.png',
+            alt: 'Document preview'
+        }
+    } as any;
 
     constructor(
         private store: StoreService,

@@ -14,7 +14,7 @@ export class SuccessModalComponent implements OnInit {
     successIconSettings = {
         img: {
             src: 'assets/icons/success-status.svg',
-            alt: 'sdfsdfsdfsf'
+            alt: 'Success status'
         }
     } as any;
 

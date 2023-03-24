@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { catchError, filter, map, startWith, switchMap } from 'rxjs/operators';
+import { catchError, filter, map, switchMap, tap } from 'rxjs/operators';
 import { Observable, of } from 'rxjs';
 import { Router } from '@angular/router';
 
@@ -14,7 +14,7 @@ import { isFormValid } from 'src/app/utils';
 import { GET_ACCOUNTS_ERROR_MESSAGE, GET_COMMISSION_ERROR_MESSAGE } from './constants';
 import { AccreditationAmountFormService } from './accreditation-amount-form.service';
 import { ClientAccount } from '../../interfaces/client-account.interface';
-import { MoneyAmountPipe } from '@psb/angular-tools';
+import { MoneyAmountPipe, takeUntilDestroyed, UntilDestroy } from '@psb/angular-tools';
 
 @Component({
     selector: 'accreditation-amount',
@@ -22,12 +22,12 @@ import { MoneyAmountPipe } from '@psb/angular-tools';
     styleUrls: ['accreditation-amount.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
+@UntilDestroy()
 export class AccreditationAmountComponent {
     commission = 0;
     ButtonType = ButtonType;
     form = this.formService.createForm();
     AccreditationAmountFormField = AccreditationAmountFormField;
-    commission$: Observable<number>;
     comissionLoading = false;
     accounts$: Observable<ClientAccount[]>;
 
@@ -42,6 +42,7 @@ export class AccreditationAmountComponent {
         private formatMoney: MoneyAmountPipe,
     ) {
         this.initObservables();
+        this.subscribeOnFormFieldsChanges();
     }
 
     private initObservables(): void {
@@ -51,13 +52,21 @@ export class AccreditationAmountComponent {
                 this.form.get(AccreditationAmountFormField.IssueSum).patchValue(this.store.payment?.summa.toString());
                 return this.clientAccountService.getClientAccounts();
             }),
+            tap(accounts => {
+                if (accounts.length) {
+                    this.form.get(AccreditationAmountFormField.SelectedAccount).patchValue(accounts[0]);
+                }
+            }),
             catchError(() => {
                 this.errorHandlerService.showErrorMessage(GET_ACCOUNTS_ERROR_MESSAGE);
 
                 return of([]);
             }),
         );
-        this.commission$ = this.form.get(AccreditationAmountFormField.IssueSum).valueChanges.pipe(
+    }
+
+    private subscribeOnFormFieldsChanges(): void {
+        this.form.get(AccreditationAmountFormField.IssueSum).valueChanges.pipe(
             switchMap(issueSum => {
                 const summa = issueSum ? Number(issueSum) : 0;
                 this.comissionLoading = true;
@@ -76,7 +85,8 @@ export class AccreditationAmountComponent {
 
                 return of(this.commission);
             }),
-        );
+            takeUntilDestroyed(this)
+        ).subscribe();
     }
 
     handleAccountSelect(account: ClientAccount): void {

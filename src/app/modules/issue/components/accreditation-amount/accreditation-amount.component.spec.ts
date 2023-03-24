@@ -18,11 +18,13 @@ import { PsbModule } from 'src/app/modules/psb/psb.module';
 import { UiKitModule } from 'src/app/modules/ui-kit/ui-kit.module';
 import { isFormValid } from 'src/app/utils';
 import { AccreditationAmountFormField } from '../../enums/accreditation-amount-form-field.enum';
+import { MoneyAmountPipe } from '@psb/angular-tools';
 
 describe('AccreditationAmountComponent', () => {
     let component: AccreditationAmountComponent;
     let fixture: ComponentFixture<AccreditationAmountComponent>;
     let router: Router;
+    let store: StoreService;
     const accounts = [
         {
             title: 'Расчетный',
@@ -55,6 +57,7 @@ describe('AccreditationAmountComponent', () => {
                 StoreService,
                 StepService,
                 AccreditationAmountFormService,
+                MoneyAmountPipe,
                 {
                     provide: AccountService,
                     useValue: {
@@ -85,6 +88,7 @@ describe('AccreditationAmountComponent', () => {
         fixture = TestBed.createComponent(AccreditationAmountComponent);
         component = fixture.componentInstance;
         router = TestBed.inject(Router);
+        store = TestBed.inject(StoreService);
 
         component.form.reset();
         fixture.detectChanges();
@@ -111,6 +115,7 @@ describe('AccreditationAmountComponent', () => {
     }));
 
     it('Задает первый аккаунт после получения списка аккаунтов', fakeAsync(() => {
+        store.isIssueVissible = true;
         accounts$$.next(accounts);
         tick();
 

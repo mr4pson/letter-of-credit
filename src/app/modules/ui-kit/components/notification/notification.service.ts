@@ -11,10 +11,10 @@ import { NotificationType } from '@psb/fe-ui-kit';
 export class NotificationService {
     private notifications$$ = new BehaviorSubject<Notification[]>([]);
     notifications$: Observable<Notification[]>;
-    private get notifications(): Notification[] {
+    get notifications(): Notification[] {
         return this.notifications$$.getValue();
     }
-    private set notifications(list) {
+    set notifications(list) {
         this.notifications$$.next(list);
     }
 

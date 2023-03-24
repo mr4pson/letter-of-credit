@@ -53,19 +53,6 @@ export class SafePaymentComponent {
         this.stateManager.state = SafePayStates.ShowAgenda;
     }
 
-    getReliableColor(): string {
-        return (
-            RELIABLE_MAP.color[this.store.receiverStatus] ?? ReliableSign.reliableGray
-        );
-    }
-
-    getReliableText(): string {
-        return (
-            RELIABLE_MAP.text[this.store.receiverStatus] ??
-            ReliableSign.reliableGrayText
-        );
-    }
-
     doSafePay(): void {
         this.dialogRef.close(SafePaymentButton.DoPay);
         this.ngService.hideSmbDocuments();

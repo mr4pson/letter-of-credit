@@ -14,9 +14,7 @@
     <psb-text>
         <div class="commission">
             <span>Комиссия за выпуск аккредитива:</span>
-            <span class="sum">
-                {{ (commission$ | async) | psbMoneyAmount:'₽' }}
-            </span>
+            <span class="sum">{{ commission | psbMoneyAmount:'₽' }}</span>
             <psb-tooltip
                 class="tooltip"
                 tooltipType="white"
@@ -55,7 +53,7 @@
 		вам на расчётный счёт на следующий день.
     </p>
     <psb-button
-        [disabled]="!!(commission$ | async) && comissionLoading"
+        [disabled]="!!commission && comissionLoading"
         class="submit"
         [isSubmit]="true"
         [type]="ButtonType.Primary"

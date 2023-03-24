@@ -27,6 +27,8 @@ import {
 } from './testing.utils';
 import { NotificationService } from '../ui-kit/components/notification/notification.service';
 import { DialogRefService } from '@psb/fe-ui-kit';
+import { SafePaymentService } from './services/safe-payment.service';
+import { ReliableColorPipe, ReliableTextPipe } from './pipes';
 
 describe('SafePaymentComponent', () => {
     let component: SafePaymentComponent;
@@ -42,6 +44,9 @@ describe('SafePaymentComponent', () => {
                 SafePaymentComponent,
                 SafePaymentAgendaComponent,
                 SafePaymentEmailComponent,
+
+                ReliableColorPipe,
+                ReliableTextPipe,
             ],
             imports: [
                 CommonModule,
@@ -62,6 +67,7 @@ describe('SafePaymentComponent', () => {
                         close: (value) => { },
                     },
                 },
+                SafePaymentService
             ],
         }).compileComponents();
     }));
@@ -114,41 +120,5 @@ describe('SafePaymentComponent', () => {
         clickNthPaymentBtn(fixture, 3);
 
         expect(dialogRef.close).toHaveBeenCalledWith(SafePaymentButton.OrdinalPay);
-    });
-
-    it('Возвращает reliableRedText при unreliable статусе отправителя', () => {
-        setUnreliableReceiverStatus(store);
-
-        expect(component.getReliableText()).toEqual(ReliableSign.reliableRedText);
-    });
-
-    it('Возвращает reliableYellowText при PartlyReliable статусе отправителя', () => {
-        setPartlyReliableReceiverStatus(store);
-
-        expect(component.getReliableText()).toEqual(ReliableSign.reliableYellowText);
-    });
-
-    it('Возвращает reliableGrayText при Reliable статусе отправителя', () => {
-        setReliableReceiverStatus(store);
-
-        expect(component.getReliableText()).toEqual(ReliableSign.reliableGrayText);
-    });
-
-    it('Возвращает reliableRed color при unreliable статусе отправителя', () => {
-        setUnreliableReceiverStatus(store);
-
-        expect(component.getReliableColor()).toEqual(ReliableSign.reliableRed);
-    });
-
-    it('Возвращает reliableYellow color при PartlyReliable статусе отправителя', () => {
-        setPartlyReliableReceiverStatus(store);
-
-        expect(component.getReliableColor()).toEqual(ReliableSign.reliableYellow);
-    });
-
-    it('Возвращает reliableGray color при Reliable статусе отправителя', () => {
-        setReliableReceiverStatus(store);
-
-        expect(component.getReliableColor()).toEqual(ReliableSign.reliableGray);
     });
 });

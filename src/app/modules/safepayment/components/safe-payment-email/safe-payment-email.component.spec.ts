@@ -8,6 +8,7 @@ import { SafePaymentEmailComponent } from './safe-payment-email.component';
 import { PsbModule } from 'src/app/modules/psb/psb.module';
 import { StoreService } from 'src/app/services';
 import { emailButtonClick } from './testing.utils';
+import { SafePaymentService } from '../../services/safe-payment.service';
 
 describe('SafePaymentEmailComponent', () => {
     let component: SafePaymentEmailComponent;
@@ -25,6 +26,7 @@ describe('SafePaymentEmailComponent', () => {
             ],
             providers: [
                 StoreService,
+                SafePaymentService
             ],
         }).compileComponents();
     }));
