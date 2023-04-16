@@ -7,9 +7,9 @@
         "start": "ng serve --liveReload=true --open",
         "test": "ng test",
         "lint": "eslint -c .eslintrc.js --ext .ts",
-        "build": "ng build --outputPath=../../server/www/inner --prod=true --optimization=true --commonChunk=true --aot=true --buildOptimizer=true --vendor-chunk=true --progress=true --sourceMap=false --base-href /",
-        "build-light": "ng build --outputPath=../../server/www/inner --prod=false --commonChunk=true --vendor-chunk=true --progress=true --sourceMap=false --base-href /",
-        "openapi-codegen:lc": "ng-openapi-gen --input ./swagger/lc.openapi.json --output src/api"
+        "build": "ng build",
+        "serve:letter-of-credit": "ng build qwe --watch",
+        "openapi-codegen:lc": "ng-openapi-gen --input ./swagger/lc.openapi.json --output src/modules/letter-of-credit/src/api"
     },
     "private": true,
     "dependencies": {
@@ -41,6 +41,7 @@
     "devDependencies": {
         "@angular-builders/custom-webpack": "^10.0.1",
         "@angular-devkit/build-angular": "~0.1002.3",
+        "@angular-devkit/build-ng-packagr": "^0.1002.0",
         "@angular/cli": "~10.2.3",
         "@angular/compiler-cli": "~10.2.5",
         "@angularclass/hmr": "^3.0.0",

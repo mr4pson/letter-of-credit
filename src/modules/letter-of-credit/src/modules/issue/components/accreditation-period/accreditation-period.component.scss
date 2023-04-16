@@ -1,0 +1,97 @@
+@import "../../../../assets/colors";
+@import "../../../../assets/sizes";
+
+.accreditation-period {
+    padding-bottom: $size-24;
+    padding-right: 15px;
+
+    .closing-doc-checkbox {
+        display: flex;
+        align-items: center;
+        padding-top: 40px;
+
+        psb-checkbox {
+            display: inline-block;
+            width: 530px;
+        }
+    }
+
+    .allow-doc-checkbox {
+        display: flex;
+        align-items: center;
+        padding-top: $size-20;
+
+        psb-checkbox {
+            display: inline-block;
+            width: 540px;
+        }
+    }
+
+    .submit {
+        margin-top: $size-20;
+    }
+}
+
+.accreditation-dates {
+    display: flex;
+
+    .expiration-date {
+        display: flex;
+        width: 100%;
+
+        psb-tooltip {
+            margin-top: 31px;
+        }
+    }
+
+    .validity {
+        margin-left: 48px;
+        width: 100%;
+        display: flex;
+        justify-content: flex-end;
+    }
+}
+
+.add-doc-btn {
+    background: $bg-grey-super-light;
+    padding: 12px 16px;
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    border: none;
+    cursor: pointer;
+
+    .icon {
+        float: left;
+        margin-top: -3px;
+        margin-bottom: -3px;
+        margin-right: $size-10;
+        color: $main-blue;
+    }
+
+    .label {
+        font-weight: bold;
+        font-size: $font-size-m;
+        line-height: $size-24;
+        color: $main-blue;
+    }
+}
+
+.doc-title {
+    display: flex;
+    align-items: center;
+    margin: 40px 0 24px 0;
+    font-size: $font-size-xl;
+    line-height: $size-24;
+    letter-spacing: 0.15px;
+
+    psb-tooltip {
+        margin-left: 15px;
+    }
+}
+
+.tooltip {
+    margin-left: $size-8;
+    display: inline-block;
+    vertical-align: middle;
+}

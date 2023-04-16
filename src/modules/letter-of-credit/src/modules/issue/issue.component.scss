@@ -1,0 +1,95 @@
+@import "../../assets/colors";
+@import "../../assets/sizes";
+
+.issue {
+    background-color: $white;
+    margin-left: 260px;
+    padding: 0 40px 0 60px;
+    box-sizing: border-box;
+    max-width: 1020px;
+    width: 100%;
+    position: absolute;
+    top: 110px;
+
+    .body {
+        width: 100%;
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        padding-bottom: 30px;
+    }
+
+    .left-col {
+        padding-right: 50px;
+        width: 71%;
+    }
+
+    .right-col {
+        width: 29%;
+        display: flex;
+
+    }
+
+    .vertical-dots {
+        width: 47px;
+
+        .dots-holder {
+            border-left: dotted 1px #ccc;
+            width: 1px;
+            height: 100%;
+            margin-left: 6px;
+        }
+    }
+
+    .footer {
+        padding-bottom: $size-12;
+    }
+}
+
+.back-btn {
+    background: none;
+    border: none;
+    margin-left: -$size-24;
+    margin-right: -$size-24;
+    margin-bottom: 16px;
+    display: flex;
+    flex-direction: row;
+    cursor: pointer;
+    padding: $size-zero;
+
+    .arrow {
+        width: $size-24;
+    }
+
+    .arrow,
+    .label {
+        color: $black-alpha-60;
+        cursor: pointer;
+        font-size: $font-size-s;
+        line-height: 16px;
+    }
+}
+
+.issue-header {
+    display: flex;
+    align-items: center;
+
+    .title {
+        font-size: $font-size-xl;
+        line-height: $size-24;
+        color: $black-alpha-87;
+        letter-spacing: 0.15px;
+        font-weight: 600;
+        margin: $size-zero;
+    }
+
+    .tooltip {
+        margin-left: $size-10;
+    }
+}
+
+@media (max-width: 1279px) {
+    .issue {
+        margin-left: 80px;
+    }
+}

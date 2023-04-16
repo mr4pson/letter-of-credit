@@ -1,0 +1,19 @@
+{
+  "extends": "../../tslint.json",
+  "rules": {
+    "directive-selector": [
+      true,
+      "attribute",
+      "pebSandbox",
+      "camelCase"
+    ],
+    "component-selector": [
+      true,
+      "element",
+      "peb-sandbox",
+      "pe-",
+      "kebab-case"
+    ],
+    "no-implicit-dependencies": false
+  }
+}

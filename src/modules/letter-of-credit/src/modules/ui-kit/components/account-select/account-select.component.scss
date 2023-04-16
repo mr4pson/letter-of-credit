@@ -1,0 +1,132 @@
+@import "../../../../assets/colors";
+@import "../../../../assets/sizes";
+
+:host {
+    display: block;
+    width: 100%;
+}
+
+.account-select {
+    font-family: "Inter";
+    font-weight: normal !important;
+    text-rendering: optimizeLegibility;
+    font-size: $font-size-m;
+    display: block;
+    min-width: 0;
+    background: transparent;
+    max-width: 590px;
+    position: relative;
+    border-bottom: 1px solid #e0e0e0;
+
+    .dropdown-header {
+        cursor: pointer;
+    }
+
+    .chevron-icon {
+        display: flex;
+        align-items: center;
+        height: 100%;
+        position: absolute;
+        right: -13px;
+        top: 19px;
+        width: 2em;
+        padding: $size-zero;
+        height: 18px;
+        color: $bg-grey-light-dark;
+
+        psb-icon {
+            width: 18px;
+        }
+    }
+}
+
+.dropdown-label {
+    position: relative;
+    display: block;
+    border: none;
+    white-space: nowrap;
+    overflow: hidden;
+    font-weight: normal;
+    width: 100%;
+    padding-right: 1em;
+    font-weight: normal;
+    line-height: 33px;
+    padding-top: $size-12;
+    min-height: 33px;
+
+    .small-label {
+        position: absolute;
+        font-size: $font-size-xs;
+        top: -10px;
+        color: $black-alpha-54;
+    }
+
+    .content-row {
+        align-items: center;
+        display: flex;
+    }
+
+    .content-col {
+        white-space: nowrap;
+        flex-shrink: 1;
+        padding-right: 21px;
+
+        &:last-child {
+            width: 100%;
+            text-align: right;
+        }
+    }
+}
+
+.dropdown-panel {
+    padding: $size-zero;
+    border: 1px solid #c8c8c8;
+    border-radius: 3px;
+    background-color: $white;
+    box-shadow: 0 3px 6px 0 rgb(0 0 0 / 16%);
+    min-width: 100%;
+    max-width: 100%;
+    position: absolute;
+    height: auto;
+    top: 46px;
+    z-index: 100;
+
+    .items-wrapper {
+        max-height: 320px !important;
+        padding: 8px 0;
+        letter-spacing: -0.5px;
+    }
+
+    .items {
+        padding: $size-zero;
+        list-style: none;
+        margin: $size-zero;
+    }
+
+    .item {
+        padding: 12px 24px;
+        box-sizing: border-box;
+        line-height: initial;
+        cursor: pointer;
+
+        &:hover {
+            background-color: $bg-grey-super-light;
+        }
+    }
+
+    .dropdown-label .content-col {
+        &:last-child {
+            padding-right: $size-zero;
+        }
+    }
+}
+
+.form-field-container {
+    width: 100%;
+}
+
+.-invalid {
+    .account-select {
+        border-bottom: 2px solid #d0021b;
+    }
+}

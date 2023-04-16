@@ -1,0 +1,14 @@
+{
+    "name": "@psb/letter-of-credit",
+    "version": "1.0.0",
+    "description": "Letter of credit",
+    "repository": "",
+    "license": "UNLICENSED",
+    "peerDependencies": {
+        "@angular/common": "~10.2.5",
+        "@angular/core": "~10.2.5",
+        "tslib": "^2.0.0",
+        "@angular/material": "~10.2.7",
+        "@angular/cdk": "^10.2.7"
+    }
+}

@@ -4,6 +4,7 @@
 /dist
 /tmp
 /out-tsc
+__ivy_ngcc__
 # Only exists if Bazel was run
 /bazel-out
 
@@ -11,7 +12,7 @@
 /node_modules
 
 #open-api codegen
-src/api
+src/modules/letter-of-credit/src/api
 
 # profiling files
 chrome-profiler-events*.json

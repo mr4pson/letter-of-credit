@@ -1,0 +1,21 @@
+@import "../../../../assets/colors";
+@import "../../../../assets/sizes";
+
+.email-form {
+    display: flex;
+    padding: 16px 0;
+    align-items: center;
+
+    .field {
+        width: 300px;
+    }
+
+    .button {
+        margin-left: 15px;
+    }
+
+    .green-check {
+        color: $status-success;
+        margin-left: $size-20;
+    }
+}

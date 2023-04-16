@@ -1,0 +1,197 @@
+@import "../../../../assets/colors";
+@import "../../../../assets/sizes";
+
+.counterparty-contract {
+    .date-picker {
+        margin-top: $size-24;
+    }
+
+    .receiver-nds {
+        margin-right: 40px;
+    }
+
+    .date-picker,
+    .nds-select {
+        width: 280px;
+        display: inline-block;
+    }
+
+    .nds-actions {
+        display: flex;
+        flex-direction: row;
+
+        psb-button:first-child {
+            margin-right: $size-8;
+        }
+
+        &--inactive button {
+            border: solid 1px $black-alpha-12;
+        }
+    }
+
+    .nds-actions,
+    .nds-select {
+        padding-top: $size-24;
+    }
+
+    .scan-title {
+        margin: 52px 0 20px 0;
+    }
+}
+
+psb-datepicker.counterparty-contract .date-picker,
+psb-input-select.counterparty-contract .nds-select,
+psb-text-input.contract-info {
+    width: 280px;
+    display: block;
+}
+
+.contract-subject {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    padding-top: $size-24;
+
+    .info {
+        width: 95%;
+        display: inline-block;
+    }
+}
+
+div.file-uploader {
+    display: block;
+    border: none;
+    width: 570px;
+    height: auto;
+    position: relative;
+    background: $bg-grey-super-light;
+    border-radius: $size-12;
+    margin: 20px 0 40px 0;
+    padding: 20px 24px 10px 24px;
+
+    .info {
+        display: flex;
+        justify-content: space-between;
+        font-size: $font-size-xs;
+        color: $black-alpha-38;
+    }
+
+    .tooltip-info {
+        display: flex;
+    }
+
+    .uploaded-files {
+        display: flex;
+        position: relative;
+        padding: 10px 0;
+    }
+
+    .upload-btn {
+        position: relative;
+        width: 96px;
+        height: 114px;
+        margin-top: $size-20;
+        border-radius: $size-12;
+        background-color: $black-alpha-6;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 10px 6px 10px 0;
+        min-width: 96px;
+
+        &::before {
+            content: "";
+            position: absolute;
+            width: 20px;
+            height: 2px;
+            background: $white;
+        }
+
+        &::after {
+            content: "";
+            position: absolute;
+            width: 2px;
+            height: 20px;
+            background: $white;
+        }
+    }
+
+    .center-image {
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        margin-top: -$size-8;
+        margin-left: -26px;
+        z-index: 1;
+    }
+
+    .error-message {
+        position: absolute;
+        bottom: 5px;
+        white-space: nowrap;
+        overflow: hidden;
+        font-size: $font-size-xs;
+        letter-spacing: 0.4px;
+        color: $status-error;
+        max-width: 570px;
+    }
+
+    ngx-simplebar {
+        z-index: 10;
+    }
+}
+
+.tooltip {
+    margin-left: $size-8;
+}
+
+// No oppottunity to override without importants
+.dropzone-preview {
+    background-image: none !important;
+    background-color: white !important;
+    width: 96px !important;
+    height: 114px !important;
+    box-shadow: 0px 0px 8px rgba(0, 0, 0, 0.04) !important;
+    border-radius: $size-12 !important;
+    padding: $size-zero !important;
+    min-width: 96px !important;
+    min-height: 0 !important;
+    margin: 10px 6px !important;
+    transition: all 0.1s;
+
+    &:hover {
+        background-image: none !important;
+        min-width: 104px !important;
+        height: 122px !important;
+        margin: 6px 2px !important;
+
+        .file-name {
+            max-width: 84px;
+        }
+    }
+
+    .file-size {
+        position: absolute;
+        bottom: 30px;
+        left: 10px;
+        font-size: $font-size-xs;
+        letter-spacing: 0.4px;
+        color: $black-alpha-20;
+    }
+
+    .file-name {
+        position: absolute;
+        bottom: 10px;
+        left: 10px;
+        font-size: $font-size-xs;
+        letter-spacing: 0.4px;
+        color: $black-alpha-87;
+        overflow: hidden;
+        max-width: 76px;
+        white-space: nowrap;
+    }
+
+    &:last-child {
+        margin-right: 0 !important;
+    }
+}
