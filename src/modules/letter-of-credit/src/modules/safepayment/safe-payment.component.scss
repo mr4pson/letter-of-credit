@@ -19,8 +19,23 @@
 
     .raiting-icon {
         float: left;
+        width: 30px;
+        height: 30px;
+        background-size: cover;
         margin-top: -2px;
         margin-left: -4px;
+    }
+
+    .raiting-icon.gray {
+        background-image: url(../../assets/icons/rating-gray.svg);
+    }
+
+    .raiting-icon.yellow {
+        background-image: url(../../assets/icons/rating-yellow.svg);
+    }
+
+    .raiting-icon.red {
+        background-image: url(../../assets/icons/rating-red.svg);
     }
 }
 

@@ -45,7 +45,6 @@ export class StoreService {
         this.receiverStatus = ReceiverStatus.Unknown;
         this.letterOfCredit = { ...DEFAULT_LOC_INSTANCE };
         this.payment = null;
-        this.isIssueVissible = false;
     }
 
     getLcDocumentsClientIdCreatePayload(files: ApplicationFile[]): LetterEditModel {

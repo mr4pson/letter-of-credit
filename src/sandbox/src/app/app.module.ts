@@ -6,7 +6,8 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { createInputTransfer, createNewHosts, removeNgStyles } from '@angularclass/hmr';
 
 import { AppComponent } from './app.component';
-import { LetterOfCreditModule } from '@psb/letter-of-credit';
+import { LetterOfCreditModule, LetterOfCreditService } from '@psb/letter-of-credit';
+import { ReactiveFormsModule } from '@angular/forms';
 
 registerLocaleData(ru);
 @NgModule({
@@ -17,6 +18,10 @@ registerLocaleData(ru);
         BrowserModule,
         BrowserAnimationsModule,
         LetterOfCreditModule,
+        ReactiveFormsModule,
+    ],
+    providers: [
+        LetterOfCreditService,
     ],
     bootstrap: [AppComponent],
 })

@@ -1,15 +1,12 @@
 <form [formGroup]="form">
     <div class="company-info">
-        <psb-icon
+        <div
+            [class]="store.receiverStatus | reliableColor"
             class="raiting-icon"
-            [style.color]="store.receiverStatus | reliableColor"
-            [path]="'assets/icons/rating.svg'"
-        ></psb-icon>
-
+        ></div>
         <span class="title">
             {{ letterOfCredit.receiverName }} имеет {{ store.receiverStatus | reliableText }} рейтинг
         </span>
-
         <div class="info-icon">
             <psb-tooltip
                 class="svg-holder"

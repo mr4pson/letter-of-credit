@@ -11,12 +11,6 @@ export class SuccessModalComponent implements OnInit {
     buttonType = ButtonType;
     successModalType = SuccessModalType;
     contentChangingDebounceTime = 100;
-    successIconSettings = {
-        img: {
-            src: 'assets/icons/success-status.svg',
-            alt: 'Success status'
-        }
-    } as any;
 
     constructor(
         private dialogRef: DialogRefService<SuccessModalComponent>,

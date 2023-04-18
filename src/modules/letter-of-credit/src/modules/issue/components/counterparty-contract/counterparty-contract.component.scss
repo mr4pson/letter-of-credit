@@ -29,6 +29,12 @@
         }
     }
 
+    .doc-preview {
+        width: 112px;
+        height: 130px;
+        background-image: url(../../../../assets/images/doc-preview.png);
+    }
+
     .nds-actions,
     .nds-select {
         padding-top: $size-24;

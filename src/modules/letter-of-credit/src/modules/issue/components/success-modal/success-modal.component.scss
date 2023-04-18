@@ -65,3 +65,10 @@
 .success-modal>.success-modal-main>.actions :not(:first-child) {
   margin-left: 16px
 }
+
+.status-icon {
+  width: 80px;
+  height: 80px;
+  background-image: url(../../../../assets/icons/success-status.svg);
+  background-position: center;
+}

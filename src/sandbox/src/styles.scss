@@ -1,6 +1,10 @@
-@import "assets/colors";
-@import "assets/sizes";
-@import "assets/fonts";
+@import "./assets/colors";
+@import "./assets/sizes";
+@import "./assets/fonts";
+
+@import '@angular/cdk/overlay';
+@import "@angular/material/theming";
+@import "~@angular/material/prebuilt-themes/indigo-pink.css";
 
 @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap');
 
@@ -58,7 +62,7 @@ loc-inner,
 
     a,
     .main-color {
-        color: $main-blue  !important;
+        color: $main-blue !important;
     }
 
     .checkbox .checkbox-label {
@@ -75,7 +79,7 @@ loc-inner,
     }
 
     psb-tooltip psb-icon svg {
-        color: $black-alpha-38  !important;
+        color: $black-alpha-38 !important;
         cursor: pointer;
     }
 }
@@ -101,16 +105,16 @@ loc-inner {
         height: 4px !important;
 
         &::before {
-            background: $black-alpha-12  !important;
+            background: $black-alpha-12 !important;
         }
     }
 
     ngx-dropzone-remove-badge {
         opacity: 1 !important;
-        background: $black-alpha-24  !important;
+        background: $black-alpha-24 !important;
 
         &:hover {
-            background: $main-blue  !important;
+            background: $main-blue !important;
         }
     }
 
@@ -143,4 +147,12 @@ psb-datepicker {
     .icon-wrapper {
         z-index: 100;
     }
+}
+
+psb-calendar header.header {
+    width: auto !important;
+}
+
+psb-dialog-header-with-close-icon {
+    width: auto !important;
 }

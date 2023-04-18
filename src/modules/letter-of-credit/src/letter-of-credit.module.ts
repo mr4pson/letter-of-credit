@@ -20,6 +20,7 @@ import { MaterialModule } from './modules/material/material-module';
 import { SafePaymentStateManagerService } from './modules/safepayment/services/safe-payment-state-manager.service';
 import { ApiModule } from './api/api.module';
 import { ApiConfigurationParams } from './api/api-configuration';
+import { LetterOfCreditService } from './letter-of-credit.service';
 
 registerLocaleData(ru);
 @NgModule({
@@ -45,7 +46,15 @@ registerLocaleData(ru);
         ErrorHandlerService,
         NgService,
         SafePaymentStateManagerService,
+        LetterOfCreditService,
     ],
-    exports: [LetterOfCreditComponent],
+    exports: [
+        LetterOfCreditComponent,
+        PsbModule,
+        MaterialModule,
+        UiKitModule,
+        IssueModule,
+        SafePaymentModule,
+    ],
 })
 export class LetterOfCreditModule { }

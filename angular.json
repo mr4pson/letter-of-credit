@@ -28,7 +28,9 @@
                         "assets": [
                             "src/sandbox/src/favicon.ico"
                         ],
-                        "styles": [],
+                        "styles": [
+                            "src/sandbox/src/styles.scss"
+                        ],
                         "scripts": []
                     },
                     "configurations": {

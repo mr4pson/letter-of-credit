@@ -1,1 +1,137 @@
-<loc-app></loc-app>
+<div class="container">
+    <div class="buttons-wrapper">
+        <psb-button
+            [isSubmit]="true"
+            (buttonClick)="handleLetterOfCreditShow()"
+        >
+            Новый покрытый акредитив
+        </psb-button>
+        <psb-button
+            [isSubmit]="true"
+            (buttonClick)="handleNewPaymenyClick()"
+        >
+            Новый платеж
+        </psb-button>
+    </div>
+</div>
+<loc-letter-of-credit></loc-letter-of-credit>
+<div class="container">
+    <form
+        *ngIf="showNewPayment"
+        [formGroup]="newPaymentForm"
+    >
+        <h1>Новый платеж</h1>
+        <section formGroupName="receiver">
+            <div class="row">
+                <psb-heading>Получатель</psb-heading>
+            </div>
+            <div class="row">
+                <psb-input-autocomplete
+                    class="counterparty-autocomplete"
+                    label="ИНН контрагента"
+                    formControlName="inn"
+                    maxHeight="320px"
+                    optionId="inn"
+                    optionLabel="shortName"
+                    [minSearchLength]="5"
+                    [delay]="500"
+                    [maskSettings]="{ mask: '000000000000' }"
+                    [options]="[]"
+                    (selectItem)="selectClient($event)"
+                >
+                    <ng-template psbTemplateType="heading">
+                        <div class="header">Найдено в ЕГРЮЛ</div>
+                    </ng-template>
+
+                    <ng-template
+                        let-option="option"
+                        psbTemplateType="option"
+                    >
+                        {{ option.shortName }}
+                        <div class="inn">
+                            ИНН
+                            <span class="inn-info">{{ option.innFound }}</span>
+                            {{ option.innTail }} - КПП {{ option.kpp }}
+                        </div>
+                    </ng-template>
+                </psb-input-autocomplete>
+                <psb-input-autocomplete
+                    class="counterparty-autocomplete"
+                    label="Наименование получателя"
+                    formControlName="inn"
+                    maxHeight="320px"
+                    optionId="name"
+                    optionLabel="shortName"
+                    [minSearchLength]="5"
+                    [delay]="500"
+                    [options]="[]"
+                    (selectItem)="selectClient($event)"
+                >
+                    <ng-template psbTemplateType="heading">
+                        <div class="header">Найдено в ЕГРЮЛ</div>
+                    </ng-template>
+
+                    <ng-template
+                        let-option="option"
+                        psbTemplateType="option"
+                    >
+                        {{ option.shortName }}
+                        <div class="inn">
+                            ИНН
+                            <span class="inn-info">{{ option.innFound }}</span>
+                            {{ option.innTail }} - КПП {{ option.kpp }}
+                        </div>
+                    </ng-template>
+                </psb-input-autocomplete>
+            </div>
+            <div class="row">
+                <psb-text-input
+                    label="Счет получателя"
+                    formControlName="account"
+                ></psb-text-input>
+                <psb-text-input
+                    label="КПП получателя(поле 103)"
+                    formControlName="kpp"
+                ></psb-text-input>
+            </div>
+            <div class="row">
+                <psb-text-input
+                    label="БИК (поле 14)*"
+                    formControlName="bik"
+                ></psb-text-input>
+                <psb-input-select
+                    label="Корреспондентский счет"
+                    [options]="[]"
+                    class="nds-select"
+                    placeholder="Выберите счет"
+                    formControlName="bankAccount"
+                ></psb-input-select>
+            </div>
+        </section>
+        <section>
+            <div class="row">
+                <psb-heading>Получатель</psb-heading>
+            </div>
+            <div class="row">
+                <loc-account-select
+                    formControlName="account"
+                    [accounts]="[]"
+                    (accountSelect)="handleAccountSelect($event)"
+                ></loc-account-select>
+            </div>
+            <div class="row">
+                <psb-text-input
+                    label="Сумма*"
+                    formControlName="summa"
+                ></psb-text-input>
+            </div>
+            <div class="row">
+                <psb-text-input
+                    label="Назначение платежа(поле 24)*"
+                    formControlName="destination"
+                ></psb-text-input>
+            </div>
+        </section>
+        <psb-button (buttonClick)="handleFormSend()">Новый покрытый акредитив</psb-button>
+    </form>
+</div>

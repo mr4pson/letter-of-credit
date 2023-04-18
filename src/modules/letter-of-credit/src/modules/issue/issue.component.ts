@@ -39,7 +39,7 @@ export class IssueComponent implements OnInit {
     navigateBack(): void {
         if (this.currentUrl === this.steps[0].url) {
             this.store.isIssueVissible = false;
-            this.ngService.showSmbDocuments();
+            // this.ngService.showSmbDocuments();
 
             return;
         }

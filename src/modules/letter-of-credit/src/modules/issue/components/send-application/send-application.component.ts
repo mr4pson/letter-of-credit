@@ -94,6 +94,7 @@ export class SendApplicationComponent implements OnInit {
                 tap(() => {
                     this.loading = false;
                     this.store.restoreDefaultState();
+                    this.store.isIssueVissible = false;
                     this.fileUploadService.files = [];
                     this.openSuccessDialog();
                 }),

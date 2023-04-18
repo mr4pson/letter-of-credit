@@ -35,12 +35,6 @@ export class CounterpartyContractComponent implements OnInit {
     maxContractDate = new Date();
     selectedNds = 20;
     CounterpartyContractFormField = CounterpartyContractFormField;
-    docPreview = {
-        img: {
-            src: 'assets/images/doc-preview.png',
-            alt: 'Document preview'
-        }
-    } as any;
 
     constructor(
         private store: StoreService,
